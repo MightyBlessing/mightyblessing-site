@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" aria-hidden="true">
+  <!-- Mighty Blessing logo mark: flowing M, three smooth humps, brand purple -->
+  <path
+    fill="#6A00FF"
+    d="M 5 85
+       Q 5 20, 25 12
+       Q 50 5, 50 50
+       Q 50 5, 75 12
+       Q 95 20, 95 85
+       Q 95 95, 85 98
+       L 50 85
+       L 15 98
+       Q 5 95, 5 85 Z"
+  />
+</svg>

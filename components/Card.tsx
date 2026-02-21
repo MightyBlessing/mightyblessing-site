@@ -13,7 +13,7 @@ type CardProps = {
 };
 
 const cardClassName =
-  "group block rounded-2xl border border-gray-200 bg-white p-6 shadow-sm transition hover:border-brand-primary/30 hover:shadow-md dark:border-gray-700 dark:bg-gray-800/50 dark:hover:border-brand-secondary/30";
+  "group block rounded-2xl bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-2 hover:shadow-xl dark:bg-[#1E1E24] cursor-pointer";
 
 export function Card({ title, summary, href, tags, date, thumbnail, children }: CardProps) {
   const content = (
@@ -24,20 +24,20 @@ export function Card({ title, summary, href, tags, date, thumbnail, children }: 
           <img src={thumbnail} alt="" className="h-full w-full object-cover" />
         </div>
       )}
-      <div className="flex flex-wrap gap-2">
+      <div className="mb-4 flex flex-wrap gap-2">
         {tags?.map((t) => (
           <Tag key={t} label={t} />
         ))}
       </div>
       {date && (
-        <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+        <p className="mb-2 text-xs text-[#666666] dark:text-[#AAAAAA]">
           {new Date(date).toLocaleDateString("ko-KR", { year: "numeric", month: "long" })}
         </p>
       )}
-      <h3 className="mt-2 text-lg font-semibold text-gray-900 dark:text-white group-hover:text-brand-primary dark:group-hover:text-brand-secondary">
+      <h3 className="mb-3 text-lg font-bold text-[#111111] dark:text-white transition-colors group-hover:text-[#6A00FF]">
         {title}
       </h3>
-      {summary && <p className="mt-2 text-sm text-gray-600 dark:text-gray-300 line-clamp-2">{summary}</p>}
+      {summary && <p className="line-clamp-2 text-sm text-[#666666] dark:text-[#AAAAAA]">{summary}</p>}
       {children}
     </>
   );

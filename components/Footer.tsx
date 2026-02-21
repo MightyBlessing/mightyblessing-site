@@ -6,50 +6,54 @@ const studioNote = "마이티 스튜디오, 둔촌동역에서 걸어 올 수 �
 
 export function Footer() {
   return (
-    <footer className="border-t border-gray-200 bg-gray-50 dark:border-gray-800 dark:bg-gray-900/50">
-      <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6">
-        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+    <footer className="border-t border-gray-200 bg-[#F8F9FB] py-12 dark:border-gray-800 dark:bg-[#0F0F12]">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="mb-8 grid grid-cols-1 gap-8 md:grid-cols-4">
           <div>
-            <h3 className="text-sm font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+            <h4 className="mb-4 text-xs font-bold uppercase tracking-wider text-[#666666] dark:text-[#AAAAAA]">
               Contact
-            </h3>
-            <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">
-              <a href={`mailto:${email}`} className="hover:text-brand-primary dark:hover:text-brand-secondary">
+            </h4>
+            <p className="mb-2 text-sm text-[#111111] dark:text-[#EEEEEE]">
+              <a href={`mailto:${email}`} className="transition-colors hover:text-[#6A00FF]">
                 {email}
               </a>
             </p>
-            <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">{studioNote}</p>
+            <p className="text-sm text-[#666666] dark:text-[#AAAAAA]">{studioNote}</p>
           </div>
           <div>
-            <h3 className="text-sm font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">SNS</h3>
-            <p className="mt-2">
-              <a
-                href={instagram}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-sm text-gray-700 hover:text-brand-primary dark:text-gray-300 dark:hover:text-brand-secondary"
-              >
-                Instagram @mightyblessing_
-              </a>
-            </p>
+            <h4 className="mb-4 text-xs font-bold uppercase tracking-wider text-[#666666] dark:text-[#AAAAAA]">
+              SNS
+            </h4>
+            <a
+              href={instagram}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-sm text-[#111111] transition-colors hover:text-[#6A00FF] dark:text-[#EEEEEE] dark:hover:text-[#6A00FF]"
+            >
+              Instagram @mightyblessing_
+            </a>
           </div>
           <div>
-            <h3 className="text-sm font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">Legal</h3>
-            <ul className="mt-2 space-y-1 text-sm text-gray-600 dark:text-gray-400">
+            <h4 className="mb-4 text-xs font-bold uppercase tracking-wider text-[#666666] dark:text-[#AAAAAA]">
+              Legal
+            </h4>
+            <ul className="space-y-2">
               <li>
-                <Link href="/privacy" className="hover:text-brand-primary dark:hover:text-brand-secondary">
+                <Link href="/privacy" className="text-sm text-[#111111] transition-colors hover:text-[#6A00FF] dark:text-[#EEEEEE] dark:hover:text-[#6A00FF]">
                   개인정보 처리방침
                 </Link>
               </li>
               <li>
-                <Link href="/terms" className="hover:text-brand-primary dark:hover:text-brand-secondary">
+                <Link href="/terms" className="text-sm text-[#111111] transition-colors hover:text-[#6A00FF] dark:text-[#EEEEEE] dark:hover:text-[#6A00FF]">
                   이용약관
                 </Link>
               </li>
             </ul>
           </div>
-          <div>
-            <p className="text-sm text-gray-500 dark:text-gray-400">© {new Date().getFullYear()} Mighty Blessing</p>
+          <div className="md:text-right">
+            <p className="mt-8 text-xs text-[#666666] dark:text-[#AAAAAA] md:mt-0">
+              © {new Date().getFullYear()} Mighty Blessing
+            </p>
           </div>
         </div>
       </div>

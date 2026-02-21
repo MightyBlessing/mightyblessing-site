@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="ko"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Mighty Blessing - Creative Agency</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet"/>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#6A00FF", // From Brand Guide
+                        secondary: "#FF5421", // Vibrant Orange from Brand Guide
+                        accent: "#00C200", // Vibrant Green from Brand Guide
+                        "background-light": "#F8F9FB",
+                        "background-dark": "#0F0F12",
+                        "surface-light": "#FFFFFF",
+                        "surface-dark": "#1E1E24",
+                        "text-light": "#111111",
+                        "text-dark": "#EEEEEE",
+                        "text-muted-light": "#666666",
+                        "text-muted-dark": "#AAAAAA",
+                    },
+                    fontFamily: {
+                        sans: ['"Noto Sans KR"', 'sans-serif'],
+                        display: ['"Noto Sans KR"', 'sans-serif'], // Assuming Noto Sans KR for display as custom font files aren't available
+                    },
+                    borderRadius: {
+                        DEFAULT: "1rem",
+                        'xl': "1.5rem",
+                        '2xl': "2rem",
+                    },
+                },
+            },
+        };
+    </script>
+<style>.organic-shape {
+            border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+        }
+        .text-gradient {
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-image: linear-gradient(135deg, #6A00FF 0%, #A066FF 100%);
+        }.no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark font-sans transition-colors duration-300 antialiased">
+<nav class="fixed w-full z-50 bg-background-light/90 dark:bg-background-dark/90 backdrop-blur-md border-b border-gray-200 dark:border-gray-800">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="flex justify-between h-20 items-center">
+<div class="flex items-center">
+<a class="text-2xl font-black tracking-tighter text-primary dark:text-white flex items-center gap-2" href="#">
+<span class="sr-only">Mighty Blessing</span>
+<div class="flex items-center gap-3">
+<svg class="h-8 w-auto text-primary" fill="none" viewBox="0 0 100 40" xmlns="http://www.w3.org/2000/svg">
+<path d="M10 30V10C10 7 12 5 15 5H18C21 5 23 7 23 10V25" stroke="currentColor" stroke-linecap="round" stroke-width="4"></path>
+<path d="M23 25V15C23 12 25 10 28 10H31C34 10 36 12 36 15V30" stroke="currentColor" stroke-linecap="round" stroke-width="4"></path>
+<path d="M45 15V30" stroke="currentColor" stroke-linecap="round" stroke-width="4"></path>
+<circle cx="45" cy="8" fill="currentColor" r="3"></circle>
+<path d="M55 15V25C55 28 57 30 60 30H63" stroke="currentColor" stroke-linecap="round" stroke-width="4"></path>
+<path d="M63 15V35" stroke="currentColor" stroke-linecap="round" stroke-width="4"></path>
+<path d="M75 12L82 20L75 28" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"></path>
+<path d="M85 12L92 20L85 28" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"></path>
+</svg>
+<span class="text-primary font-bold text-xl tracking-tight" style="font-family: 'Noto Sans KR', sans-serif;">Mighty Blessing</span>
+</div>
+</a>
+</div>
+<div class="hidden md:flex space-x-8 items-center">
+<a class="text-sm font-medium text-text-light dark:text-text-dark hover:text-primary dark:hover:text-primary transition-colors" href="#">Home</a>
+<a class="text-sm font-medium text-text-muted-light dark:text-text-muted-dark hover:text-primary dark:hover:text-primary transition-colors" href="#">Portfolio</a>
+<a class="text-sm font-medium text-text-muted-light dark:text-text-muted-dark hover:text-primary dark:hover:text-primary transition-colors" href="#">Blog</a>
+<a class="text-sm font-medium text-text-muted-light dark:text-text-muted-dark hover:text-primary dark:hover:text-primary transition-colors" href="#">Products</a>
+<a class="bg-primary hover:bg-opacity-90 text-white px-5 py-2.5 rounded-full font-bold text-sm transition-all shadow-lg hover:shadow-primary/30" href="#">Project Inquiry</a>
+</div>
+<div class="md:hidden flex items-center">
+<button class="text-text-light dark:text-text-dark hover:text-primary">
+<span class="material-icons-outlined text-3xl">menu</span>
+</button>
+</div>
+</div>
+</div>
+</nav>
+<header class="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden">
+<div class="absolute top-0 right-0 -mr-20 -mt-20 w-96 h-96 bg-primary/10 rounded-full blur-3xl dark:bg-primary/20 pointer-events-none"></div>
+<div class="absolute bottom-0 left-0 -ml-20 -mb-20 w-80 h-80 bg-secondary/10 rounded-full blur-3xl dark:bg-secondary/20 pointer-events-none"></div>
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+<p class="text-primary font-bold tracking-wider uppercase text-sm mb-6 animate-fade-in-up">We Move, God Does</p>
+<h1 class="text-5xl md:text-7xl font-black text-text-light dark:text-white mb-8 leading-tight tracking-tight">
+                이제껏 없던 <br class="md:hidden"/>
+<span class="text-gradient relative inline-block">
+                    예배를 만듭니다
+                    <svg class="absolute w-full h-3 -bottom-1 left-0 text-secondary opacity-70" preserveAspectRatio="none" viewBox="0 0 100 10">
+<path d="M0,5 Q50,10 100,5" fill="none" stroke="currentColor" stroke-width="4"></path>
+</svg>
+</span>
+</h1>
+<p class="mt-4 max-w-2xl mx-auto text-xl text-text-muted-light dark:text-text-muted-dark leading-relaxed">
+                하나님과 함께 여태껏 세상에 없던 즐거움을 만들어갑니다.<br/>
+                예배/집회가 잘 열리도록 만드는 행정·기획·운영 중심 기독교 플랫폼 팀입니다.
+            </p>
+<div class="mt-12">
+<a class="inline-flex items-center justify-center px-8 py-4 border border-transparent text-base font-bold rounded-full text-white bg-primary hover:bg-primary/90 md:text-lg shadow-xl hover:shadow-primary/40 transition-all transform hover:-translate-y-1" href="#">
+                    프로젝트 문의하기
+                    <span class="material-icons-outlined ml-2">arrow_forward</span>
+</a>
+</div>
+</div>
+</header>
+<section class="py-20 bg-white dark:bg-surface-dark transition-colors duration-300">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="text-center mb-16">
+<h2 class="text-3xl md:text-4xl font-black text-text-light dark:text-white mb-4">What We Do</h2>
+<p class="text-text-muted-light dark:text-text-muted-dark">예배와 집회가 잘 열리도록 기획·운영·현장 오퍼레이션을 담당합니다.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<div class="group bg-background-light dark:bg-background-dark p-8 rounded-2xl hover:shadow-2xl hover:shadow-primary/10 transition-all duration-300 border border-transparent hover:border-primary/20">
+<div class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mb-6 text-primary group-hover:scale-110 transition-transform">
+<span class="material-icons-outlined">event_note</span>
+</div>
+<h3 class="text-xl font-bold text-text-light dark:text-white mb-3">예배·집회 기획·진행</h3>
+<p class="text-text-muted-light dark:text-text-muted-dark text-sm leading-relaxed">
+                        온/오프라인 행사 기획과 진행, 수련회, 캠프, 컨퍼런스, 집회를 함께 만듭니다. 컨셉 회의부터 스탭 모집·운영까지 전체 기획 및 진행.
+                    </p>
+</div>
+<div class="group bg-background-light dark:bg-background-dark p-8 rounded-2xl hover:shadow-2xl hover:shadow-primary/10 transition-all duration-300 border border-transparent hover:border-primary/20">
+<div class="w-12 h-12 bg-secondary/10 rounded-full flex items-center justify-center mb-6 text-secondary group-hover:scale-110 transition-transform">
+<span class="material-icons-outlined">theater_comedy</span>
+</div>
+<h3 class="text-xl font-bold text-text-light dark:text-white mb-3">무대·접수·프로그램</h3>
+<p class="text-text-muted-light dark:text-text-muted-dark text-sm leading-relaxed">
+                        무대 연출, 소품 제작·배치, 접수·숙소 관리, 레크레이션·코스게임·온라인 방탈출·토크 콘서트 등 프로그램 진행.
+                    </p>
+</div>
+<div class="group bg-background-light dark:bg-background-dark p-8 rounded-2xl hover:shadow-2xl hover:shadow-primary/10 transition-all duration-300 border border-transparent hover:border-primary/20">
+<div class="w-12 h-12 bg-accent/10 rounded-full flex items-center justify-center mb-6 text-accent group-hover:scale-110 transition-transform">
+<span class="material-icons-outlined">code</span>
+</div>
+<h3 class="text-xl font-bold text-text-light dark:text-white mb-3">프로그래밍·서비스</h3>
+<p class="text-text-muted-light dark:text-text-muted-dark text-sm leading-relaxed">
+                        온라인 방탈출, 수련회 등록 페이지, 예배 접수 관리 페이지, 웹사이트 제작 등 행사를 돕는 서비스를 만듭니다.
+                    </p>
+</div>
+<div class="group bg-background-light dark:bg-background-dark p-8 rounded-2xl hover:shadow-2xl hover:shadow-primary/10 transition-all duration-300 border border-transparent hover:border-primary/20">
+<div class="w-12 h-12 bg-purple-500/10 rounded-full flex items-center justify-center mb-6 text-purple-500 group-hover:scale-110 transition-transform">
+<span class="material-icons-outlined">analytics</span>
+</div>
+<h3 class="text-xl font-bold text-text-light dark:text-white mb-3">데이터·콘텐츠·뉴스레터</h3>
+<p class="text-text-muted-light dark:text-text-muted-dark text-sm leading-relaxed">
+                        데이터 분석, CCM 분석, 마이티박스 뉴스레터 등 하나님을 흘려보내는 콘텐츠를 제작합니다.
+                    </p>
+</div>
+<div class="group bg-background-light dark:bg-background-dark p-8 rounded-2xl hover:shadow-2xl hover:shadow-primary/10 transition-all duration-300 border border-transparent hover:border-primary/20 md:col-span-2 lg:col-span-1 lg:col-start-2">
+<div class="w-12 h-12 bg-yellow-500/10 rounded-full flex items-center justify-center mb-6 text-yellow-500 group-hover:scale-110 transition-transform">
+<span class="material-icons-outlined">mic_external_on</span>
+</div>
+<h3 class="text-xl font-bold text-text-light dark:text-white mb-3">조명·음향·중계</h3>
+<p class="text-text-muted-light dark:text-text-muted-dark text-sm leading-relaxed">
+                        예배에 필요한 조명, 음향, 중계 등을 함께 준비합니다.
+                    </p>
+</div>
+</div>
+</div>
+</section>
+<section class="py-24 bg-background-light dark:bg-background-dark transition-colors duration-300 overflow-hidden">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="flex justify-between items-end mb-12">
+<h2 class="text-3xl md:text-4xl font-black text-text-light dark:text-white">Featured Portfolio</h2>
+<a class="text-primary font-bold text-sm hover:underline" href="#">전체 보기</a>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+<div class="bg-white dark:bg-surface-dark rounded-2xl p-6 shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300 group cursor-pointer">
+<div class="flex gap-2 mb-4">
+<span class="px-2 py-1 bg-gray-100 dark:bg-gray-800 text-xs rounded text-text-muted-light dark:text-text-muted-dark">기획</span>
+<span class="px-2 py-1 bg-gray-100 dark:bg-gray-800 text-xs rounded text-text-muted-light dark:text-text-muted-dark">운영</span>
+<span class="px-2 py-1 bg-gray-100 dark:bg-gray-800 text-xs rounded text-text-muted-light dark:text-text-muted-dark">현장</span>
+</div>
+<div class="text-xs text-text-muted-light dark:text-text-muted-dark mb-2">2024년 6월</div>
+<h3 class="text-lg font-bold text-text-light dark:text-white mb-3 group-hover:text-primary transition-colors">WELOVE 공연 운영 케이스</h3>
+<p class="text-sm text-text-muted-light dark:text-text-muted-dark line-clamp-2">
+                        WELOVE TOUR 2022 "다시, Back to the Garden" 등 대형 공연의 기획·운영·현장 오퍼레이션을 맡았습니다.
+                    </p>
+</div>
+<div class="bg-white dark:bg-surface-dark rounded-2xl p-6 shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300 group cursor-pointer">
+<div class="flex gap-2 mb-4">
+<span class="px-2 py-1 bg-gray-100 dark:bg-gray-800 text-xs rounded text-text-muted-light dark:text-text-muted-dark">기획</span>
+<span class="px-2 py-1 bg-gray-100 dark:bg-gray-800 text-xs rounded text-text-muted-light dark:text-text-muted-dark">운영</span>
+<span class="px-2 py-1 bg-gray-100 dark:bg-gray-800 text-xs rounded text-text-muted-light dark:text-text-muted-dark">행정</span>
+</div>
+<div class="text-xs text-text-muted-light dark:text-text-muted-dark mb-2">2023년 3월</div>
+<h3 class="text-lg font-bold text-text-light dark:text-white mb-3 group-hover:text-primary transition-colors">The Sent 운영 케이스</h3>
+<p class="text-sm text-text-muted-light dark:text-text-muted-dark line-clamp-2">
+                        The Sent 컨퍼런스의 기획·운영·현장 오퍼레이션을 담당했습니다.
+                    </p>
+</div>
+<div class="bg-white dark:bg-surface-dark rounded-2xl p-6 shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300 group cursor-pointer">
+<div class="flex gap-2 mb-4">
+<span class="px-2 py-1 bg-gray-100 dark:bg-gray-800 text-xs rounded text-text-muted-light dark:text-text-muted-dark">기획</span>
+<span class="px-2 py-1 bg-gray-100 dark:bg-gray-800 text-xs rounded text-text-muted-light dark:text-text-muted-dark">운영</span>
+<span class="px-2 py-1 bg-gray-100 dark:bg-gray-800 text-xs rounded text-text-muted-light dark:text-text-muted-dark">프로그램</span>
+</div>
+<div class="text-xs text-text-muted-light dark:text-text-muted-dark mb-2">2022년 11월</div>
+<h3 class="text-lg font-bold text-text-light dark:text-white mb-3 group-hover:text-primary transition-colors">기독 학생 대회 및 지역 예배/집회 운영</h3>
+<p class="text-sm text-text-muted-light dark:text-text-muted-dark line-clamp-2">
+                        2021-2022 기독 학생 대회, 오른교회 ALLIN 컨퍼런스 등 다양한 오프라인·온라인 집회 운영을 지원했습니다.
+                    </p>
+</div>
+</div>
+</div>
+</section>
+<section class="py-20 bg-gray-100 dark:bg-black relative overflow-hidden flex items-center justify-center">
+<div class="absolute inset-0 bg-primary/5 dark:bg-primary/10"></div>
+<div class="relative max-w-4xl px-6 text-center z-10">
+<span class="material-icons-outlined text-4xl text-primary mb-4 opacity-50">format_quote</span>
+<p class="text-xl md:text-2xl italic font-medium text-text-light dark:text-text-dark mb-4">
+                "그런즉 우리도 그의 치욕을 짊어지고 영문 밖으로 그에게 나아가자"
+            </p>
+<p class="text-sm text-text-muted-light dark:text-text-muted-dark font-bold uppercase tracking-widest">— Hebrews 13:13</p>
+</div>
+</section>
+<section class="py-24 bg-white dark:bg-surface-dark transition-colors duration-300">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="flex justify-between items-end mb-12">
+<h2 class="text-3xl md:text-4xl font-black text-text-light dark:text-white">Featured Blog</h2>
+<a class="text-primary font-bold text-sm hover:underline" href="#">전체 보기</a>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+<article class="bg-background-light dark:bg-background-dark rounded-2xl overflow-hidden hover:shadow-lg transition-all duration-300 border border-gray-100 dark:border-gray-800">
+<div class="p-6">
+<div class="flex flex-wrap gap-2 mb-4">
+<span class="px-2 py-1 bg-white dark:bg-surface-dark border border-gray-200 dark:border-gray-700 text-xs rounded-full text-text-muted-light dark:text-text-muted-dark">케이스 회고</span>
+<span class="px-2 py-1 bg-white dark:bg-surface-dark border border-gray-200 dark:border-gray-700 text-xs rounded-full text-text-muted-light dark:text-text-muted-dark">회고</span>
+<span class="px-2 py-1 bg-white dark:bg-surface-dark border border-gray-200 dark:border-gray-700 text-xs rounded-full text-text-muted-light dark:text-text-muted-dark">리스크</span>
+</div>
+<div class="text-xs text-text-muted-light dark:text-text-muted-dark mb-2">2024년 2월</div>
+<h3 class="text-lg font-bold text-text-light dark:text-white mb-3 hover:text-primary cursor-pointer">대형 집회 운영 회고 1 - 리스크와 대응</h3>
+<p class="text-sm text-text-muted-light dark:text-text-muted-dark line-clamp-3">
+                            대형 집회에서 자주 생기는 리스크와 우리가 썼던 대응 방식을 공유합니다.
+                        </p>
+</div>
+</article>
+<article class="bg-background-light dark:bg-background-dark rounded-2xl overflow-hidden hover:shadow-lg transition-all duration-300 border border-gray-100 dark:border-gray-800">
+<div class="p-6">
+<div class="flex flex-wrap gap-2 mb-4">
+<span class="px-2 py-1 bg-white dark:bg-surface-dark border border-gray-200 dark:border-gray-700 text-xs rounded-full text-text-muted-light dark:text-text-muted-dark">운영 메뉴얼</span>
+<span class="px-2 py-1 bg-white dark:bg-surface-dark border border-gray-200 dark:border-gray-700 text-xs rounded-full text-text-muted-light dark:text-text-muted-dark">체크리스트</span>
+<span class="px-2 py-1 bg-white dark:bg-surface-dark border border-gray-200 dark:border-gray-700 text-xs rounded-full text-text-muted-light dark:text-text-muted-dark">기획</span>
+</div>
+<div class="text-xs text-text-muted-light dark:text-text-muted-dark mb-2">2024년 1월</div>
+<h3 class="text-lg font-bold text-text-light dark:text-white mb-3 hover:text-primary cursor-pointer">예배/집회 운영 체크리스트 1 - 기획 단계</h3>
+<p class="text-sm text-text-muted-light dark:text-text-muted-dark line-clamp-3">
+                            집회를 준비할 때 기획 단계에서 꼭 점검해야 할 항목을 정리했습니다.
+                        </p>
+</div>
+</article>
+<article class="bg-background-light dark:bg-background-dark rounded-2xl overflow-hidden hover:shadow-lg transition-all duration-300 border border-gray-100 dark:border-gray-800">
+<div class="p-6">
+<div class="flex flex-wrap gap-2 mb-4">
+<span class="px-2 py-1 bg-white dark:bg-surface-dark border border-gray-200 dark:border-gray-700 text-xs rounded-full text-text-muted-light dark:text-text-muted-dark">조직문화</span>
+<span class="px-2 py-1 bg-white dark:bg-surface-dark border border-gray-200 dark:border-gray-700 text-xs rounded-full text-text-muted-light dark:text-text-muted-dark">비전</span>
+<span class="px-2 py-1 bg-white dark:bg-surface-dark border border-gray-200 dark:border-gray-700 text-xs rounded-full text-text-muted-light dark:text-text-muted-dark">예배</span>
+</div>
+<div class="text-xs text-text-muted-light dark:text-text-muted-dark mb-2">2024년 1월</div>
+<h3 class="text-lg font-bold text-text-light dark:text-white mb-3 hover:text-primary cursor-pointer">우리가 하는 일 - 예배를 만들어 내는 일</h3>
+<p class="text-sm text-text-muted-light dark:text-text-muted-dark line-clamp-3">
+                            마이티 블레싱이 예배와 집회를 어떻게 바라보고 일하는지 나눕니다.
+                        </p>
+</div>
+</article>
+</div>
+</div>
+</section>
+<section class="py-24 bg-background-light dark:bg-background-dark relative">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="text-left mb-12">
+<h2 class="text-3xl md:text-4xl font-black text-text-light dark:text-white mb-2">Products</h2>
+<p class="text-text-muted-light dark:text-text-muted-dark">맞춤 패키지로 문의해 주세요.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<div class="bg-white dark:bg-surface-dark p-8 rounded-2xl border-2 border-transparent hover:border-primary transition-all duration-300 shadow-sm flex flex-col justify-between h-full">
+<div>
+<h3 class="text-xl font-bold text-text-light dark:text-white mb-4">Basic</h3>
+<p class="text-sm text-text-muted-light dark:text-text-muted-dark">운영 지원 / 현장 오퍼 중심</p>
+</div>
+</div>
+<div class="bg-white dark:bg-surface-dark p-8 rounded-2xl border-2 border-transparent hover:border-primary transition-all duration-300 shadow-sm flex flex-col justify-between h-full">
+<div>
+<h3 class="text-xl font-bold text-text-light dark:text-white mb-4">Standard</h3>
+<p class="text-sm text-text-muted-light dark:text-text-muted-dark">기획 + 운영 + 운영매뉴얼·체크리스트</p>
+</div>
+</div>
+<div class="bg-white dark:bg-surface-dark p-8 rounded-2xl border-2 border-transparent hover:border-primary transition-all duration-300 shadow-sm flex flex-col justify-between h-full">
+<div>
+<h3 class="text-xl font-bold text-text-light dark:text-white mb-4">Extended</h3>
+<p class="text-sm text-text-muted-light dark:text-text-muted-dark">기획 + 운영 + 콘텐츠/미디어 + 파트너 코디네이션</p>
+</div>
+</div>
+</div>
+<div class="mt-16 text-center flex justify-center gap-4">
+<a class="px-8 py-3 bg-primary text-white rounded-full font-bold shadow-lg hover:bg-opacity-90 hover:-translate-y-1 transition-all" href="#">자세히 보기</a>
+<a class="px-8 py-3 bg-primary text-white rounded-full font-bold shadow-lg hover:bg-opacity-90 hover:-translate-y-1 transition-all" href="#">문의하기</a>
+</div>
+</div>
+</section>
+<section class="py-24 bg-white dark:bg-surface-dark">
+<div class="max-w-4xl mx-auto px-4 text-center">
+<h2 class="text-3xl md:text-4xl font-black text-text-light dark:text-white mb-6">프로젝트 상담 / 협업 제안</h2>
+<p class="text-text-muted-light dark:text-text-muted-dark mb-10 text-lg">
+                행사·예배·집회 기획·운영이 필요하시면 편하게 문의해 주세요.
+            </p>
+<a class="inline-block px-10 py-4 bg-primary text-white rounded-full font-bold shadow-xl shadow-primary/30 hover:scale-105 transition-transform duration-300" href="#">
+                문의하기
+            </a>
+</div>
+</section>
+<footer class="bg-background-light dark:bg-background-dark py-12 border-t border-gray-200 dark:border-gray-800">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+<div class="col-span-1 md:col-span-1">
+<h4 class="text-xs font-bold text-text-muted-light dark:text-text-muted-dark uppercase tracking-wider mb-4">Contact</h4>
+<p class="text-sm text-text-light dark:text-text-dark mb-2">team.mablous@gmail.com</p>
+<p class="text-sm text-text-muted-light dark:text-text-muted-dark">마이티 스튜디오, 둔촌동역에서 걸어 올 수 있어요.</p>
+</div>
+<div class="col-span-1 md:col-span-1">
+<h4 class="text-xs font-bold text-text-muted-light dark:text-text-muted-dark uppercase tracking-wider mb-4">SNS</h4>
+<a class="text-sm text-text-light dark:text-text-dark hover:text-primary dark:hover:text-primary transition-colors" href="#">Instagram @mightyblessing_</a>
+</div>
+<div class="col-span-1 md:col-span-1">
+<h4 class="text-xs font-bold text-text-muted-light dark:text-text-muted-dark uppercase tracking-wider mb-4">Legal</h4>
+<ul class="space-y-2">
+<li><a class="text-sm text-text-light dark:text-text-dark hover:text-primary transition-colors" href="#">개인정보 처리방침</a></li>
+<li><a class="text-sm text-text-light dark:text-text-dark hover:text-primary transition-colors" href="#">이용약관</a></li>
+</ul>
+</div>
+<div class="col-span-1 md:col-span-1 md:text-right">
+<p class="text-xs text-text-muted-light dark:text-text-muted-dark mt-8 md:mt-0">© 2026 Mighty Blessing</p>
+</div>
+</div>
+</div>
+</footer>
+</body></html>

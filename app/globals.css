@@ -2,35 +2,48 @@
 @plugin "@tailwindcss/typography";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-  /* Mighty Blessing brand (PDF) */
-  --brand-primary: #6a00ff;
-  --brand-secondary: #ff5421;
-  --brand-sub-orange: #ff9d00;
-  --brand-sub-green: #00c200;
+  --background: #f8f9fb;
+  --foreground: #111111;
+  --primary: #6a00ff;
+  --secondary: #ff5421;
+  --accent: #00c200;
+  --text-muted: #666666;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-noto-sans-kr), system-ui, sans-serif;
+  --font-mono: ui-monospace, monospace;
+  --color-primary: #6a00ff;
+  --color-secondary: #ff5421;
+  --color-accent: #00c200;
   --color-brand-primary: #6a00ff;
   --color-brand-secondary: #ff5421;
-  --color-brand-sub-orange: #ff9d00;
-  --color-brand-sub-green: #00c200;
+  --radius-default: 1rem;
+  --radius-xl: 1.5rem;
+  --radius-2xl: 2rem;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #0f0f12;
+    --foreground: #eeeeee;
+    --text-muted: #aaaaaa;
   }
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-sans), system-ui, sans-serif;
+  font-family: var(--font-sans);
+  transition: background-color 0.3s, color 0.3s;
+}
+
+/* design: gradient text for hero */
+.text-gradient {
+  background: linear-gradient(135deg, #6a00ff 0%, #a066ff 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
