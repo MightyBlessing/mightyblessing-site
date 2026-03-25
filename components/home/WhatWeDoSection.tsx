@@ -41,7 +41,7 @@ export function WhatWeDoSection() {
               className="group rounded-[1.5rem] border border-neutral-200 bg-white p-6 transition-colors hover:border-neutral-300"
             >
               <div className="mb-5 flex items-center">
-                <span className="text-[12px] font-semibold tracking-[0.15em] text-neutral-500">{item.number}</span>
+                <span className="text-[12px] font-semibold tracking-[0.15em] text-violet-600">{item.number}</span>
                 <span className="ml-4 h-px flex-1 bg-neutral-200 transition-colors group-hover:bg-neutral-300" />
               </div>
               <h3 className="mb-3 text-[1.12rem] font-semibold tracking-[-0.03em] text-neutral-950">{item.title}</h3>

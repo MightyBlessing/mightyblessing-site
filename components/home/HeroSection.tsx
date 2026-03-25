@@ -1,18 +1,34 @@
+"use client";
+
+import { useState } from "react";
 import Link from "next/link";
 import { CTAButton } from "../CTAButton";
 
 export function HeroSection() {
+  const [isVideoReady, setIsVideoReady] = useState(false);
+
   return (
     <header className="relative overflow-hidden border-b border-neutral-200 bg-neutral-950 text-white">
-      <video
+      <img
+        src="/media/portfolio/home-hero-worship-poster.jpg"
+        alt=""
         className="absolute inset-0 h-full w-full object-cover"
+        loading="eager"
+        decoding="async"
+        aria-hidden="true"
+      />
+      <video
+        className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-700 ${
+          isVideoReady ? "opacity-100" : "opacity-0"
+        }`}
         autoPlay
         muted
         loop
         playsInline
-        poster="/media/portfolio/church-event.jpg"
+        poster="/media/portfolio/home-hero-worship-poster.jpg"
         preload="metadata"
         aria-hidden="true"
+        onLoadedData={() => setIsVideoReady(true)}
       >
         <source src="/media/portfolio/home-hero-worship.mp4" type="video/mp4" />
       </video>
