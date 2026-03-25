@@ -6,6 +6,18 @@ location: 부산, 전주, 용인
 summary: WELOVE TOUR 2022 "다시, Back to the Garden" 등 대형 공연의 기획·운영·현장 오퍼레이션을 담당했습니다.
 roles: [기획, 운영, 현장, 무대]
 categories: [Worship Event, Tour & Live]
+search_terms:
+  - WELOVE
+  - welove tour
+  - Back to the Garden
+  - 부산 공연
+  - 전주 공연
+  - 용인 공연
+heroMedia:
+  type: video
+  url: /media/portfolio/welove-case/hero.mp4
+  poster: /media/portfolio/welove-case/poster.jpg
+  alt: WELOVE 공연 현장의 열기와 조명을 담은 라이브 영상
 goals: |
   대규모 찬양 공연의 원활한 진행과 참가자 경험 극대화.
   지역별 투어 일정·인력·장비를 체계적으로 관리.
@@ -22,7 +34,19 @@ metrics:
   - { label: "투어 지역", value: "3개 도시" }
   - { label: "참가 규모", value: "대형" }
 testimonials: []
-gallery: []
+gallery:
+  - type: image
+    url: /media/portfolio/welove-case/detail-01.jpg
+    alt: 핑크 조명으로 구성된 공연 무대
+    caption: Show build
+  - type: image
+    url: /media/portfolio/welove-case/detail-02.jpg
+    alt: 무대를 가로지르는 청록빛 조명
+    caption: Lighting detail
+  - type: image
+    url: /media/portfolio/welove-case/detail-03.jpg
+    alt: 찬양과 예배에 집중하는 참가자들
+    caption: Room response
 ---
 
 WELOVE 공연 시리즈의 투어 및 단일 공연 운영을 맡았습니다. 기독교 청년들을 위한 대형 찬양·예배 행사로, 기획 단계부터 현장 당일까지 일관된 운영 시스템을 적용했습니다.

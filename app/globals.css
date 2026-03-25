@@ -2,41 +2,33 @@
 @plugin "@tailwindcss/typography";
 
 :root {
-  --background: #f8f9fb;
-  --foreground: #111111;
-  --primary: #6a00ff;
-  --secondary: #ff5421;
-  --accent: #00c200;
-  --text-muted: #666666;
+  --background: #ffffff;
+  --foreground: #171717;
+  --primary: #7c3aed;
+  --secondary: #ede9fe;
+  --accent: #171717;
+  --text-muted: #737373;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-noto-sans-kr), system-ui, sans-serif;
+  --font-sans: "Pretendard Variable", "Pretendard", system-ui, sans-serif;
   --font-mono: ui-monospace, monospace;
-  --color-primary: #6a00ff;
-  --color-secondary: #ff5421;
-  --color-accent: #00c200;
-  --color-brand-primary: #6a00ff;
-  --color-brand-secondary: #ff5421;
+  --color-primary: #7c3aed;
+  --color-secondary: #ede9fe;
+  --color-accent: #171717;
+  --color-brand-primary: #7c3aed;
+  --color-brand-secondary: #171717;
   --radius-default: 1rem;
   --radius-xl: 1.5rem;
   --radius-2xl: 2rem;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0f0f12;
-    --foreground: #eeeeee;
-    --text-muted: #aaaaaa;
-  }
-}
-
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-sans);
+  font-family: "Pretendard Variable", "Pretendard", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
   transition: background-color 0.3s, color 0.3s;
 }
 
@@ -46,4 +38,18 @@ body {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+}
+
+.container-wide {
+  width: min(1080px, 100% - 2.5rem);
+  margin-inline: auto;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
 }

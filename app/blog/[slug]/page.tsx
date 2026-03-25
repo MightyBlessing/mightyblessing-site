@@ -1,11 +1,11 @@
 import { notFound } from "next/navigation";
-import Link from "next/link";
 import { getBlogBySlug, getBlogSlugs } from "@/lib/content";
 import { CTAButton } from "@/components/CTAButton";
 import { Tag } from "@/components/Tag";
 import { MarkdownContent } from "@/components/MarkdownContent";
 
 type Props = { params: Promise<{ slug: string }> };
+const blogUrl = "https://mbplatform-eight.vercel.app/";
 
 export async function generateStaticParams() {
   const slugs = getBlogSlugs();
@@ -58,12 +58,12 @@ export default async function BlogDetailPage({ params }: Props) {
         </div>
         <div className="mt-14 flex flex-wrap gap-4 border-t border-gray-200 pt-10 dark:border-gray-800">
           <CTAButton href="/inquiry" label="협업/운영 문의" />
-          <Link
-            href="/blog"
+          <a
+            href={blogUrl}
             className="inline-flex items-center justify-center rounded-full border border-gray-300 px-5 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-800"
           >
-            목록으로
-          </Link>
+            블로그로 이동
+          </a>
         </div>
       </article>
     </>

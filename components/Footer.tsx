@@ -1,60 +1,37 @@
 import Link from "next/link";
 
-const email = "team.mablous@gmail.com";
-const instagram = "https://instagram.com/mightyblessing_";
-const studioNote = "마이티 스튜디오, 둔촌동역에서 걸어 올 수 있어요.";
+const links = [
+  { label: "홈", href: "/" },
+  { label: "포트폴리오", href: "/portfolio" },
+  { label: "개인정보처리방침", href: "/privacy" },
+  { label: "이용약관", href: "/terms" },
+];
 
 export function Footer() {
   return (
-    <footer className="border-t border-gray-200 bg-[#F8F9FB] py-12 dark:border-gray-800 dark:bg-[#0F0F12]">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="mb-8 grid grid-cols-1 gap-8 md:grid-cols-4">
+    <footer className="mt-24 bg-neutral-950 pb-12 pt-16 text-neutral-400">
+      <div className="container-wide">
+        <div className="mb-14 flex flex-col gap-8 sm:flex-row sm:items-start sm:justify-between">
           <div>
-            <h4 className="mb-4 text-xs font-bold uppercase tracking-wider text-[#666666] dark:text-[#AAAAAA]">
-              Contact
-            </h4>
-            <p className="mb-2 text-sm text-[#111111] dark:text-[#EEEEEE]">
-              <a href={`mailto:${email}`} className="transition-colors hover:text-[#6A00FF]">
-                {email}
-              </a>
-            </p>
-            <p className="text-sm text-[#666666] dark:text-[#AAAAAA]">{studioNote}</p>
-          </div>
-          <div>
-            <h4 className="mb-4 text-xs font-bold uppercase tracking-wider text-[#666666] dark:text-[#AAAAAA]">
-              SNS
-            </h4>
-            <a
-              href={instagram}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-sm text-[#111111] transition-colors hover:text-[#6A00FF] dark:text-[#EEEEEE] dark:hover:text-[#6A00FF]"
-            >
-              Instagram @mightyblessing_
-            </a>
-          </div>
-          <div>
-            <h4 className="mb-4 text-xs font-bold uppercase tracking-wider text-[#666666] dark:text-[#AAAAAA]">
-              Legal
-            </h4>
-            <ul className="space-y-2">
-              <li>
-                <Link href="/privacy" className="text-sm text-[#111111] transition-colors hover:text-[#6A00FF] dark:text-[#EEEEEE] dark:hover:text-[#6A00FF]">
-                  개인정보 처리방침
-                </Link>
-              </li>
-              <li>
-                <Link href="/terms" className="text-sm text-[#111111] transition-colors hover:text-[#6A00FF] dark:text-[#EEEEEE] dark:hover:text-[#6A00FF]">
-                  이용약관
-                </Link>
-              </li>
-            </ul>
-          </div>
-          <div className="md:text-right">
-            <p className="mt-8 text-xs text-[#666666] dark:text-[#AAAAAA] md:mt-0">
-              © {new Date().getFullYear()} Mighty Blessing
+            <p className="mb-3 text-sm uppercase tracking-[0.15em] text-white">MightyBlessing</p>
+            <p className="max-w-xs break-keep text-[13px] leading-[1.7] text-neutral-500">
+              예배가 예배되게, 행사가 은혜롭게.
+              <br />
+              마이티블레싱 팀의 이야기와 노하우를 나눕니다.
             </p>
           </div>
+          <div className="flex flex-wrap items-center gap-6 text-[13px] text-neutral-500">
+            {links.map((link) => (
+              <Link key={link.href} href={link.href} className="transition-colors hover:text-white">
+                {link.label}
+              </Link>
+            ))}
+          </div>
+        </div>
+        <div className="border-t border-neutral-800 pt-8">
+          <p className="text-[11px] uppercase tracking-[0.1em] text-neutral-600">
+            © {new Date().getFullYear()} Mighty Blessing. All rights reserved.
+          </p>
         </div>
       </div>
     </footer>

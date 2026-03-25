@@ -1,6 +1,3 @@
-import Link from "next/link";
-import { CTAButton } from "../CTAButton";
-
 const tiers = [
   { name: "Basic", desc: "운영 지원 / 현장 오퍼 중심" },
   { name: "Standard", desc: "기획 + 운영 + 운영매뉴얼·체크리스트" },
@@ -29,15 +26,6 @@ export function ProductsTeaserSection() {
               </div>
             </div>
           ))}
-        </div>
-        <div className="mt-16 flex flex-wrap justify-center gap-4">
-          <Link
-            href="/products"
-            className="rounded-full bg-[#6A00FF] px-8 py-3 font-bold text-white shadow-lg transition-all hover:opacity-90 hover:-translate-y-0.5"
-          >
-            자세히 보기
-          </Link>
-          <CTAButton href="/inquiry" label="문의하기" size="md" />
         </div>
       </div>
     </section>

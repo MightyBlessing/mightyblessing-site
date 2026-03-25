@@ -1,6 +1,7 @@
 import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
+import type { PortfolioMediaAsset } from "./portfolio-media";
 
 const contentDir = path.join(process.cwd(), "content");
 
@@ -14,13 +15,15 @@ export type PortfolioFrontmatter = {
   roles: string[];
   categories: string[];
   thumbnail?: string;
+  heroMedia?: PortfolioMediaAsset;
+  search_terms?: string[];
   goals?: string;
   scope?: string;
   our_role?: string;
   process?: string;
   metrics?: { label: string; value: string }[];
   testimonials?: { name: string; role: string; text: string }[];
-  gallery?: { type: "image" | "video"; url: string; alt?: string }[];
+  gallery?: PortfolioMediaAsset[];
   related_cases?: string[];
 };
 
@@ -45,7 +48,21 @@ export function getPortfolioBySlug(slug: string): { frontmatter: PortfolioFrontm
   if (!fs.existsSync(fullPath)) return null;
   const raw = fs.readFileSync(fullPath, "utf-8");
   const { data, content } = matter(raw);
-  return { frontmatter: data as PortfolioFrontmatter, content };
+  const frontmatter = data as PortfolioFrontmatter;
+  const firstGalleryItem = frontmatter.gallery?.[0];
+
+  return {
+    frontmatter: {
+      ...frontmatter,
+      thumbnail:
+        frontmatter.thumbnail ||
+        frontmatter.heroMedia?.poster ||
+        (firstGalleryItem?.type === "image" ? firstGalleryItem.url : firstGalleryItem?.poster),
+      gallery: frontmatter.gallery || [],
+      search_terms: frontmatter.search_terms || [],
+    },
+    content,
+  };
 }
 
 export function getAllPortfolios(): { frontmatter: PortfolioFrontmatter; slug: string }[] {
@@ -58,6 +75,28 @@ export function getAllPortfolios(): { frontmatter: PortfolioFrontmatter; slug: s
     })
     .filter((x): x is { frontmatter: PortfolioFrontmatter; slug: string } => x !== null)
     .sort((a, b) => new Date(b.frontmatter.date).getTime() - new Date(a.frontmatter.date).getTime());
+}
+
+function normalizeSearchValue(value: string): string {
+  return value.toLowerCase().replace(/\s+/g, " ").trim();
+}
+
+export function searchPortfolios(query: string): { frontmatter: PortfolioFrontmatter; slug: string }[] {
+  const normalizedQuery = normalizeSearchValue(query);
+  if (!normalizedQuery) return getAllPortfolios();
+
+  return getAllPortfolios().filter(({ frontmatter }) => {
+    const haystack = normalizeSearchValue(
+      [
+        frontmatter.title,
+        ...(frontmatter.roles || []),
+        ...(frontmatter.categories || []),
+        ...(frontmatter.search_terms || []),
+      ].join(" "),
+    );
+
+    return haystack.includes(normalizedQuery);
+  });
 }
 
 export function getBlogSlugs(): string[] {

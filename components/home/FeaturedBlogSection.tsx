@@ -1,6 +1,7 @@
 import { getAllBlogs } from "@/lib/content";
 import { Card } from "../Card";
-import Link from "next/link";
+
+const blogUrl = "https://mbplatform-eight.vercel.app/";
 
 export function FeaturedBlogSection() {
   const all = getAllBlogs();
@@ -11,9 +12,9 @@ export function FeaturedBlogSection() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mb-12 flex items-end justify-between">
           <h2 className="text-3xl font-black text-[#111111] dark:text-white md:text-4xl">Featured Blog</h2>
-          <Link href="/blog" className="text-sm font-bold text-[#6A00FF] hover:underline">
+          <a href={blogUrl} className="text-sm font-bold text-[#6A00FF] hover:underline">
             전체 보기
-          </Link>
+          </a>
         </div>
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
           {featured.map(({ slug, frontmatter }) => (
