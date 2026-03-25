@@ -60,15 +60,15 @@ export default async function PortfolioDetailPage({ params }: Props) {
   ].filter((item): item is { label: string; value: string } => Boolean(item?.value));
   const relatedItems = getRelatedPortfolios(slug, 2);
   const galleryLayouts = [
-    "sm:col-span-2 xl:col-span-8",
+    "xl:col-span-8",
     "xl:col-span-4",
     "xl:col-span-4",
-    "sm:col-span-2 xl:col-span-8",
+    "xl:col-span-8",
   ];
   const galleryMediaLayouts = [
     "aspect-[16/10] h-full w-full object-cover",
-    "aspect-[4/5] h-full w-full object-cover",
-    "aspect-[4/5] h-full w-full object-cover",
+    "aspect-[4/3] h-full w-full object-cover xl:aspect-[4/5]",
+    "aspect-[4/3] h-full w-full object-cover xl:aspect-[4/5]",
     "aspect-[16/10] h-full w-full object-cover",
   ];
 
@@ -83,21 +83,21 @@ export default async function PortfolioDetailPage({ params }: Props) {
             포트폴리오
           </Link>
 
-          <div className="mt-5 grid gap-6 lg:grid-cols-[minmax(0,1.08fr)_minmax(280px,0.92fr)] lg:items-end">
+          <div className="mt-5 grid gap-6 xl:grid-cols-[minmax(0,1.08fr)_minmax(280px,0.92fr)] xl:items-end">
             <PortfolioMediaTile
               item={heroMedia}
               priority
               className="overflow-hidden rounded-[2rem] border border-neutral-200 bg-neutral-100"
-              mediaClassName="aspect-[16/11] min-h-[360px] w-full object-cover sm:min-h-[460px]"
+              mediaClassName="aspect-[16/10] min-h-[240px] w-full object-cover sm:min-h-[320px] md:min-h-[420px] xl:aspect-[16/11] xl:min-h-[460px]"
               captionClassName="hidden"
             />
 
-            <div className="space-y-6 lg:pb-4">
+            <div className="space-y-6 xl:pb-4">
               <div>
                 <p className="text-[11px] font-medium tracking-[0.16em] text-neutral-500 uppercase">
                   {formatDate(frontmatter.date)}
                 </p>
-                <h1 className="mt-3 max-w-[10ch] text-[1.9rem] leading-[1.02] font-semibold tracking-[-0.055em] text-neutral-950 sm:text-[3rem]">
+                <h1 className="mt-3 max-w-[12ch] text-[1.7rem] leading-[1.05] font-semibold tracking-[-0.055em] text-neutral-950 sm:text-[2.35rem] xl:max-w-[10ch] xl:text-[3rem]">
                   {frontmatter.title}
                 </h1>
                 {frontmatter.summary && (
@@ -145,15 +145,15 @@ export default async function PortfolioDetailPage({ params }: Props) {
               </h2>
             </div>
 
-            <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-12">
+            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-12">
               {gallery.map((media, index) => (
                 <PortfolioMediaTile
                   key={`${media.url}-${index}`}
                   item={media}
                   className={`overflow-hidden rounded-[1.7rem] border border-neutral-200 bg-neutral-100 ${
-                    galleryLayouts[index] ?? "sm:col-span-1 xl:col-span-6"
+                    galleryLayouts[index] ?? "xl:col-span-6"
                   }`}
-                  mediaClassName={galleryMediaLayouts[index] ?? "aspect-[4/5] h-full w-full object-cover"}
+                  mediaClassName={galleryMediaLayouts[index] ?? "aspect-[4/3] h-full w-full object-cover xl:aspect-[4/5]"}
                   captionClassName="px-1 pt-3 text-[11px] font-medium uppercase tracking-[0.16em] text-neutral-500"
                 />
               ))}
@@ -170,7 +170,7 @@ export default async function PortfolioDetailPage({ params }: Props) {
               </h2>
             </div>
 
-            <div className="grid gap-4 lg:grid-cols-3">
+            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
               {narrativeBlocks.map((block) => (
                 <section key={block.label} className="rounded-[1.6rem] border border-neutral-200 bg-white p-6">
                   <h3 className="text-[11px] font-medium uppercase tracking-[0.18em] text-neutral-500">{block.label}</h3>

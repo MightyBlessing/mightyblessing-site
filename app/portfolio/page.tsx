@@ -94,8 +94,8 @@ function FeaturedCard({
       <article
         className={`relative overflow-hidden rounded-[2rem] bg-neutral-100 ${
           large
-            ? "aspect-[4/5] sm:aspect-[16/10] lg:h-[39rem] lg:aspect-auto"
-            : "aspect-[16/10] lg:h-[18.7rem] lg:aspect-auto"
+            ? "aspect-[16/10] md:h-[22rem] md:aspect-auto xl:h-[39rem]"
+            : "aspect-[16/10] md:h-[22rem] md:aspect-auto xl:h-[18.7rem]"
         }`}
       >
         <PortfolioMediaTile
@@ -113,14 +113,22 @@ function FeaturedCard({
                 <h3
                   className={`mt-3 font-semibold tracking-[-0.05em] text-white break-keep text-balance ${
                     large
-                      ? "max-w-[8.6ch] text-[1.7rem] leading-[1.02] sm:text-[2.45rem]"
-                      : "max-w-[16ch] text-[1.28rem] leading-[1.14] sm:text-[1.42rem]"
+                      ? "max-w-[10ch] text-[1.5rem] leading-[1.04] sm:text-[1.85rem] xl:max-w-[8.6ch] xl:text-[2.45rem]"
+                      : "max-w-[16ch] text-[1.18rem] leading-[1.16] sm:text-[1.3rem] xl:text-[1.42rem]"
                   }`}
                 >
                   {item.frontmatter.title}
                 </h3>
                 {item.frontmatter.summary && (
-                  <p className="mt-3 max-w-[420px] text-[0.92rem] leading-[1.75] text-white/78 break-keep">
+                  <p
+                    className="mt-3 max-w-[420px] text-[0.88rem] leading-[1.7] text-white/78 break-keep sm:text-[0.92rem]"
+                    style={{
+                      display: "-webkit-box",
+                      WebkitLineClamp: large ? 3 : 2,
+                      WebkitBoxOrient: "vertical",
+                      overflow: "hidden",
+                    }}
+                  >
                     {item.frontmatter.summary}
                   </p>
                 )}
@@ -142,11 +150,11 @@ function ArchiveCard({ item }: { item: PortfolioEntry }) {
         <PortfolioMediaTile
           item={media}
           className="overflow-hidden"
-          mediaClassName="aspect-[4/5] w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+          mediaClassName="aspect-[16/10] w-full object-cover transition-transform duration-700 group-hover:scale-[1.03] md:aspect-[3/2] lg:aspect-[4/5]"
           captionClassName="hidden"
         />
-        <div className="flex min-h-[13.5rem] flex-1 flex-col p-5">
-          <div className="flex min-h-[3rem] flex-wrap content-start gap-2">
+        <div className="flex min-h-[11.5rem] flex-1 flex-col p-4 sm:min-h-[12.5rem] sm:p-5 lg:min-h-[13.5rem]">
+          <div className="flex min-h-[2.4rem] flex-wrap content-start gap-2 sm:min-h-[3rem]">
             {[...(item.frontmatter.roles || []), ...(item.frontmatter.categories || [])].slice(0, 3).map((tag) => (
               <Tag key={`${item.slug}-${tag}`} label={tag} />
             ))}
@@ -156,7 +164,7 @@ function ArchiveCard({ item }: { item: PortfolioEntry }) {
               {formatDate(item.frontmatter.date)}
             </p>
             <h3
-              className="mt-2 min-h-[3.1rem] text-[1.12rem] leading-[1.2] font-semibold tracking-[-0.035em] text-neutral-950"
+              className="mt-2 min-h-[2.7rem] text-[1.06rem] leading-[1.2] font-semibold tracking-[-0.035em] text-neutral-950 sm:min-h-[3.1rem] sm:text-[1.12rem]"
               style={{
                 display: "-webkit-box",
                 WebkitLineClamp: 2,
@@ -168,7 +176,7 @@ function ArchiveCard({ item }: { item: PortfolioEntry }) {
             </h3>
             {item.frontmatter.summary && (
               <p
-                className="mt-3 min-h-[5rem] text-[0.94rem] leading-[1.75] text-neutral-600 break-keep"
+                className="mt-3 min-h-[4.2rem] text-[0.92rem] leading-[1.72] text-neutral-600 break-keep sm:min-h-[5rem] sm:text-[0.94rem]"
                 style={{
                   display: "-webkit-box",
                   WebkitLineClamp: 3,
@@ -223,10 +231,10 @@ export default async function PortfolioPage({ searchParams }: Props) {
     <>
       <section className="border-b border-neutral-900 bg-neutral-950 text-white">
         <div className="container-wide py-8 sm:py-10 lg:py-14">
-          <div className="grid gap-8 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:items-end">
-            <div className="flex flex-col justify-between gap-8 lg:min-h-[34rem] lg:py-2">
+          <div className="grid gap-8 md:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] md:items-end lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)]">
+            <div className="flex flex-col justify-between gap-8 md:min-h-[24rem] md:py-2 lg:min-h-[34rem]">
               <div>
-                <h1 className="text-[2.7rem] leading-[0.92] font-semibold tracking-[-0.065em] text-white sm:text-[4.3rem] lg:text-[5.35rem]">
+                <h1 className="text-[2.45rem] leading-[0.94] font-semibold tracking-[-0.065em] text-white sm:text-[3.4rem] md:text-[3.7rem] lg:text-[5.35rem]">
                   현장을
                   <br />
                   <span
@@ -258,13 +266,13 @@ export default async function PortfolioPage({ searchParams }: Props) {
               )}
             </div>
 
-            <div className="relative lg:pl-10">
+            <div className="relative md:pl-4 lg:pl-10">
               <div className="absolute inset-y-8 right-0 hidden w-[74%] rounded-[2.3rem] bg-[linear-gradient(180deg,rgba(125,146,255,0.18)_0%,rgba(125,146,255,0.02)_100%)] blur-2xl lg:block" />
               <PortfolioMediaTile
                 item={portfolioHeroMedia}
                 priority
                 className="relative z-10 overflow-hidden rounded-[2rem] border border-white/10 bg-black shadow-[0_32px_90px_rgba(0,0,0,0.35)]"
-                mediaClassName="aspect-[16/11] h-full w-full object-cover object-center opacity-72 sm:aspect-[16/10] lg:aspect-[16/11]"
+                mediaClassName="aspect-[16/10] w-full object-cover object-center opacity-72 md:aspect-[4/3] lg:aspect-[16/11]"
                 captionClassName="hidden"
                 overlay={
                   <>
@@ -278,7 +286,7 @@ export default async function PortfolioPage({ searchParams }: Props) {
                 }
               />
 
-              <div className="relative z-20 -mt-14 ml-4 hidden max-w-[13rem] overflow-hidden rounded-[1.4rem] border border-white/10 bg-neutral-900 shadow-[0_20px_60px_rgba(0,0,0,0.45)] sm:block lg:-ml-8">
+              <div className="relative z-20 -mt-14 hidden max-w-[13rem] overflow-hidden rounded-[1.4rem] border border-white/10 bg-neutral-900 shadow-[0_20px_60px_rgba(0,0,0,0.45)] lg:-ml-8 lg:block">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={heroPreviewImage}
@@ -313,13 +321,12 @@ export default async function PortfolioPage({ searchParams }: Props) {
             </h2>
           </div>
 
-          <div className="mt-8 grid gap-5 lg:grid-cols-[minmax(0,1.12fr)_minmax(0,0.88fr)]">
-            {featuredItems[0] && <FeaturedCard item={featuredItems[0]} large />}
-            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-1 lg:grid-rows-2">
-              {featuredItems.slice(1).map((item) => (
-                <FeaturedCard key={item.slug} item={item} />
-              ))}
-            </div>
+          <div className="mt-8 grid gap-5 md:grid-cols-2 xl:grid-cols-[minmax(0,1.12fr)_minmax(0,0.88fr)]">
+            {featuredItems.map((item, index) => (
+              <div key={item.slug} className={index === 0 ? "xl:row-span-2" : ""}>
+                <FeaturedCard item={item} large={index === 0} />
+              </div>
+            ))}
           </div>
         </section>
       )}
@@ -404,7 +411,7 @@ export default async function PortfolioPage({ searchParams }: Props) {
             </p>
           </div>
         ) : (
-          <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {pagedItems.map((item) => (
               <ArchiveCard key={item.slug} item={item} />
             ))}
