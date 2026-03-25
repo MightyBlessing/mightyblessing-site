@@ -41,7 +41,7 @@ body {
 }
 
 .container-wide {
-  width: min(1080px, 100% - 2.5rem);
+  width: min(1120px, 100% - 2.5rem);
   margin-inline: auto;
 }
 

@@ -6,10 +6,10 @@ import { Footer } from "@/components/Footer";
 export const metadata: Metadata = {
   title: "Mighty Blessing | 이제껏 없던 예배를 만듭니다",
   description:
-    "예배/집회가 잘 열리도록 만드는 행정·기획·운영 중심 기독교 플랫폼 팀. We Move, God Does.",
+    "예배와 집회가 잘 열리도록 기획하고 운영하는 마이티블레싱 팀.",
   openGraph: {
     title: "Mighty Blessing | 이제껏 없던 예배를 만듭니다",
-    description: "예배/집회가 잘 열리도록 만드는 행정·기획·운영 중심 기독교 플랫폼 팀.",
+    description: "예배와 집회가 잘 열리도록 기획하고 운영하는 마이티블레싱 팀.",
   },
 };
 

@@ -2,9 +2,11 @@
 title: The Sent 운영 케이스
 slug: the-sent-case
 date: "2023-03-01"
+featured: true
+featured_order: 2
 summary: The Sent 컨퍼런스의 기획·운영·현장 오퍼레이션을 담당했습니다.
 roles: [기획, 운영, 행정, 현장]
-categories: [Conference]
+categories: [컨퍼런스]
 search_terms:
   - The Sent
   - sent conference
@@ -32,15 +34,20 @@ gallery:
   - type: image
     url: /media/portfolio/the-sent-case/detail-01.jpg
     alt: 세션에 집중하는 참가자들의 메모 장면
-    caption: Session detail
+    caption: 세션 디테일
   - type: image
     url: /media/portfolio/the-sent-case/detail-02.jpg
     alt: 행사 진행 전 조명이 세팅된 무대
-    caption: Stage prep
+    caption: 무대 준비
   - type: image
     url: /media/portfolio/the-sent-case/detail-03.jpg
     alt: 운영 현장의 공기감을 보여주는 조명 장면
-    caption: Atmosphere
+    caption: 현장 분위기
+  - type: image
+    url: /media/portfolio/audience-lights.jpg
+    alt: 세션 조명 아래 청중의 흐름이 보이는 장면
+    caption: 청중 흐름
+related_cases: [welove-case, regional-worship-case]
 ---
 
 The Sent 프로젝트의 컨퍼런스 운영을 전담했습니다. 행정·기획 중심으로 일정과 예산을 관리하고, 현장에서는 스태프 배치와 세션 진행 지원을 맡았습니다.

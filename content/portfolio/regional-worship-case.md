@@ -2,9 +2,11 @@
 title: 기독 학생 대회 및 지역 예배/집회 운영
 slug: regional-worship-case
 date: "2022-11-01"
+featured: true
+featured_order: 3
 summary: 2021·2022 기독 학생 대회, 오륜교회 ALLIN 컨퍼런스 등 다양한 오프라인·온라인 집회 운영 경험을 담았습니다.
 roles: [기획, 운영, 프로그램, 기술]
-categories: [Conference, Worship Event]
+categories: [컨퍼런스, 예배·집회]
 search_terms:
   - 기독 학생 대회
   - 오륜교회 ALLIN
@@ -34,15 +36,20 @@ gallery:
   - type: image
     url: /media/portfolio/regional-worship-case/detail-01.jpg
     alt: 함께 찬양하는 참가자들의 모습
-    caption: Community
+    caption: 함께 찬양
   - type: image
     url: /media/portfolio/regional-worship-case/detail-02.jpg
     alt: 현장에서 교제하는 참가자들
-    caption: Gathering
+    caption: 현장 교제
   - type: image
     url: /media/portfolio/regional-worship-case/detail-03.jpg
     alt: 예배 공간의 무드를 만드는 조명
-    caption: Space tone
+    caption: 공간 무드
+  - type: image
+    url: /media/portfolio/worship-hands.jpg
+    alt: 함께 손을 들고 예배하는 현장의 분위기
+    caption: 예배 장면
+related_cases: [welove-case, the-sent-case]
 ---
 
 기독 학생 대회 "누가 우리를 대적하리오", "Back to Campus", 오륜교회 ALLIN 컨퍼런스, kouny·디지털 말씀 사경회·NAMELESS 등 온라인 집회까지 다양한 규모와 형태의 예배·집회를 기획·운영했습니다.

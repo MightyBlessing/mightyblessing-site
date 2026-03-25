@@ -1,36 +1,43 @@
+import Link from "next/link";
 import { CTAButton } from "../CTAButton";
 
 export function HeroSection() {
   return (
-    <header className="bg-white">
-      <div className="container-wide py-16 sm:py-20">
-        <p className="mb-5 text-[12px] uppercase tracking-[0.15em] text-neutral-400">
-          We Move, God Does
-        </p>
-        <h1 className="max-w-[920px] text-[2rem] leading-[1.2] font-bold tracking-tight text-neutral-900 break-keep sm:text-[3.8rem]">
-          이제껏 없던
-          <br className="hidden sm:block" />
-          <span className="relative inline-block">
+    <header className="relative overflow-hidden border-b border-neutral-200 bg-neutral-950 text-white">
+      <video
+        className="absolute inset-0 h-full w-full object-cover"
+        autoPlay
+        muted
+        loop
+        playsInline
+        poster="/media/portfolio/church-event.jpg"
+        preload="metadata"
+        aria-hidden="true"
+      >
+        <source src="/media/portfolio/home-hero-worship.mp4" type="video/mp4" />
+      </video>
+      <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(6,6,8,0.3)_0%,rgba(6,6,8,0.48)_38%,rgba(6,6,8,0.82)_100%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(247,201,72,0.2),transparent_26%),radial-gradient(circle_at_bottom_left,rgba(75,132,255,0.16),transparent_28%)]" />
+
+      <div className="container-wide relative py-24 sm:py-28 lg:py-32">
+        <div className="max-w-[760px]">
+          <p className="mb-5 text-[11px] font-medium uppercase tracking-[0.18em] text-white/80">MightyBlessing</p>
+          <h1 className="max-w-[9.5ch] text-[2.45rem] leading-[0.98] font-semibold tracking-[-0.06em] text-white break-keep sm:text-[4.55rem]">
+            이제껏 없던
+            <br />
             예배를 만듭니다
-            <span
-              className="absolute inset-x-0 bottom-1 -z-10 h-3 rounded-[2px] bg-violet-100"
-              aria-hidden="true"
-            />
-          </span>
-        </h1>
-        <p className="mt-5 max-w-[720px] text-[1rem] leading-[1.75] text-neutral-500 break-keep sm:text-[1.1rem]">
-          하나님과 함께 여태껏 세상에 없던 즐거움을 만들어갑니다.
-          <br />
-          예배/집회가 잘 열리도록 만드는 행정·기획·운영 중심 기독교 플랫폼 팀입니다.
-        </p>
-        <div className="mt-10">
-          <CTAButton
-            href="/inquiry"
-            label="프로젝트 문의하기"
-            size="lg"
-            showArrow
-            className="shadow-none"
-          />
+          </h1>
+          <p className="mt-6 max-w-[620px] text-[1.04rem] leading-[1.9] text-white/88 break-keep sm:text-[1.14rem]">
+            예배와 집회가 잘 열리도록 기획하고 운영합니다.
+            <br />
+            현장 오퍼레이션부터 디지털 제작까지 실제 진행이 끊기지 않게 함께 설계합니다.
+          </p>
+          <div className="mt-10 flex flex-col gap-4 sm:flex-row sm:items-center">
+            <CTAButton href="/inquiry" label="프로젝트 문의하기" size="lg" showArrow className="shadow-none" />
+            <Link href="/portfolio" className="text-[15px] font-medium text-white/82 transition-colors hover:text-white">
+              대표 프로젝트 보기
+            </Link>
+          </div>
         </div>
       </div>
     </header>
