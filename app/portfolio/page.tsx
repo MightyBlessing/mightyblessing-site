@@ -120,48 +120,15 @@ export default async function PortfolioPage({ searchParams }: Props) {
           </p>
         </div>
 
-        <section className="mt-8 rounded-[1.6rem] border border-neutral-200 bg-neutral-50 p-4 sm:p-5">
-          <form action="/portfolio" className="flex flex-col gap-3 sm:flex-row sm:items-center">
-            <div className="flex-1">
-              <label htmlFor="portfolio-search" className="sr-only">
-                포트폴리오 검색
-              </label>
-              <input
-                id="portfolio-search"
-                name="q"
-                defaultValue={query}
-                placeholder="제목, 태그, 행사명으로 검색"
-                autoComplete="off"
-                className="w-full rounded-full border border-neutral-200 bg-white px-4 py-3 text-[0.9rem] text-neutral-900 outline-none transition-colors placeholder:text-neutral-400 focus:border-neutral-400"
-              />
-            </div>
-            <button
-              type="submit"
-              className="inline-flex items-center justify-center rounded-full bg-neutral-950 px-5 py-3 text-[0.82rem] font-semibold text-white transition-colors hover:bg-neutral-800"
-            >
-              검색
-            </button>
-            {hasQuery && (
-              <Link
-                href="/portfolio"
-                className="inline-flex items-center justify-center rounded-full border border-neutral-200 bg-white px-5 py-3 text-[0.82rem] font-medium text-neutral-600 transition-colors hover:bg-neutral-100"
-              >
-                초기화
-              </Link>
-            )}
-          </form>
-          <p className="mt-3 text-[0.82rem] leading-[1.7] text-neutral-500 break-keep">
-            {hasQuery
-              ? resultLabel
-              : "제목, 역할, 카테고리, 보조 검색어로 원하는 work를 빠르게 찾을 수 있습니다."}
-          </p>
-        </section>
+        <p className="mt-8 text-[0.82rem] leading-[1.7] text-neutral-500 break-keep">
+          {hasQuery ? resultLabel : "포트폴리오 검색은 상단 헤더의 검색 아이콘에서 바로 시작할 수 있습니다."}
+        </p>
 
         <div className="mt-10 space-y-16 sm:space-y-20">
           {hasQuery && items.length === 0 && (
             <div className="rounded-[1.8rem] border border-dashed border-neutral-200 bg-white px-6 py-12 text-center">
               <p className="text-[0.95rem] leading-[1.8] text-neutral-500 break-keep">
-                "{query}"와 일치하는 포트폴리오가 아직 없습니다. 제목, 태그, 행사명 변형으로 다시 검색해보세요.
+                "{query}"와 일치하는 포트폴리오가 아직 없습니다. 헤더 검색에서 다른 제목, 태그, 행사명으로 다시 찾아보세요.
               </p>
             </div>
           )}
@@ -200,7 +167,7 @@ export default async function PortfolioPage({ searchParams }: Props) {
                         <p className="text-[10px] font-medium tracking-[0.2em] text-neutral-400 uppercase">
                           {formatDate(frontmatter.date)}
                         </p>
-                        <h3 className="mt-3 max-w-[12ch] text-[1.58rem] leading-[1.02] font-semibold tracking-[-0.05em] text-neutral-950 transition-colors group-hover:text-neutral-700 sm:text-[2.2rem]">
+                        <h3 className="mt-3 max-w-[12ch] text-[1.26rem] leading-[1.04] font-semibold tracking-[-0.05em] text-neutral-950 transition-colors group-hover:text-neutral-700 sm:text-[1.76rem]">
                           {frontmatter.title}
                         </h3>
                         {summary && (

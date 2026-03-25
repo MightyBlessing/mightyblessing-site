@@ -16,27 +16,29 @@ export const portfolioHeroMedia: PortfolioMediaAsset = {
 
 export const portfolioMoodFrames: PortfolioMediaAsset[] = [
   {
-    type: "image",
-    url: "/media/portfolio/blue-stage.jpg",
-    alt: "푸른 조명 아래 펼쳐진 집회 무대",
-    caption: "Stage scale",
+    type: "video",
+    url: "/media/portfolio/welove-case/hero.mp4",
+    poster: "/media/portfolio/welove-case/poster.jpg",
+    alt: "라이브 무대의 열기와 관객 흐름을 담은 영상",
+    caption: "Live flow",
   },
   {
     type: "image",
-    url: "/media/portfolio/worship-hands.jpg",
-    alt: "조용히 예배에 집중하는 참가자들",
+    url: "/media/portfolio/worship-room.jpg",
+    alt: "함께 찬양에 집중하는 참가자들",
     caption: "Quiet focus",
   },
   {
     type: "image",
-    url: "/media/portfolio/church-event.jpg",
-    alt: "행사 현장에서 서로 인사하는 참가자들",
-    caption: "Gathering",
+    url: "/media/portfolio/ambient-stage.jpg",
+    alt: "공연 전 무대와 공간의 조명 분위기",
+    caption: "Stage build",
   },
   {
-    type: "image",
-    url: "/media/portfolio/atmosphere-detail.jpg",
-    alt: "공간을 가르는 한 줄기 조명",
-    caption: "Light and air",
+    type: "video",
+    url: "/media/portfolio/the-sent-case/hero.mp4",
+    poster: "/media/portfolio/the-sent-case/poster.jpg",
+    alt: "컨퍼런스 현장의 청중과 세션 흐름을 담은 영상",
+    caption: "Audience rhythm",
   },
 ];

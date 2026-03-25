@@ -85,7 +85,7 @@ export default async function PortfolioDetailPage({ params }: Props) {
             <div className="space-y-6 lg:pb-4">
               <div>
                 <p className="text-[10px] font-medium tracking-[0.2em] text-neutral-400 uppercase">{formatDate(frontmatter.date)}</p>
-                <h1 className="mt-3 max-w-[10ch] text-[1.95rem] leading-[0.98] font-semibold tracking-[-0.05em] text-neutral-950 sm:text-[3.05rem]">
+                <h1 className="mt-3 max-w-[10ch] text-[1.56rem] leading-[1] font-semibold tracking-[-0.05em] text-neutral-950 sm:text-[2.44rem]">
                   {frontmatter.title}
                 </h1>
                 {frontmatter.summary && (
