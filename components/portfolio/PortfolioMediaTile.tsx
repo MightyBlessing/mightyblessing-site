@@ -30,7 +30,7 @@ export function PortfolioMediaTile({
     <figure className={className}>
       {item.type === "video" ? (
         <video
-          className={mediaClassName}
+          className={`block ${mediaClassName}`.trim()}
           autoPlay={autoPlay}
           muted={muted}
           loop={loop}
@@ -46,7 +46,7 @@ export function PortfolioMediaTile({
         <img
           src={item.url}
           alt={item.alt ?? ""}
-          className={mediaClassName}
+          className={`block ${mediaClassName}`.trim()}
           loading={priority ? "eager" : "lazy"}
           decoding="async"
         />

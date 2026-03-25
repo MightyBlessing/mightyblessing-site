@@ -3,7 +3,7 @@ import type { PortfolioEntry, PortfolioFrontmatter } from "@/lib/content";
 import { filterPortfolios, getFeaturedPortfolios, getPortfolioCategories } from "@/lib/content";
 import { Tag } from "@/components/Tag";
 import { PortfolioMediaTile } from "@/components/portfolio/PortfolioMediaTile";
-import { portfolioHeroMedia, portfolioMoodFrames } from "@/lib/portfolio-media";
+import { portfolioHeroMedia } from "@/lib/portfolio-media";
 
 const ARCHIVE_PAGE_SIZE = 12;
 
@@ -62,6 +62,24 @@ function getPrimaryMedia(frontmatter: PortfolioFrontmatter) {
   );
 }
 
+function SearchIcon({ className = "" }: { className?: string }) {
+  return (
+    <svg
+      aria-hidden="true"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+    >
+      <circle cx="11" cy="11" r="6.5" />
+      <path d="M16 16 21 21" />
+    </svg>
+  );
+}
+
 function FeaturedCard({
   item,
   large = false,
@@ -74,18 +92,16 @@ function FeaturedCard({
   return (
     <Link href={`/portfolio/${item.slug}`} className="group block">
       <article
-        className={`relative h-full overflow-hidden rounded-[2rem] bg-neutral-100 ${
-          large ? "lg:min-h-[39rem]" : "lg:min-h-[18.7rem]"
+        className={`relative overflow-hidden rounded-[2rem] bg-neutral-100 ${
+          large
+            ? "aspect-[4/5] sm:aspect-[16/10] lg:h-[39rem] lg:aspect-auto"
+            : "aspect-[16/10] lg:h-[18.7rem] lg:aspect-auto"
         }`}
       >
         <PortfolioMediaTile
           item={media}
           className="relative h-full"
-          mediaClassName={`w-full object-cover transition-transform duration-700 group-hover:scale-[1.02] ${
-            large
-              ? "aspect-[4/5] sm:aspect-[16/10] lg:h-full lg:aspect-auto"
-              : "aspect-[16/10] lg:h-full lg:aspect-auto"
-          }`}
+          mediaClassName="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.02]"
           captionClassName="hidden"
           overlay={
             <>
@@ -95,8 +111,10 @@ function FeaturedCard({
                   {formatDate(item.frontmatter.date)}
                 </p>
                 <h3
-                  className={`mt-3 max-w-[12ch] font-semibold tracking-[-0.05em] text-white ${
-                    large ? "text-[1.7rem] leading-[1.02] sm:text-[2.45rem]" : "text-[1.28rem] leading-[1.08]"
+                  className={`mt-3 font-semibold tracking-[-0.05em] text-white break-keep text-balance ${
+                    large
+                      ? "max-w-[8.6ch] text-[1.7rem] leading-[1.02] sm:text-[2.45rem]"
+                      : "max-w-[16ch] text-[1.28rem] leading-[1.14] sm:text-[1.42rem]"
                   }`}
                 >
                   {item.frontmatter.title}
@@ -185,6 +203,11 @@ export default async function PortfolioPage({ searchParams }: Props) {
   const filteredItems = filterPortfolios({ query, category });
   const categories = getPortfolioCategories();
   const featuredItems = !hasFilters ? getFeaturedPortfolios(3) : [];
+  const heroChips = categories.slice(0, 4);
+  const heroPreviewImage =
+    featuredItems[0]?.frontmatter.heroMedia?.poster ||
+    featuredItems[0]?.frontmatter.thumbnail ||
+    "/media/portfolio/ambient-stage.jpg";
 
   const totalPages = Math.max(1, Math.ceil(filteredItems.length / ARCHIVE_PAGE_SIZE));
   const currentPage = Math.min(requestedPage, totalPages);
@@ -198,67 +221,95 @@ export default async function PortfolioPage({ searchParams }: Props) {
 
   return (
     <>
-      <section className="border-b border-neutral-200 bg-neutral-950 text-white">
-        <div className="container-wide grid gap-6 py-6 sm:py-8 lg:grid-cols-[minmax(0,1.08fr)_minmax(280px,0.92fr)] lg:items-end lg:py-10">
-          <PortfolioMediaTile
-            item={portfolioHeroMedia}
-            priority
-            className="relative overflow-hidden rounded-[2rem] border border-white/10 bg-black"
-            mediaClassName="aspect-[16/10] h-full w-full object-cover object-center opacity-58 blur-[2px]"
-            captionClassName="hidden"
-            overlay={
-              <>
-                <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(8,8,10,0.08)_0%,rgba(8,8,10,0.36)_44%,rgba(8,8,10,0.88)_100%)]" />
-                <div className="absolute inset-x-0 bottom-0 p-6 sm:p-8 lg:p-10">
-                  <p className="text-[11px] font-medium tracking-[0.18em] text-white/58 uppercase">포트폴리오</p>
-                  <h1 className="mt-3 max-w-[8ch] text-[2.2rem] leading-[0.96] font-semibold tracking-[-0.055em] text-white sm:text-[3.25rem]">
-                    현장을
-                    <br />
-                    장면으로 남깁니다
-                  </h1>
-                </div>
-              </>
-            }
-          />
-
-          <div className="space-y-6 lg:pb-4">
-            <p className="max-w-[420px] text-[0.98rem] leading-[1.85] text-white/78 break-keep">
-              무대와 군중, 공간의 결이 먼저 읽히도록 정리한 포트폴리오입니다. 설명은 줄이고, 대표 장면과 필요한 정보만 남겼습니다.
-            </p>
-            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
-              <div className="rounded-[1.4rem] border border-white/10 bg-white/5 p-4">
-                <p className="text-[11px] font-medium tracking-[0.16em] text-white/45 uppercase">대표 작업</p>
-                <p className="mt-2 text-[1rem] font-medium text-white">{getFeaturedPortfolios(3).length}개</p>
+      <section className="border-b border-neutral-900 bg-neutral-950 text-white">
+        <div className="container-wide py-8 sm:py-10 lg:py-14">
+          <div className="grid gap-8 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:items-end">
+            <div className="flex flex-col justify-between gap-8 lg:min-h-[34rem] lg:py-2">
+              <div>
+                <h1 className="text-[2.7rem] leading-[0.92] font-semibold tracking-[-0.065em] text-white sm:text-[4.3rem] lg:text-[5.35rem]">
+                  현장을
+                  <br />
+                  <span
+                    className="text-transparent"
+                    style={{ WebkitTextStroke: "1px rgba(188, 201, 255, 0.9)" }}
+                  >
+                    장면으로
+                  </span>
+                  <br />
+                  남깁니다
+                </h1>
+                <p className="mt-6 max-w-[34rem] text-[1rem] leading-[1.8] text-white/72 break-keep sm:text-[1.04rem]">
+                  예배와 집회, 컨퍼런스의 순간을 기획과 운영, 기술의 언어로 기록합니다. 먼저 남겨야 할 장면과
+                  흐름이 보이도록 정리했습니다.
+                </p>
               </div>
-              <div className="rounded-[1.4rem] border border-white/10 bg-white/5 p-4">
-                <p className="text-[11px] font-medium tracking-[0.16em] text-white/45 uppercase">전체 아카이브</p>
-                <p className="mt-2 text-[1rem] font-medium text-white">{allItems.length}개</p>
+
+              {heroChips.length > 0 && (
+                <div className="flex flex-wrap gap-2">
+                  {heroChips.map((item) => (
+                    <span
+                      key={item}
+                      className="inline-flex items-center rounded-full border border-white/14 bg-white/[0.04] px-4 py-2 text-[0.82rem] font-medium text-white/76"
+                    >
+                      {item}
+                    </span>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            <div className="relative lg:pl-10">
+              <div className="absolute inset-y-8 right-0 hidden w-[74%] rounded-[2.3rem] bg-[linear-gradient(180deg,rgba(125,146,255,0.18)_0%,rgba(125,146,255,0.02)_100%)] blur-2xl lg:block" />
+              <PortfolioMediaTile
+                item={portfolioHeroMedia}
+                priority
+                className="relative z-10 overflow-hidden rounded-[2rem] border border-white/10 bg-black shadow-[0_32px_90px_rgba(0,0,0,0.35)]"
+                mediaClassName="aspect-[16/11] h-full w-full object-cover object-center opacity-72 sm:aspect-[16/10] lg:aspect-[16/11]"
+                captionClassName="hidden"
+                overlay={
+                  <>
+                    <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(8,8,10,0.06)_0%,rgba(8,8,10,0.22)_42%,rgba(8,8,10,0.64)_100%)]" />
+                    <div className="absolute inset-x-0 top-0 p-5 sm:p-6">
+                      <p className="inline-flex items-center rounded-full border border-white/14 bg-black/28 px-3 py-1.5 text-[11px] font-medium tracking-[0.16em] text-white/76 uppercase backdrop-blur-sm">
+                        Mighty Blessing Archive
+                      </p>
+                    </div>
+                  </>
+                }
+              />
+
+              <div className="relative z-20 -mt-14 ml-4 hidden max-w-[13rem] overflow-hidden rounded-[1.4rem] border border-white/10 bg-neutral-900 shadow-[0_20px_60px_rgba(0,0,0,0.45)] sm:block lg:-ml-8">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={heroPreviewImage}
+                  alt="대표 장면 미리보기"
+                  className="aspect-[4/5] w-full object-cover"
+                  loading="eager"
+                  decoding="async"
+                />
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      <section className="container-wide py-12 sm:py-14 lg:py-16">
-        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-          {portfolioMoodFrames.map((frame, index) => (
-            <PortfolioMediaTile
-              key={`${frame.url}-${index}`}
-              item={frame}
-              className="overflow-hidden rounded-[1.6rem] border border-neutral-200 bg-neutral-100"
-              mediaClassName="aspect-[4/5] h-full w-full object-cover"
-              captionClassName="mt-3 px-1 text-[11px] font-medium tracking-[0.14em] text-neutral-500 uppercase"
-            />
-          ))}
+      <section className="overflow-hidden border-b border-neutral-900 bg-neutral-950 py-5 text-white">
+        <div className="whitespace-nowrap text-[2.65rem] leading-none font-semibold tracking-[-0.05em] text-transparent opacity-92 sm:text-[4.3rem] lg:text-[5.8rem]">
+          <div
+            className="min-w-max"
+            aria-hidden="true"
+            style={{ WebkitTextStroke: "1px rgba(188, 201, 255, 0.38)" }}
+          >
+            MIGHTY BLESSING / PORTFOLIO / MIGHTY BLESSING / PORTFOLIO
+          </div>
         </div>
       </section>
 
       {!hasFilters && featuredItems.length > 0 && (
-        <section className="container-wide pb-10 sm:pb-12">
-          <div className="flex flex-col gap-3 border-t border-neutral-200 pt-10">
-            <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-neutral-500">대표 작업</p>
+        <section className="container-wide py-10 sm:py-12">
+          <div className="border-t border-neutral-200 pt-10">
             <h2 className="text-[1.75rem] leading-[1.08] font-semibold tracking-[-0.05em] text-neutral-950 sm:text-[2.4rem]">
-              먼저 보여주고 싶은 프로젝트
+              대표 프로젝트
             </h2>
           </div>
 
@@ -277,9 +328,8 @@ export default async function PortfolioPage({ searchParams }: Props) {
         <div className="border-t border-neutral-200 pt-10">
           <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
             <div>
-              <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-neutral-500">전체 아카이브</p>
-              <h2 className="mt-2 text-[1.75rem] leading-[1.08] font-semibold tracking-[-0.05em] text-neutral-950 sm:text-[2.35rem]">
-                제목과 태그로 찾는 프로젝트
+              <h2 className="text-[1.75rem] leading-[1.08] font-semibold tracking-[-0.05em] text-neutral-950 sm:text-[2.35rem]">
+                프로젝트 찾기
               </h2>
             </div>
             <p className="text-[0.94rem] leading-[1.7] text-neutral-600">
@@ -304,9 +354,10 @@ export default async function PortfolioPage({ searchParams }: Props) {
               />
               <button
                 type="submit"
-                className="inline-flex items-center justify-center rounded-full bg-neutral-950 px-5 py-3 text-[0.92rem] font-semibold text-white transition-colors hover:bg-neutral-800"
+                aria-label="검색"
+                className="inline-flex items-center justify-center rounded-full bg-neutral-950 px-4 py-3 text-white transition-colors hover:bg-neutral-800"
               >
-                검색
+                <SearchIcon className="size-[1.05rem]" />
               </button>
               {hasFilters && (
                 <Link

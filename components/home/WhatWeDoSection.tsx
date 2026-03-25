@@ -23,29 +23,32 @@ const items = [
 
 export function WhatWeDoSection() {
   return (
-    <section className="border-t border-neutral-200 bg-white py-16 sm:py-20">
+    <section className="border-t border-neutral-800 bg-neutral-950 py-16 text-white sm:py-20">
       <div className="container-wide">
-        <div className="mb-10 max-w-[720px]">
-          <p className="mb-4 text-[11px] font-medium uppercase tracking-[0.18em] text-neutral-500">우리가 하는 일</p>
-          <h2 className="text-[1.7rem] leading-[1.22] font-semibold tracking-[-0.045em] text-neutral-950 break-keep sm:text-[2.5rem]">
-            예배와 집회가 잘 열리도록 기획하고 운영합니다.
+        <div className="max-w-[840px]">
+          <p className="mb-4 text-[11px] font-medium uppercase tracking-[0.18em] text-white/48">우리가 하는 일</p>
+          <h2 className="text-[1.7rem] leading-[1.15] font-semibold tracking-[-0.045em] text-white break-keep sm:text-[2.7rem]">
+            예배와 집회가
+            <br className="hidden sm:block" />
+            잘 열리도록 기획하고 운영합니다.
           </h2>
-          <p className="mt-4 text-[1.02rem] leading-[1.8] text-neutral-600 break-keep">
-            역할을 잘게 나누기보다, 실제 현장에서 반드시 필요한 단위로 다시 정리했습니다.
-          </p>
         </div>
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+        <div className="mt-10 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
           {items.map((item) => (
             <article
               key={item.title}
-              className="group rounded-[1.5rem] border border-neutral-200 bg-white p-6 transition-colors hover:border-neutral-300"
+              className="group flex h-full flex-col rounded-[1.55rem] border border-white/10 bg-white/[0.04] p-6 backdrop-blur-sm transition-colors hover:border-white/18 hover:bg-white/[0.06]"
             >
-              <div className="mb-5 flex items-center">
-                <span className="text-[12px] font-semibold tracking-[0.15em] text-violet-600">{item.number}</span>
-                <span className="ml-4 h-px flex-1 bg-neutral-200 transition-colors group-hover:bg-neutral-300" />
+              <div className="mb-6 flex items-center">
+                <span className="text-[1.65rem] leading-none font-semibold tracking-[-0.04em] text-violet-300">
+                  {item.number}
+                </span>
+                <span className="ml-4 h-px flex-1 bg-white/10 transition-colors group-hover:bg-white/22" />
               </div>
-              <h3 className="mb-3 text-[1.12rem] font-semibold tracking-[-0.03em] text-neutral-950">{item.title}</h3>
-              <p className="text-[15px] leading-[1.8] text-neutral-600 break-keep">{item.desc}</p>
+              <h3 className="min-h-[2.8rem] text-[1.1rem] leading-[1.2] font-semibold tracking-[-0.03em] text-white">
+                {item.title}
+              </h3>
+              <p className="mt-4 text-[14px] leading-[1.72] text-white/68 break-keep">{item.desc}</p>
             </article>
           ))}
         </div>

@@ -53,3 +53,26 @@ body {
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
+
+.scroll-cue-pulse {
+  animation: scroll-cue-pulse 1.8s ease-in-out infinite;
+}
+
+@keyframes scroll-cue-pulse {
+  0%,
+  100% {
+    opacity: 0.35;
+    transform: translateY(0);
+  }
+
+  50% {
+    opacity: 1;
+    transform: translateY(8px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scroll-cue-pulse {
+    animation: none;
+  }
+}

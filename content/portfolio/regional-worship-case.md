@@ -1,5 +1,5 @@
 ---
-title: 기독 학생 대회 및 지역 예배/집회 운영
+title: 기독 학생 대회 및 지역 예배 집회 운영
 slug: regional-worship-case
 date: "2022-11-01"
 featured: true
