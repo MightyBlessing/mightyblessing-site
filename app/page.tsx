@@ -1,6 +1,7 @@
 import { HeroSection } from "@/components/home/HeroSection";
 import { WhatWeDoSection } from "@/components/home/WhatWeDoSection";
 import { ProofStripSection } from "@/components/home/ProofStripSection";
+import { InstagramCarouselSection } from "@/components/home/InstagramCarouselSection";
 import { FinalCTASection } from "@/components/home/FinalCTASection";
 
 export default function Home() {
@@ -9,6 +10,7 @@ export default function Home() {
       <HeroSection />
       <WhatWeDoSection />
       <ProofStripSection />
+      <InstagramCarouselSection />
       <FinalCTASection />
     </>
   );
