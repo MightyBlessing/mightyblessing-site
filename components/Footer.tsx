@@ -3,6 +3,7 @@ import Link from "next/link";
 const links = [
   { label: "홈", href: "/" },
   { label: "포트폴리오", href: "/portfolio" },
+  { label: "서비스", href: "/services" },
   { label: "문의", href: "/inquiry" },
   { label: "개인정보처리방침", href: "/privacy" },
   { label: "이용약관", href: "/terms" },

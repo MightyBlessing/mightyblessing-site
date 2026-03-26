@@ -8,6 +8,7 @@ const blogUrl = "https://mbplatform-eight.vercel.app/";
 const nav = [
   { label: "홈", href: "/" },
   { label: "포트폴리오", href: "/portfolio" },
+  { label: "서비스", href: "/services" },
   { label: "문의", href: "/inquiry" },
   { label: "블로그", href: blogUrl, external: true },
 ];
