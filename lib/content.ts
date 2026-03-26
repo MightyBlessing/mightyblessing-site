@@ -5,10 +5,13 @@ import type { PortfolioMediaAsset } from "./portfolio-media";
 
 const contentDir = path.join(process.cwd(), "content");
 
+export type PortfolioStatus = "draft" | "published" | "archived";
+
 export type PortfolioFrontmatter = {
   title: string;
   slug: string;
   date: string;
+  status?: PortfolioStatus;
   featured?: boolean;
   featured_order?: number;
   location?: string;
@@ -41,33 +44,71 @@ export type BlogFrontmatter = {
   thumbnail?: string;
 };
 
-export function getPortfolioSlugs(): string[] {
-  const dir = path.join(contentDir, "portfolio");
-  if (!fs.existsSync(dir)) return [];
-  return fs.readdirSync(dir).filter((f) => f.endsWith(".md")).map((f) => f.replace(/\.md$/, ""));
+function shouldIncludePortfolio(status: PortfolioStatus, includeUnpublished?: boolean) {
+  return includeUnpublished || status === "published";
 }
 
-export function getPortfolioBySlug(slug: string): { frontmatter: PortfolioFrontmatter; content: string } | null {
+export function normalizePortfolioFrontmatter(frontmatter: Partial<PortfolioFrontmatter>): PortfolioFrontmatter {
+  const firstGalleryItem = frontmatter.gallery?.[0];
+
+  return {
+    title: frontmatter.title || "",
+    slug: frontmatter.slug || "",
+    date: frontmatter.date || "",
+    status: frontmatter.status || "published",
+    featured: Boolean(frontmatter.featured),
+    featured_order: frontmatter.featured_order,
+    location: frontmatter.location,
+    partner: frontmatter.partner,
+    summary: frontmatter.summary || "",
+    roles: frontmatter.roles || [],
+    categories: frontmatter.categories || [],
+    thumbnail:
+      frontmatter.thumbnail ||
+      frontmatter.heroMedia?.poster ||
+      (firstGalleryItem?.type === "image" ? firstGalleryItem.url : firstGalleryItem?.poster),
+    heroMedia: frontmatter.heroMedia,
+    search_terms: frontmatter.search_terms || [],
+    goals: frontmatter.goals,
+    scope: frontmatter.scope,
+    our_role: frontmatter.our_role,
+    process: frontmatter.process,
+    metrics: frontmatter.metrics || [],
+    testimonials: frontmatter.testimonials || [],
+    gallery: frontmatter.gallery || [],
+    related_cases: frontmatter.related_cases || [],
+  };
+}
+
+export function getPortfolioSlugs(options: { includeUnpublished?: boolean } = {}): string[] {
+  const dir = path.join(contentDir, "portfolio");
+  if (!fs.existsSync(dir)) return [];
+  return fs
+    .readdirSync(dir)
+    .filter((f) => f.endsWith(".md"))
+    .map((f) => f.replace(/\.md$/, ""))
+    .filter((slug) => {
+      const item = getPortfolioBySlug(slug, options);
+      return Boolean(item);
+    });
+}
+
+export function getPortfolioBySlug(
+  slug: string,
+  options: { includeUnpublished?: boolean } = {},
+): { frontmatter: PortfolioFrontmatter; content: string } | null {
   const fullPath = path.join(contentDir, "portfolio", `${slug}.md`);
   if (!fs.existsSync(fullPath)) return null;
   const raw = fs.readFileSync(fullPath, "utf-8");
   const { data, content } = matter(raw);
-  const frontmatter = data as PortfolioFrontmatter;
-  const firstGalleryItem = frontmatter.gallery?.[0];
+  const frontmatter = normalizePortfolioFrontmatter(data as Partial<PortfolioFrontmatter>);
+
+  if (!shouldIncludePortfolio(frontmatter.status || "published", options.includeUnpublished)) {
+    return null;
+  }
 
   return {
-    frontmatter: {
-      ...frontmatter,
-      featured: Boolean(frontmatter.featured),
-      thumbnail:
-        frontmatter.thumbnail ||
-        frontmatter.heroMedia?.poster ||
-        (firstGalleryItem?.type === "image" ? firstGalleryItem.url : firstGalleryItem?.poster),
-      categories: frontmatter.categories || [],
-      roles: frontmatter.roles || [],
-      gallery: frontmatter.gallery || [],
-      search_terms: frontmatter.search_terms || [],
-    },
+    frontmatter,
     content,
   };
 }
@@ -85,11 +126,11 @@ function sortFeatured(items: PortfolioEntry[]) {
   });
 }
 
-export function getAllPortfolios(): PortfolioEntry[] {
-  const slugs = getPortfolioSlugs();
+export function getAllPortfolios(options: { includeUnpublished?: boolean } = {}): PortfolioEntry[] {
+  const slugs = getPortfolioSlugs(options);
   const items = slugs
     .map((slug) => {
-      const item = getPortfolioBySlug(slug);
+      const item = getPortfolioBySlug(slug, options);
       if (!item) return null;
       return { frontmatter: item.frontmatter, slug };
     })

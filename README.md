@@ -31,6 +31,8 @@ npm run dev
 | `/blog/[slug]` | 블로그 글 상세 |
 | `/products` | 서비스·패키지 소개, FAQ, 프로젝트 링크 |
 | `/inquiry` | 문의 (MVP: 외부 폼 링크) |
+| `/admin/login` | 포트폴리오 관리자 로그인 |
+| `/admin` | 포트폴리오 관리자 대시보드 |
 | `/privacy`, `/terms` | 개인정보처리방침, 이용약관 (플레이스홀더) |
 
 ## 문의 폼
@@ -43,6 +45,20 @@ npm run dev
 - 메타·OG: `app/layout.tsx` 및 각 페이지 `generateMetadata`
 - `app/sitemap.ts`, `app/robots.ts` 사용
 - 배포 시 `NEXT_PUBLIC_SITE_URL` 환경 변수로 사이트 URL 지정 권장
+
+## Admin
+
+- 포트폴리오 admin은 `/admin/login`에서 접근합니다.
+- 기본 계정은 환경 변수 기준입니다.
+  - `ADMIN_ID`
+  - `ADMIN_PASSWORD`
+  - `ADMIN_SESSION_SECRET`
+- GitHub 연동 시 admin 저장은 저장소 커밋으로 이어지고, Vercel 재배포 후 공개 사이트에 반영됩니다.
+  - `GITHUB_TOKEN`
+  - `GITHUB_OWNER`
+  - `GITHUB_REPO`
+  - `GITHUB_BRANCH`
+- GitHub 환경 변수가 없으면 로컬 개발 환경에서는 현재 워크스페이스 파일을 직접 수정하는 방식으로 동작합니다.
 
 ## Vercel 배포
 
