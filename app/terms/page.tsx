@@ -1,4 +1,13 @@
+import type { Metadata } from "next";
 import { PageHero } from "@/components/PageHero";
+import { buildPageMetadata } from "@/lib/seo";
+
+export const metadata: Metadata = buildPageMetadata({
+  title: "이용약관",
+  description: "마이티블레싱 웹사이트 이용에 관한 기본 운영 기준입니다.",
+  path: "/terms",
+  noIndex: true,
+});
 
 export default function TermsPage() {
   return (

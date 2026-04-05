@@ -1,4 +1,13 @@
+import type { Metadata } from "next";
 import { PageHero } from "@/components/PageHero";
+import { buildPageMetadata } from "@/lib/seo";
+
+export const metadata: Metadata = buildPageMetadata({
+  title: "개인정보 처리방침",
+  description: "마이티블레싱 웹사이트의 개인정보 처리방침입니다.",
+  path: "/privacy",
+  noIndex: true,
+});
 
 export default function PrivacyPage() {
   return (

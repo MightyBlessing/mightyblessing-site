@@ -1,3 +1,14 @@
+import type { Metadata } from "next";
+import { buildPageMetadata } from "@/lib/seo";
+
+export const metadata: Metadata = buildPageMetadata({
+  title: "서비스",
+  description:
+    "마이티블레싱이 직접 운영하며 다듬은 교회 행사 운영 플랫폼과 예배 자막 준비 도구를 소개합니다.",
+  path: "/services",
+  keywords: ["교회 행사 플랫폼", "예배 자막", "행사 운영 서비스", "교회 운영 도구"],
+});
+
 const services = [
   {
     name: "포도나무",

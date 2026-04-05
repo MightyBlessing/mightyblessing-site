@@ -44,6 +44,8 @@ npm run dev
 - 메타·OG: `app/layout.tsx` 및 각 페이지 `generateMetadata`
 - `app/sitemap.ts`, `app/robots.ts` 사용
 - 배포 시 `NEXT_PUBLIC_SITE_URL` 환경 변수로 사이트 URL 지정 권장
+- `NEXT_PUBLIC_GA_MEASUREMENT_ID` 지정 시 전체 페이지에 GA4 스크립트가 삽입됩니다.
+- 카카오톡/메신저 링크 미리보기는 Open Graph 메타(`og:title`, `og:description`, `og:image`) 기준으로 노출됩니다.
 
 ## Admin
 
@@ -84,6 +86,9 @@ npm run dev
    - `NEXT_PUBLIC_SITE_URL` = 배포된 사이트 URL  
      (예: `https://mightyblessing-site.vercel.app` 또는 커스텀 도메인)  
    → sitemap·robots에 사용됩니다.
+   - `NEXT_PUBLIC_GA_MEASUREMENT_ID` = GA4 측정 ID  
+     (예: `G-X195JMZNYZ`)  
+   → 전체 페이지 방문 추적에 사용됩니다.
 
 4. **Deploy**  
    **Deploy** 클릭 후 빌드가 끝나면 배포 URL로 접속할 수 있습니다.  

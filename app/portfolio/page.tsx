@@ -1,11 +1,20 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import type { PortfolioEntry, PortfolioFrontmatter } from "@/lib/content";
 import { filterPortfolios, getFeaturedPortfolios, getPortfolioCategories } from "@/lib/content";
 import { Tag } from "@/components/Tag";
 import { PortfolioMediaTile } from "@/components/portfolio/PortfolioMediaTile";
 import { portfolioHeroMedia } from "@/lib/portfolio-media";
+import { buildPageMetadata } from "@/lib/seo";
 
 const ARCHIVE_PAGE_SIZE = 12;
+
+export const metadata: Metadata = buildPageMetadata({
+  title: "포트폴리오",
+  description: "마이티블레싱이 기획하고 운영한 예배, 집회, 행사 프로젝트 포트폴리오를 확인해 보세요.",
+  path: "/portfolio",
+  keywords: ["예배 포트폴리오", "집회 포트폴리오", "행사 운영 사례", "프로젝트 사례"],
+});
 
 type Props = {
   searchParams: Promise<{ q?: string | string[]; category?: string | string[]; page?: string | string[] }>;

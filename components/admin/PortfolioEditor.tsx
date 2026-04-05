@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useId, useState } from "react";
+import { useEffect, useId, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { PortfolioEditorPayload } from "@/lib/admin/portfolio-admin";
 import type { PortfolioStatus } from "@/lib/content";
@@ -51,22 +51,18 @@ function MediaPreview({
   file?: File | null;
   label: string;
 }) {
-  const [previewUrl, setPreviewUrl] = useState("");
+  const previewUrl = useMemo(() => createObjectUrl(file), [file]);
 
   useEffect(() => {
-    if (!file) {
-      setPreviewUrl("");
+    if (!previewUrl) {
       return;
     }
-
-    const objectUrl = createObjectUrl(file);
-    setPreviewUrl(objectUrl);
     return () => {
-      URL.revokeObjectURL(objectUrl);
+      URL.revokeObjectURL(previewUrl);
     };
-  }, [file]);
+  }, [previewUrl]);
 
-  const displayUrl = previewUrl || currentUrl || "";
+  const displayUrl = (file ? previewUrl : currentUrl) || "";
   if (!displayUrl) {
     return (
       <div className="rounded-[1rem] border border-dashed border-white/10 bg-black/20 px-4 py-5 text-[0.86rem] text-white/35">
