@@ -34,16 +34,6 @@ export type PortfolioFrontmatter = {
 
 export type PortfolioEntry = { frontmatter: PortfolioFrontmatter; slug: string };
 
-export type BlogFrontmatter = {
-  title: string;
-  slug: string;
-  date: string;
-  category: string;
-  tags: string[];
-  summary: string;
-  thumbnail?: string;
-};
-
 function shouldIncludePortfolio(status: PortfolioStatus, includeUnpublished?: boolean) {
   return includeUnpublished || status === "published";
 }
@@ -226,30 +216,4 @@ export function getRelatedPortfolios(slug: string, limit = 2): PortfolioEntry[] 
   return getAllPortfolios()
     .filter((item) => item.slug !== slug)
     .slice(0, limit);
-}
-
-export function getBlogSlugs(): string[] {
-  const dir = path.join(contentDir, "blog");
-  if (!fs.existsSync(dir)) return [];
-  return fs.readdirSync(dir).filter((f) => f.endsWith(".md")).map((f) => f.replace(/\.md$/, ""));
-}
-
-export function getBlogBySlug(slug: string): { frontmatter: BlogFrontmatter; content: string } | null {
-  const fullPath = path.join(contentDir, "blog", `${slug}.md`);
-  if (!fs.existsSync(fullPath)) return null;
-  const raw = fs.readFileSync(fullPath, "utf-8");
-  const { data, content } = matter(raw);
-  return { frontmatter: data as BlogFrontmatter, content };
-}
-
-export function getAllBlogs(): { frontmatter: BlogFrontmatter; slug: string }[] {
-  const slugs = getBlogSlugs();
-  return slugs
-    .map((slug) => {
-      const item = getBlogBySlug(slug);
-      if (!item) return null;
-      return { frontmatter: item.frontmatter, slug };
-    })
-    .filter((x): x is { frontmatter: BlogFrontmatter; slug: string } => x !== null)
-    .sort((a, b) => new Date(b.frontmatter.date).getTime() - new Date(a.frontmatter.date).getTime());
 }

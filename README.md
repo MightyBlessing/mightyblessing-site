@@ -9,7 +9,7 @@
 ## 스택
 
 - Next.js 16 (App Router), TypeScript, Tailwind CSS 4
-- 콘텐츠: `content/portfolio/*.md`, `content/blog/*.md` (gray-matter + react-markdown)
+- 콘텐츠: `content/portfolio/*.md` (gray-matter + react-markdown)
 
 ## 실행
 
@@ -28,7 +28,6 @@ npm run dev
 | `/portfolio` | 포트폴리오 목록 |
 | `/portfolio/[slug]` | 케이스 스터디 상세 |
 | `/blog` | 블로그 목록 |
-| `/blog/[slug]` | 블로그 글 상세 |
 | `/products` | 서비스·패키지 소개, FAQ, 프로젝트 링크 |
 | `/inquiry` | 문의 (MVP: 외부 폼 링크) |
 | `/admin/login` | 포트폴리오 관리자 로그인 |
@@ -93,4 +92,3 @@ npm run dev
 ## 콘텐츠 추가
 
 - **포트폴리오**: `content/portfolio/` 에 `slug.md` 추가 (frontmatter: title, slug, date, summary, roles, categories 등)
-- **블로그**: `content/blog/` 에 `slug.md` 추가 (frontmatter: title, slug, date, category, tags, summary)
