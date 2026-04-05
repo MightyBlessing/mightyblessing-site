@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { getPortfolioBySlug, getPortfolioSlugs, getRelatedPortfolios } from "@/lib/content";
@@ -5,6 +6,7 @@ import { CTAButton } from "@/components/CTAButton";
 import { Tag } from "@/components/Tag";
 import { MarkdownContent } from "@/components/MarkdownContent";
 import { PortfolioMediaTile } from "@/components/portfolio/PortfolioMediaTile";
+import { buildPageMetadata } from "@/lib/seo";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -18,18 +20,31 @@ export async function generateStaticParams() {
   return slugs.map((slug) => ({ slug }));
 }
 
-export async function generateMetadata({ params }: Props) {
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const item = getPortfolioBySlug(slug);
-  if (!item) return { title: "Portfolio" };
-  return {
-    title: `${item.frontmatter.title} | Mighty Blessing`,
+  if (!item) {
+    return buildPageMetadata({
+      title: "포트폴리오",
+      description: "마이티블레싱 프로젝트 포트폴리오입니다.",
+      path: "/portfolio",
+    });
+  }
+
+  const image =
+    item.frontmatter.heroMedia?.poster ||
+    item.frontmatter.thumbnail ||
+    (item.frontmatter.gallery?.[0]?.type === "image" ? item.frontmatter.gallery[0].url : item.frontmatter.gallery?.[0]?.poster) ||
+    "/media/portfolio/home-hero-worship-poster.jpg";
+
+  return buildPageMetadata({
+    title: item.frontmatter.title,
     description: item.frontmatter.summary,
-    openGraph: {
-      title: item.frontmatter.title,
-      description: item.frontmatter.summary,
-    },
-  };
+    path: `/portfolio/${slug}`,
+    images: [image],
+    keywords: [...(item.frontmatter.roles || []), ...(item.frontmatter.categories || []), ...(item.frontmatter.search_terms || [])],
+    type: "article",
+  });
 }
 
 export default async function PortfolioDetailPage({ params }: Props) {

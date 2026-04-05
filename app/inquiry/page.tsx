@@ -1,4 +1,13 @@
+import type { Metadata } from "next";
 import { InquiryForm } from "@/components/inquiry/InquiryForm";
+import { buildPageMetadata } from "@/lib/seo";
+
+export const metadata: Metadata = buildPageMetadata({
+  title: "프로젝트 문의",
+  description: "예배, 집회, 행사 기획과 운영이 필요하다면 마이티블레싱에 프로젝트 문의를 남겨 주세요.",
+  path: "/inquiry",
+  keywords: ["프로젝트 문의", "예배 문의", "집회 운영 문의", "행사 기획 문의"],
+});
 
 export default function InquiryPage() {
   return (

@@ -2,15 +2,51 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
+import { GoogleAnalytics } from "@/components/GoogleAnalytics";
+import { siteDescription, siteName, siteUrl } from "@/lib/site";
+import { buildPageMetadata, toAbsoluteUrl } from "@/lib/seo";
 
 export const metadata: Metadata = {
-  title: "Mighty Blessing | 이제껏 없던 예배를 만듭니다",
-  description:
-    "예배와 집회가 잘 열리도록 기획하고 운영하는 마이티블레싱 팀.",
-  openGraph: {
-    title: "Mighty Blessing | 이제껏 없던 예배를 만듭니다",
-    description: "예배와 집회가 잘 열리도록 기획하고 운영하는 마이티블레싱 팀.",
+  ...buildPageMetadata({
+    path: "/",
+    keywords: ["예배 연출", "행사 운영", "교회 행사 운영", "예배 제작"],
+  }),
+  metadataBase: new URL(siteUrl),
+  applicationName: siteName,
+  creator: siteName,
+  publisher: siteName,
+  referrer: "origin-when-cross-origin",
+  formatDetection: {
+    telephone: false,
+    email: false,
+    address: false,
   },
+  icons: {
+    icon: [{ url: "/favicon.ico" }],
+    shortcut: "/favicon.ico",
+    apple: "/favicon.ico",
+  },
+};
+
+const organizationJsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      name: siteName,
+      url: siteUrl,
+      description: siteDescription,
+      email: "contact@mightyblessing.com",
+      logo: toAbsoluteUrl("/images/logo.png"),
+    },
+    {
+      "@type": "WebSite",
+      name: siteName,
+      url: siteUrl,
+      description: siteDescription,
+      inLanguage: "ko-KR",
+    },
+  ],
 };
 
 export default function RootLayout({
@@ -29,8 +65,13 @@ export default function RootLayout({
           href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined"
           rel="stylesheet"
         />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
+        />
       </head>
       <body className="bg-white text-neutral-900 antialiased">
+        <GoogleAnalytics />
         <Header />
         <main>{children}</main>
         <Footer />
