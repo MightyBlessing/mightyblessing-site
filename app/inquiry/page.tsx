@@ -1,3 +1,5 @@
+import { InquiryForm } from "@/components/inquiry/InquiryForm";
+
 export default function InquiryPage() {
   return (
     <section className="relative overflow-hidden border-b border-neutral-900 bg-neutral-950 text-white">
@@ -62,16 +64,12 @@ export default function InquiryPage() {
 
                 <div className="border-b border-white/10 py-6">
                   <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-white/45">이메일</p>
-                  <p className="mt-3 text-[1rem] leading-[1.7] text-white/82 break-keep">team.mablous@gmail.com</p>
+                  <p className="mt-3 text-[1rem] leading-[1.7] text-white/82 break-keep">contact@mightyblessing.com</p>
                 </div>
 
                 <div className="pt-6">
-                  <a
-                    href="mailto:team.mablous@gmail.com"
-                    className="inline-flex items-center justify-center rounded-full bg-[#a9bcff] px-5 py-3 text-[0.95rem] font-semibold text-[#162349] transition-colors hover:bg-[#bfd0ff]"
-                  >
-                    이메일로 문의하기
-                  </a>
+                  <p className="mb-5 text-[11px] font-medium uppercase tracking-[0.18em] text-white/45">문의 폼</p>
+                  <InquiryForm />
                 </div>
               </div>
             </div>

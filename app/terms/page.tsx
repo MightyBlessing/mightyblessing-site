@@ -45,8 +45,8 @@ export default function TermsPage() {
             <h2 className="text-[1.15rem] font-semibold text-neutral-950">5. 문의</h2>
             <p className="mt-3">
               서비스 이용과 관련한 문의는{" "}
-              <a href="mailto:team.mablous@gmail.com" className="font-medium text-neutral-950 underline underline-offset-4">
-                team.mablous@gmail.com
+              <a href="mailto:contact@mightyblessing.com" className="font-medium text-neutral-950 underline underline-offset-4">
+                contact@mightyblessing.com
               </a>
               으로 보내주시면 안내드리겠습니다.
             </p>

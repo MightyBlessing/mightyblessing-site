@@ -3,7 +3,6 @@ import Link from "next/link";
 const links = [
   { label: "홈", href: "/" },
   { label: "포트폴리오", href: "/portfolio" },
-  { label: "서비스", href: "/services" },
   { label: "문의", href: "/inquiry" },
   { label: "개인정보처리방침", href: "/privacy" },
   { label: "이용약관", href: "/terms" },
@@ -22,10 +21,10 @@ export function Footer() {
               현장 운영과 디지털 제작을 함께 맡는 팀입니다.
             </p>
             <a
-              href="mailto:team.mablous@gmail.com"
+              href="mailto:contact@mightyblessing.com"
               className="mt-5 inline-flex text-[14px] font-medium text-white transition-colors hover:text-neutral-200"
             >
-              team.mablous@gmail.com
+              contact@mightyblessing.com
             </a>
           </div>
           <div className="flex flex-wrap items-center gap-x-6 gap-y-3 text-[14px] text-neutral-300">
