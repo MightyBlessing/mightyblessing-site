@@ -1,4 +1,6 @@
+import { randomUUID } from "crypto";
 import matter from "gray-matter";
+import { resolveContentMediaUrl } from "@/lib/content-media";
 import type { PortfolioMediaAsset } from "@/lib/portfolio-media";
 import {
   type PortfolioEntry,
@@ -8,6 +10,12 @@ import {
 } from "@/lib/content";
 import { base64ToString, stringToBase64 } from "./base64";
 import { getAdminRepository } from "./repository";
+import {
+  copyContentMediaFile,
+  deleteContentMediaFiles,
+  isContentMediaStorageConfigured,
+  uploadContentMediaFile,
+} from "./content-media-storage";
 
 export type AdminPortfolioDocument = {
   slug: string;
@@ -26,6 +34,8 @@ export type PortfolioEditorGalleryItem = {
   caption?: string;
   existingUrl?: string;
   existingPoster?: string;
+  existingStorageKey?: string;
+  existingPosterStorageKey?: string;
 };
 
 export type PortfolioEditorPayload = {
@@ -53,6 +63,8 @@ export type PortfolioEditorPayload = {
     alt: string;
     existingUrl?: string;
     existingPoster?: string;
+    existingStorageKey?: string;
+    existingPosterStorageKey?: string;
   };
   gallery: PortfolioEditorGalleryItem[];
 };
@@ -98,6 +110,8 @@ export function portfolioDocumentToPayload(document: AdminPortfolioDocument): Po
       alt: document.frontmatter.heroMedia?.alt || "",
       existingUrl: document.frontmatter.heroMedia?.url,
       existingPoster: document.frontmatter.heroMedia?.poster,
+      existingStorageKey: document.frontmatter.heroMedia?.storageKey,
+      existingPosterStorageKey: document.frontmatter.heroMedia?.posterStorageKey,
     },
     gallery: (document.frontmatter.gallery || []).map((item, index) => ({
       id: `gallery-${index + 1}`,
@@ -106,6 +120,8 @@ export function portfolioDocumentToPayload(document: AdminPortfolioDocument): Po
       caption: item.caption || "",
       existingUrl: item.url,
       existingPoster: item.poster,
+      existingStorageKey: item.storageKey,
+      existingPosterStorageKey: item.posterStorageKey,
     })),
   };
 }
@@ -116,19 +132,6 @@ function sortByDateDesc(items: AdminPortfolioDocument[]) {
 
 function portfolioContentPath(slug: string) {
   return `content/portfolio/${slug}.md`;
-}
-
-function portfolioMediaDir(slug: string) {
-  return `public/media/portfolio/${slug}`;
-}
-
-function publicUrlToRepoPath(url: string) {
-  const normalized = url.startsWith("/") ? url : `/${url}`;
-  return `public${normalized}`;
-}
-
-function repoPathToPublicUrl(repoPath: string) {
-  return repoPath.startsWith("public/") ? `/${repoPath.slice("public/".length)}` : repoPath;
 }
 
 function fileExtension(fileName: string) {
@@ -153,39 +156,6 @@ function slugify(value: string) {
     .replace(/^-|-$/g, "");
 }
 
-function rewriteAssetSlug(asset: PortfolioMediaAsset | undefined, fromSlug: string, toSlug: string) {
-  if (!asset) return asset;
-
-  const prefix = `/media/portfolio/${fromSlug}/`;
-  return {
-    ...asset,
-    url: asset.url.startsWith(prefix) ? asset.url.replace(prefix, `/media/portfolio/${toSlug}/`) : asset.url,
-    poster:
-      asset.poster && asset.poster.startsWith(prefix)
-        ? asset.poster.replace(prefix, `/media/portfolio/${toSlug}/`)
-        : asset.poster,
-  };
-}
-
-function collectManagedRepoPaths(frontmatter: PortfolioFrontmatter) {
-  const paths = new Set<string>();
-  const add = (url?: string) => {
-    if (url?.startsWith("/media/portfolio/")) {
-      paths.add(publicUrlToRepoPath(url));
-    }
-  };
-
-  add(frontmatter.heroMedia?.url);
-  add(frontmatter.heroMedia?.poster);
-
-  for (const media of frontmatter.gallery || []) {
-    add(media.url);
-    add(media.poster);
-  }
-
-  return [...paths];
-}
-
 function uniqueSlug(baseSlug: string, usedSlugs: Set<string>) {
   let nextSlug = baseSlug;
   let index = 2;
@@ -198,6 +168,100 @@ function uniqueSlug(baseSlug: string, usedSlugs: Set<string>) {
   return nextSlug;
 }
 
+function createPortfolioMediaId(seed?: string) {
+  const normalized = slugify(seed || "");
+  return normalized || `portfolio-${randomUUID().slice(0, 8)}`;
+}
+
+function buildPortfolioStorageKey(mediaId: string, fileName: string) {
+  return `portfolio/${mediaId}/${fileName}`;
+}
+
+function resolveManagedMediaAsset({
+  type,
+  storageKey,
+  legacyUrl,
+  posterStorageKey,
+  legacyPosterUrl,
+  alt,
+  caption,
+}: {
+  type: "image" | "video";
+  storageKey?: string;
+  legacyUrl?: string;
+  posterStorageKey?: string;
+  legacyPosterUrl?: string;
+  alt?: string;
+  caption?: string;
+}) {
+  const url = storageKey
+    ? resolveContentMediaUrl({ storageKey, fallbackUrl: legacyUrl })
+    : legacyUrl || "";
+
+  if (!url) {
+    return undefined;
+  }
+
+  return {
+    type,
+    url,
+    storageKey,
+    alt,
+    caption,
+    poster: posterStorageKey
+      ? resolveContentMediaUrl({ storageKey: posterStorageKey, fallbackUrl: legacyPosterUrl }) || undefined
+      : legacyPosterUrl || undefined,
+    posterStorageKey: posterStorageKey || undefined,
+  } satisfies PortfolioMediaAsset;
+}
+
+function collectManagedStorageKeys(frontmatter: PortfolioFrontmatter) {
+  const keys = new Set<string>();
+  const add = (storageKey?: string) => {
+    if (storageKey) keys.add(storageKey);
+  };
+
+  add(frontmatter.heroMedia?.storageKey);
+  add(frontmatter.heroMedia?.posterStorageKey);
+
+  for (const media of frontmatter.gallery || []) {
+    add(media.storageKey);
+    add(media.posterStorageKey);
+  }
+
+  return [...keys];
+}
+
+function toStoredMediaAsset(asset?: PortfolioMediaAsset) {
+  if (!asset) return undefined;
+
+  const storedAsset: Record<string, unknown> = {
+    type: asset.type,
+  };
+
+  if (asset.storageKey) {
+    storedAsset.storageKey = asset.storageKey;
+  } else if (asset.url) {
+    storedAsset.url = asset.url;
+  }
+
+  if (asset.posterStorageKey) {
+    storedAsset.posterStorageKey = asset.posterStorageKey;
+  } else if (asset.poster) {
+    storedAsset.poster = asset.poster;
+  }
+
+  if (asset.alt) {
+    storedAsset.alt = asset.alt;
+  }
+
+  if (asset.caption) {
+    storedAsset.caption = asset.caption;
+  }
+
+  return storedAsset;
+}
+
 function cleanFrontmatter(frontmatter: PortfolioFrontmatter): PortfolioFrontmatter {
   return normalizePortfolioFrontmatter({
     ...frontmatter,
@@ -208,18 +272,20 @@ function cleanFrontmatter(frontmatter: PortfolioFrontmatter): PortfolioFrontmatt
     search_terms: (frontmatter.search_terms || []).filter(Boolean),
     roles: (frontmatter.roles || []).filter(Boolean),
     categories: (frontmatter.categories || []).filter(Boolean),
-    gallery: (frontmatter.gallery || []).filter((item) => item.url),
+    gallery: (frontmatter.gallery || []).filter((item) => item.url || item.storageKey),
   });
 }
 
 function serializePortfolioFile(frontmatter: PortfolioFrontmatter, content: string) {
-  const {
-    thumbnail,
-    ...rest
-  } = cleanFrontmatter(frontmatter);
+  const cleaned = cleanFrontmatter(frontmatter);
 
   const data = Object.fromEntries(
-    Object.entries(rest).filter(([, value]) => {
+    Object.entries({
+      ...cleaned,
+      thumbnail: undefined,
+      heroMedia: toStoredMediaAsset(cleaned.heroMedia),
+      gallery: cleaned.gallery?.map((item) => toStoredMediaAsset(item)).filter(Boolean),
+    }).filter(([, value]) => {
       if (value === undefined || value === null) return false;
       if (Array.isArray(value)) return value.length > 0;
       return true;
@@ -249,137 +315,121 @@ function commitMessage(action: "create" | "update" | "publish" | "archive" | "du
   return `admin: ${action} portfolio ${slug}`;
 }
 
-function buildHeroMedia(
-  slug: string,
+async function buildHeroMedia(
+  mediaId: string,
   payload: PortfolioEditorPayload,
   uploads: PortfolioEditorUploads,
-  nextUpserts: { path: string; contentBase64: string }[],
-  nextUsedManagedPaths: Set<string>,
+  createdStorageKeys: Set<string>,
 ) {
-  const folder = portfolioMediaDir(slug);
   const heroUpload = uploads.heroFile;
   const posterUpload = uploads.heroPosterFile;
   const existing = payload.heroMedia;
 
-  let heroUrl = existing.existingUrl || "";
-  let posterUrl = existing.existingPoster || "";
+  let heroStorageKey = existing.existingStorageKey || "";
+  let heroLegacyUrl = existing.existingUrl || "";
+  let posterStorageKey = existing.existingPosterStorageKey || "";
+  let posterLegacyUrl = existing.existingPoster || "";
 
   if (heroUpload) {
     const ext = fileExtension(heroUpload.name) || (payload.heroMedia.type === "video" ? ".mp4" : ".jpg");
-    const heroPath = `${folder}/hero${ext}`;
-    nextUpserts.push({ path: heroPath, contentBase64: heroUpload.contentBase64 });
-    nextUsedManagedPaths.add(heroPath);
-    heroUrl = repoPathToPublicUrl(heroPath);
-  } else if (heroUrl.startsWith("/media/portfolio/")) {
-    nextUsedManagedPaths.add(publicUrlToRepoPath(heroUrl));
+    heroStorageKey = buildPortfolioStorageKey(mediaId, `hero${ext}`);
+    await uploadContentMediaFile(heroStorageKey, heroUpload);
+    createdStorageKeys.add(heroStorageKey);
+    heroLegacyUrl = "";
   }
 
   if (payload.heroMedia.type === "video") {
     if (posterUpload) {
       const ext = fileExtension(posterUpload.name) || ".jpg";
-      const posterPath = `${folder}/poster${ext}`;
-      nextUpserts.push({ path: posterPath, contentBase64: posterUpload.contentBase64 });
-      nextUsedManagedPaths.add(posterPath);
-      posterUrl = repoPathToPublicUrl(posterPath);
-    } else if (posterUrl.startsWith("/media/portfolio/")) {
-      nextUsedManagedPaths.add(publicUrlToRepoPath(posterUrl));
+      posterStorageKey = buildPortfolioStorageKey(mediaId, `poster${ext}`);
+      await uploadContentMediaFile(posterStorageKey, posterUpload);
+      createdStorageKeys.add(posterStorageKey);
+      posterLegacyUrl = "";
     }
   } else {
-    posterUrl = "";
+    posterStorageKey = "";
+    posterLegacyUrl = "";
   }
 
-  if (!heroUrl) {
-    return undefined;
-  }
-
-  return cleanFrontmatter({
-    title: "",
-    slug,
-    date: payload.date,
-    summary: payload.summary,
-    roles: [],
-    categories: [],
-    heroMedia: {
-      type: payload.heroMedia.type,
-      url: heroUrl,
-      poster: posterUrl || undefined,
-      alt: payload.heroMedia.alt,
-    },
-  }).heroMedia;
+  return resolveManagedMediaAsset({
+    type: payload.heroMedia.type,
+    storageKey: heroStorageKey || undefined,
+    legacyUrl: heroLegacyUrl || undefined,
+    posterStorageKey: posterStorageKey || undefined,
+    legacyPosterUrl: posterLegacyUrl || undefined,
+    alt: payload.heroMedia.alt,
+  });
 }
 
-function buildGalleryMedia(
-  slug: string,
+async function buildGalleryMedia(
+  mediaId: string,
   payload: PortfolioEditorPayload,
   uploads: PortfolioEditorUploads,
-  nextUpserts: { path: string; contentBase64: string }[],
-  nextUsedManagedPaths: Set<string>,
-) {
-  const folder = portfolioMediaDir(slug);
-  const galleryItems: Array<PortfolioMediaAsset | null> = payload.gallery.map((item, index) => {
-      const uploadedFile = uploads.galleryFiles[item.id];
-      const uploadedPosterFile = uploads.galleryPosterFiles[item.id];
+  createdStorageKeys: Set<string>,
+): Promise<PortfolioMediaAsset[]> {
+  const galleryItems: PortfolioMediaAsset[] = [];
 
-      let mediaUrl = item.existingUrl || "";
-      let posterUrl = item.existingPoster || "";
+  for (const [index, item] of payload.gallery.entries()) {
+    const uploadedFile = uploads.galleryFiles[item.id];
+    const uploadedPosterFile = uploads.galleryPosterFiles[item.id];
 
-      if (uploadedFile) {
-        const fallbackExt = item.type === "video" ? ".mp4" : ".jpg";
-        const mediaPath = `${folder}/detail-${String(index + 1).padStart(2, "0")}${fileExtension(uploadedFile.name) || fallbackExt}`;
-        nextUpserts.push({ path: mediaPath, contentBase64: uploadedFile.contentBase64 });
-        nextUsedManagedPaths.add(mediaPath);
-        mediaUrl = repoPathToPublicUrl(mediaPath);
-      } else if (mediaUrl.startsWith("/media/portfolio/")) {
-        nextUsedManagedPaths.add(publicUrlToRepoPath(mediaUrl));
+    let storageKey = item.existingStorageKey || "";
+    let legacyUrl = item.existingUrl || "";
+    let posterStorageKey = item.existingPosterStorageKey || "";
+    let legacyPosterUrl = item.existingPoster || "";
+
+    if (uploadedFile) {
+      const fallbackExt = item.type === "video" ? ".mp4" : ".jpg";
+      storageKey = buildPortfolioStorageKey(
+        mediaId,
+        `detail-${String(index + 1).padStart(2, "0")}${fileExtension(uploadedFile.name) || fallbackExt}`,
+      );
+      await uploadContentMediaFile(storageKey, uploadedFile);
+      createdStorageKeys.add(storageKey);
+      legacyUrl = "";
+    }
+
+    if (item.type === "video") {
+      if (uploadedPosterFile) {
+        posterStorageKey = buildPortfolioStorageKey(
+          mediaId,
+          `detail-${String(index + 1).padStart(2, "0")}-poster${fileExtension(uploadedPosterFile.name) || ".jpg"}`,
+        );
+        await uploadContentMediaFile(posterStorageKey, uploadedPosterFile);
+        createdStorageKeys.add(posterStorageKey);
+        legacyPosterUrl = "";
       }
+    } else {
+      posterStorageKey = "";
+      legacyPosterUrl = "";
+    }
 
-      if (item.type === "video") {
-        if (uploadedPosterFile) {
-          const posterPath = `${folder}/detail-${String(index + 1).padStart(2, "0")}-poster${fileExtension(uploadedPosterFile.name) || ".jpg"}`;
-          nextUpserts.push({ path: posterPath, contentBase64: uploadedPosterFile.contentBase64 });
-          nextUsedManagedPaths.add(posterPath);
-          posterUrl = repoPathToPublicUrl(posterPath);
-        } else if (posterUrl.startsWith("/media/portfolio/")) {
-          nextUsedManagedPaths.add(publicUrlToRepoPath(posterUrl));
-        }
-      } else {
-        posterUrl = "";
-      }
-
-      if (!mediaUrl) return null;
-
-      return {
-        type: item.type,
-        url: mediaUrl,
-        poster: posterUrl || undefined,
-        alt: item.alt,
-        caption: item.caption || undefined,
-      } satisfies PortfolioMediaAsset;
+    const media = resolveManagedMediaAsset({
+      type: item.type,
+      storageKey: storageKey || undefined,
+      legacyUrl: legacyUrl || undefined,
+      posterStorageKey: posterStorageKey || undefined,
+      legacyPosterUrl: legacyPosterUrl || undefined,
+      alt: item.alt,
+      caption: item.caption || undefined,
     });
 
-  return galleryItems.filter((item): item is PortfolioMediaAsset => item !== null);
+    if (media) {
+      galleryItems.push(media);
+    }
+  }
+
+  return galleryItems;
 }
 
-async function moveManagedMedia(previousSlug: string, nextSlug: string) {
-  const repository = getAdminRepository();
-  const sourceFiles = await repository.listFiles(portfolioMediaDir(previousSlug));
+async function cleanupCreatedStorageKeys(createdStorageKeys: Set<string>) {
+  if (createdStorageKeys.size === 0) return;
 
-  const upserts = await Promise.all(
-    sourceFiles.map(async (filePath) => {
-      const contentBase64 = await repository.readFile(filePath);
-      if (!contentBase64) return null;
-
-      return {
-        path: filePath.replace(`/${previousSlug}/`, `/${nextSlug}/`),
-        contentBase64,
-      };
-    }),
-  );
-
-  return {
-    upserts: upserts.filter((item): item is { path: string; contentBase64: string } => item !== null),
-    deletes: sourceFiles,
-  };
+  try {
+    await deleteContentMediaFiles([...createdStorageKeys]);
+  } catch (error) {
+    console.error("Failed to cleanup uploaded Supabase files after repository error.", error);
+  }
 }
 
 export async function listAdminPortfolios() {
@@ -431,45 +481,18 @@ export async function saveAdminPortfolio(
   }
 
   const nextSlug = desiredSlug;
-  const nextUpserts: { path: string; contentBase64: string }[] = [];
-  const nextUsedManagedPaths = new Set<string>();
+  const mediaId = existing?.frontmatter.mediaId || createPortfolioMediaId(nextSlug);
+  const existingFrontmatter = existing?.frontmatter;
+  const createdStorageKeys = new Set<string>();
   const deletes = new Set<string>();
 
-  if (existing && previousSlug && previousSlug !== nextSlug) {
-    const movedMedia = await moveManagedMedia(previousSlug, nextSlug);
-    for (const item of movedMedia.upserts) {
-      nextUpserts.push(item);
-    }
-    for (const item of movedMedia.deletes) {
-      deletes.add(item);
-    }
-  }
-
-  const existingFrontmatter = existing?.frontmatter;
-  const heroSeed = rewriteAssetSlug(existingFrontmatter?.heroMedia, previousSlug || "", nextSlug);
-  const gallerySeed = (existingFrontmatter?.gallery || []).map((item) => rewriteAssetSlug(item, previousSlug || "", nextSlug));
-
-  const nextPayload: PortfolioEditorPayload = {
-    ...payload,
-    slug: nextSlug,
-    heroMedia: {
-      ...payload.heroMedia,
-      existingUrl: payload.heroMedia.existingUrl || heroSeed?.url,
-      existingPoster: payload.heroMedia.existingPoster || heroSeed?.poster,
-    },
-    gallery: payload.gallery.map((item, index) => ({
-      ...item,
-      existingUrl: item.existingUrl || gallerySeed[index]?.url,
-      existingPoster: item.existingPoster || gallerySeed[index]?.poster,
-    })),
-  };
-
-  const heroMedia = buildHeroMedia(nextSlug, nextPayload, uploads, nextUpserts, nextUsedManagedPaths);
-  const gallery = buildGalleryMedia(nextSlug, nextPayload, uploads, nextUpserts, nextUsedManagedPaths);
+  const heroMedia = await buildHeroMedia(mediaId, payload, uploads, createdStorageKeys);
+  const gallery = await buildGalleryMedia(mediaId, payload, uploads, createdStorageKeys);
 
   const frontmatter = cleanFrontmatter({
     title: payload.title.trim(),
     slug: nextSlug,
+    mediaId,
     date: payload.date,
     status: ensureStatus(payload.status),
     featured: payload.featured,
@@ -494,17 +517,14 @@ export async function saveAdminPortfolio(
     gallery,
   });
 
-  const nextManagedPaths = collectManagedRepoPaths(frontmatter);
-  for (const filePath of nextManagedPaths) {
-    nextUsedManagedPaths.add(filePath);
-  }
+  const nextManagedStorageKeys = new Set(collectManagedStorageKeys(frontmatter));
+  const removedStorageKeys = existingFrontmatter
+    ? collectManagedStorageKeys(existingFrontmatter).filter((storageKey) => !nextManagedStorageKeys.has(storageKey))
+    : [];
 
-  if (existingFrontmatter) {
-    for (const filePath of collectManagedRepoPaths(existingFrontmatter)) {
-      if (!nextUsedManagedPaths.has(filePath)) {
-        deletes.add(filePath);
-      }
-    }
+  if (removedStorageKeys.length > 0 && !isContentMediaStorageConfigured()) {
+    await cleanupCreatedStorageKeys(createdStorageKeys);
+    throw new Error("Supabase 콘텐츠 스토리지 설정이 없어 기존 미디어를 정리할 수 없습니다.");
   }
 
   if (previousSlug && previousSlug !== nextSlug) {
@@ -512,18 +532,66 @@ export async function saveAdminPortfolio(
   }
 
   const markdownContent = serializePortfolioFile(frontmatter, payload.content);
-  nextUpserts.push({
-    path: portfolioContentPath(nextSlug),
-    contentBase64: stringToBase64(markdownContent),
-  });
 
-  await repository.commitChanges({
-    message: commitMessage(action, nextSlug),
-    upserts: nextUpserts,
-    deletes: [...deletes].filter((filePath) => filePath !== portfolioContentPath(nextSlug)),
-  });
+  try {
+    await repository.commitChanges({
+      message: commitMessage(action, nextSlug),
+      upserts: [
+        {
+          path: portfolioContentPath(nextSlug),
+          contentBase64: stringToBase64(markdownContent),
+        },
+      ],
+      deletes: [...deletes].filter((filePath) => filePath !== portfolioContentPath(nextSlug)),
+    });
+  } catch (error) {
+    await cleanupCreatedStorageKeys(createdStorageKeys);
+    throw error;
+  }
+
+  if (removedStorageKeys.length > 0) {
+    try {
+      await deleteContentMediaFiles(removedStorageKeys);
+    } catch (error) {
+      console.error("Failed to delete stale Supabase media after commit.", error);
+    }
+  }
 
   return { slug: nextSlug };
+}
+
+async function duplicateStorageBackedAsset(
+  asset: PortfolioMediaAsset,
+  nextMediaId: string,
+  fileBaseName: string,
+  createdStorageKeys: Set<string>,
+): Promise<PortfolioMediaAsset | undefined> {
+  const nextStorageKey = asset.storageKey
+    ? buildPortfolioStorageKey(nextMediaId, `${fileBaseName}${fileExtension(asset.storageKey) || ".jpg"}`)
+    : undefined;
+  const nextPosterStorageKey = asset.posterStorageKey
+    ? buildPortfolioStorageKey(nextMediaId, `${fileBaseName}-poster${fileExtension(asset.posterStorageKey) || ".jpg"}`)
+    : undefined;
+
+  if (asset.storageKey && nextStorageKey) {
+    await copyContentMediaFile(asset.storageKey, nextStorageKey);
+    createdStorageKeys.add(nextStorageKey);
+  }
+
+  if (asset.posterStorageKey && nextPosterStorageKey) {
+    await copyContentMediaFile(asset.posterStorageKey, nextPosterStorageKey);
+    createdStorageKeys.add(nextPosterStorageKey);
+  }
+
+  return resolveManagedMediaAsset({
+    type: asset.type,
+    storageKey: nextStorageKey,
+    legacyUrl: !asset.storageKey ? asset.url : undefined,
+    posterStorageKey: nextPosterStorageKey,
+    legacyPosterUrl: !asset.posterStorageKey ? asset.poster : undefined,
+    alt: asset.alt,
+    caption: asset.caption,
+  });
 }
 
 export async function duplicateAdminPortfolio(slug: string) {
@@ -536,42 +604,52 @@ export async function duplicateAdminPortfolio(slug: string) {
   const allItems = await listAdminPortfolios();
   const nextSlug = uniqueSlug(`${existing.slug}-copy`, new Set(allItems.map((item) => item.slug)));
   const nextTitle = `${existing.frontmatter.title} 복사본`;
-  const duplicatedGallery: PortfolioMediaAsset[] = (existing.frontmatter.gallery || []).map(
-    (item) => rewriteAssetSlug(item, existing.slug, nextSlug) as PortfolioMediaAsset,
-  );
-  const nextFrontmatter = cleanFrontmatter({
-    ...existing.frontmatter,
-    title: nextTitle,
-    slug: nextSlug,
-    status: "draft",
-    featured: false,
-    featured_order: undefined,
-    heroMedia: rewriteAssetSlug(existing.frontmatter.heroMedia, existing.slug, nextSlug),
-    gallery: duplicatedGallery,
-  });
+  const nextMediaId = createPortfolioMediaId(nextSlug);
+  const createdStorageKeys = new Set<string>();
 
-  const sourceMediaFiles = await repository.listFiles(portfolioMediaDir(existing.slug));
-  const upserts = await Promise.all(
-    sourceMediaFiles.map(async (filePath) => {
-      const contentBase64 = await repository.readFile(filePath);
-      if (!contentBase64) return null;
-      return {
-        path: filePath.replace(`/${existing.slug}/`, `/${nextSlug}/`),
-        contentBase64,
-      };
-    }),
-  );
+  try {
+    const duplicatedHero = existing.frontmatter.heroMedia
+      ? await duplicateStorageBackedAsset(existing.frontmatter.heroMedia, nextMediaId, "hero", createdStorageKeys)
+      : undefined;
+    const duplicatedGallery = (
+      await Promise.all(
+        (existing.frontmatter.gallery || []).map((item, index) =>
+          duplicateStorageBackedAsset(
+            item,
+            nextMediaId,
+            `detail-${String(index + 1).padStart(2, "0")}`,
+            createdStorageKeys,
+          ),
+        ),
+      )
+    ).filter((item): item is PortfolioMediaAsset => Boolean(item));
 
-  upserts.push({
-    path: portfolioContentPath(nextSlug),
-    contentBase64: stringToBase64(serializePortfolioFile(nextFrontmatter, existing.content)),
-  });
+    const nextFrontmatter = cleanFrontmatter({
+      ...existing.frontmatter,
+      title: nextTitle,
+      slug: nextSlug,
+      mediaId: nextMediaId,
+      status: "draft",
+      featured: false,
+      featured_order: undefined,
+      heroMedia: duplicatedHero,
+      gallery: duplicatedGallery,
+    });
 
-  await repository.commitChanges({
-    message: commitMessage("duplicate", nextSlug),
-    upserts: upserts.filter((item): item is { path: string; contentBase64: string } => item !== null),
-    deletes: [],
-  });
+    await repository.commitChanges({
+      message: commitMessage("duplicate", nextSlug),
+      upserts: [
+        {
+          path: portfolioContentPath(nextSlug),
+          contentBase64: stringToBase64(serializePortfolioFile(nextFrontmatter, existing.content)),
+        },
+      ],
+      deletes: [],
+    });
+  } catch (error) {
+    await cleanupCreatedStorageKeys(createdStorageKeys);
+    throw error;
+  }
 
   return { slug: nextSlug };
 }

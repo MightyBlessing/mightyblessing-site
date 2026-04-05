@@ -6,6 +6,8 @@ import { CTAButton } from "@/components/CTAButton";
 import { Tag } from "@/components/Tag";
 import { MarkdownContent } from "@/components/MarkdownContent";
 import { PortfolioMediaTile } from "@/components/portfolio/PortfolioMediaTile";
+import { HOME_HERO_POSTER_STORAGE_KEY, resolveContentMediaUrl } from "@/lib/content-media";
+import { portfolioFallbackImageUrl } from "@/lib/portfolio-media";
 import { buildPageMetadata } from "@/lib/seo";
 
 type Props = { params: Promise<{ slug: string }> };
@@ -35,6 +37,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     item.frontmatter.heroMedia?.poster ||
     item.frontmatter.thumbnail ||
     (item.frontmatter.gallery?.[0]?.type === "image" ? item.frontmatter.gallery[0].url : item.frontmatter.gallery?.[0]?.poster) ||
+    resolveContentMediaUrl({
+      storageKey: HOME_HERO_POSTER_STORAGE_KEY,
+      fallbackUrl: "/media/portfolio/home-hero-worship-poster.jpg",
+    }) ||
     "/media/portfolio/home-hero-worship-poster.jpg";
 
   return buildPageMetadata({
@@ -55,7 +61,7 @@ export default async function PortfolioDetailPage({ params }: Props) {
   const { frontmatter, content } = item;
   const heroMedia = frontmatter.heroMedia || {
     type: "image" as const,
-    url: frontmatter.thumbnail || "/media/portfolio/ambient-stage.jpg",
+    url: frontmatter.thumbnail || portfolioFallbackImageUrl,
     alt: frontmatter.title,
   };
   const gallery = frontmatter.gallery || [];
@@ -228,7 +234,7 @@ export default async function PortfolioDetailPage({ params }: Props) {
               {relatedItems.map((related) => {
                 const relatedMedia = related.frontmatter.heroMedia || {
                   type: "image" as const,
-                  url: related.frontmatter.thumbnail || "/media/portfolio/ambient-stage.jpg",
+                  url: related.frontmatter.thumbnail || portfolioFallbackImageUrl,
                   alt: related.frontmatter.title,
                 };
 

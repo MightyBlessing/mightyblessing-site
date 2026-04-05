@@ -4,7 +4,7 @@ import type { PortfolioEntry, PortfolioFrontmatter } from "@/lib/content";
 import { filterPortfolios, getFeaturedPortfolios, getPortfolioCategories } from "@/lib/content";
 import { Tag } from "@/components/Tag";
 import { PortfolioMediaTile } from "@/components/portfolio/PortfolioMediaTile";
-import { portfolioHeroMedia } from "@/lib/portfolio-media";
+import { portfolioFallbackImageUrl, portfolioHeroMedia } from "@/lib/portfolio-media";
 import { buildPageMetadata } from "@/lib/seo";
 
 const ARCHIVE_PAGE_SIZE = 12;
@@ -65,7 +65,7 @@ function getPrimaryMedia(frontmatter: PortfolioFrontmatter) {
   return (
     frontmatter.heroMedia || {
       type: "image" as const,
-      url: frontmatter.thumbnail || "/media/portfolio/ambient-stage.jpg",
+      url: frontmatter.thumbnail || portfolioFallbackImageUrl,
       alt: frontmatter.title,
     }
   );
@@ -224,7 +224,7 @@ export default async function PortfolioPage({ searchParams }: Props) {
   const heroPreviewImage =
     featuredItems[0]?.frontmatter.heroMedia?.poster ||
     featuredItems[0]?.frontmatter.thumbnail ||
-    "/media/portfolio/ambient-stage.jpg";
+    portfolioFallbackImageUrl;
 
   const totalPages = Math.max(1, Math.ceil(filteredItems.length / ARCHIVE_PAGE_SIZE));
   const currentPage = Math.min(requestedPage, totalPages);

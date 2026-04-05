@@ -2,6 +2,7 @@ import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
 import type { PortfolioMediaAsset } from "./portfolio-media";
+import { resolveContentMediaAsset } from "./content-media";
 
 const contentDir = path.join(process.cwd(), "content");
 
@@ -11,6 +12,7 @@ export type PortfolioFrontmatter = {
   title: string;
   slug: string;
   date: string;
+  mediaId?: string;
   status?: PortfolioStatus;
   featured?: boolean;
   featured_order?: number;
@@ -39,12 +41,17 @@ function shouldIncludePortfolio(status: PortfolioStatus, includeUnpublished?: bo
 }
 
 export function normalizePortfolioFrontmatter(frontmatter: Partial<PortfolioFrontmatter>): PortfolioFrontmatter {
-  const firstGalleryItem = frontmatter.gallery?.[0];
+  const heroMedia = resolveContentMediaAsset(frontmatter.heroMedia);
+  const gallery = (frontmatter.gallery || [])
+    .map((item) => resolveContentMediaAsset(item))
+    .filter((item): item is PortfolioMediaAsset => Boolean(item));
+  const firstGalleryItem = gallery[0];
 
   return {
     title: frontmatter.title || "",
     slug: frontmatter.slug || "",
     date: frontmatter.date || "",
+    mediaId: frontmatter.mediaId,
     status: frontmatter.status || "published",
     featured: Boolean(frontmatter.featured),
     featured_order: frontmatter.featured_order,
@@ -55,9 +62,9 @@ export function normalizePortfolioFrontmatter(frontmatter: Partial<PortfolioFron
     categories: frontmatter.categories || [],
     thumbnail:
       frontmatter.thumbnail ||
-      frontmatter.heroMedia?.poster ||
+      heroMedia?.poster ||
       (firstGalleryItem?.type === "image" ? firstGalleryItem.url : firstGalleryItem?.poster),
-    heroMedia: frontmatter.heroMedia,
+    heroMedia,
     search_terms: frontmatter.search_terms || [],
     goals: frontmatter.goals,
     scope: frontmatter.scope,
@@ -65,7 +72,7 @@ export function normalizePortfolioFrontmatter(frontmatter: Partial<PortfolioFron
     process: frontmatter.process,
     metrics: frontmatter.metrics || [],
     testimonials: frontmatter.testimonials || [],
-    gallery: frontmatter.gallery || [],
+    gallery,
     related_cases: frontmatter.related_cases || [],
   };
 }
