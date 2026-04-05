@@ -4,44 +4,44 @@ import { useEffect, useRef } from "react";
 
 const instagramSamples = [
   {
-    account: "Elevation Worship",
-    handle: "@elevationworship",
-    url: "https://www.instagram.com/elevationworship/",
-    image: "/media/portfolio/stage-lights.jpg",
-    label: "Tour Moment",
-    text: "NEW SONG. Sure Been Good. Listen now, and hold onto the moment that keeps echoing after the lights go down.",
+    account: "Mighty Blessing",
+    handle: "@mightyblessing_",
+    url: "https://www.instagram.com/p/DUpySoJkvX8/",
+    image: "/media/instagram/mightyblessing-post-01.jpg",
+    label: "8.15 특별성회",
+    text: "경남기독교총연합회와 함께한 특별성회 현장 셋팅과 연출. 창원 실내체육관에서 2,500명이 함께 예배한 순간을 담은 포스트입니다.",
   },
   {
-    account: "Hillsong Worship",
-    handle: "@hillsongworship",
-    url: "https://www.instagram.com/hillsongworship/",
-    image: "/media/portfolio/home-hero-worship-poster.jpg",
-    label: "Live Worship",
-    text: "Great I AM. Pre-save now. A quiet line, a rising room, and a chorus that feels larger than the frame.",
+    account: "Mighty Blessing",
+    handle: "@mightyblessing_",
+    url: "https://www.instagram.com/p/DTUTGFJElYY/",
+    image: "/media/instagram/mightyblessing-post-02.jpg",
+    label: "청년다니엘기도회",
+    text: "오륜교회에서 진행된 청년다니엘기도회의 무대 제작과 연출 기록. 뜨거운 합심 예배의 밀도를 한 장면으로 전합니다.",
   },
   {
-    account: "Bethel Music",
-    handle: "@bethelmusic",
-    url: "https://www.instagram.com/bethelmusic/",
-    image: "/media/portfolio/worship-room.jpg",
-    label: "Backstage",
-    text: "Worship School in view. The details behind the stage still carry the same atmosphere as the room itself.",
+    account: "Mighty Blessing",
+    handle: "@mightyblessing_",
+    url: "https://www.instagram.com/p/DHNcU9qRbv7/",
+    image: "/media/instagram/mightyblessing-post-03.jpg",
+    label: "WELOVE 애가",
+    text: "WELOVE 애가 집회를 위한 스태프 모집 포스트. 접수와 현장 안내 등 함께 예배를 세워갈 팀을 모으는 장면을 담았습니다.",
   },
   {
-    account: "Elevation Worship",
-    handle: "@elevationworship",
-    url: "https://www.instagram.com/elevationworship/",
-    image: "/media/portfolio/audience-lights.jpg",
-    label: "Crowd Energy",
-    text: "So So Good, out now. Light, crowd, and response moving together like a single pulse across the room.",
+    account: "Mighty Blessing",
+    handle: "@mightyblessing_",
+    url: "https://www.instagram.com/p/DAQG5VgTCv-/",
+    image: "/media/instagram/mightyblessing-post-04.jpg",
+    label: "MultiTracks 런칭",
+    text: "MultiTracks.co.kr 런칭 행사의 운영과 네트워킹 파티를 함께한 기록. 한국 CCM의 새로운 흐름을 여는 자리에 동행했습니다.",
   },
   {
-    account: "Hillsong Worship",
-    handle: "@hillsongworship",
-    url: "https://www.instagram.com/hillsongworship/",
-    image: "/media/portfolio/atmosphere-detail.jpg",
-    label: "Visual Detail",
-    text: "Listen to our worship playlist below. The atmosphere is built as much by tone and texture as by the song itself.",
+    account: "Mighty Blessing",
+    handle: "@mightyblessing_",
+    url: "https://www.instagram.com/p/C9jncGPxEQ3/",
+    image: "/media/instagram/mightyblessing-post-05.jpg",
+    label: "더센트 미션",
+    text: "더센트를 계기로 이어진 남아프리카 선교 이야기. 선교를 수고가 아닌 기쁨의 전파로 다시 바라본 기록을 전합니다.",
   },
 ];
 
@@ -118,7 +118,7 @@ export function InstagramCarouselSection() {
       <div className="container-wide">
         <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
           <div className="max-w-[760px]">
-            <p className="mb-4 text-[11px] font-medium uppercase tracking-[0.18em] text-white/48">Instagram Mood</p>
+            <p className="mb-4 text-[11px] font-medium uppercase tracking-[0.18em] text-white/48">@mightyblessing_</p>
             <h2 className="text-[1.8rem] leading-[1.08] font-semibold tracking-[-0.05em] text-white break-keep sm:text-[2.55rem]">
               현장 기록
             </h2>
