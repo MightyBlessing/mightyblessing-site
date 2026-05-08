@@ -6,6 +6,9 @@ import { CTAButton } from "@/components/CTAButton";
 import { Tag } from "@/components/Tag";
 import { MarkdownContent } from "@/components/MarkdownContent";
 import { PortfolioMediaTile } from "@/components/portfolio/PortfolioMediaTile";
+import { HOME_HERO_POSTER_STORAGE_KEY, resolveContentMediaUrl } from "@/lib/content-media";
+import { resolvePortfolioCardMedia, resolvePortfolioThumbnailUrl } from "@/lib/portfolio-display";
+import { portfolioFallbackImageUrl } from "@/lib/portfolio-media";
 import { buildPageMetadata } from "@/lib/seo";
 
 type Props = { params: Promise<{ slug: string }> };
@@ -32,9 +35,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 
   const image =
-    item.frontmatter.heroMedia?.poster ||
-    item.frontmatter.thumbnail ||
-    (item.frontmatter.gallery?.[0]?.type === "image" ? item.frontmatter.gallery[0].url : item.frontmatter.gallery?.[0]?.poster) ||
+    resolvePortfolioThumbnailUrl(item.frontmatter) ||
+    resolveContentMediaUrl({
+      storageKey: HOME_HERO_POSTER_STORAGE_KEY,
+      fallbackUrl: "/media/portfolio/home-hero-worship-poster.jpg",
+    }) ||
     "/media/portfolio/home-hero-worship-poster.jpg";
 
   return buildPageMetadata({
@@ -55,7 +60,7 @@ export default async function PortfolioDetailPage({ params }: Props) {
   const { frontmatter, content } = item;
   const heroMedia = frontmatter.heroMedia || {
     type: "image" as const,
-    url: frontmatter.thumbnail || "/media/portfolio/ambient-stage.jpg",
+    url: frontmatter.thumbnail || portfolioFallbackImageUrl,
     alt: frontmatter.title,
   };
   const gallery = frontmatter.gallery || [];
@@ -226,11 +231,15 @@ export default async function PortfolioDetailPage({ params }: Props) {
           {relatedItems.length > 0 && (
             <div className="mt-8 grid gap-4 md:grid-cols-2">
               {relatedItems.map((related) => {
-                const relatedMedia = related.frontmatter.heroMedia || {
-                  type: "image" as const,
-                  url: related.frontmatter.thumbnail || "/media/portfolio/ambient-stage.jpg",
-                  alt: related.frontmatter.title,
-                };
+                const relatedMedia =
+                  resolvePortfolioCardMedia(related.frontmatter, {
+                    fallbackUrl: portfolioFallbackImageUrl,
+                    fallbackAlt: related.frontmatter.title,
+                  }) || {
+                    type: "image" as const,
+                    url: portfolioFallbackImageUrl,
+                    alt: related.frontmatter.title,
+                  };
 
                 return (
                   <Link key={related.slug} href={`/portfolio/${related.slug}`} className="group block">

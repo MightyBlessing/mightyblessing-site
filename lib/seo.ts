@@ -1,7 +1,12 @@
 import type { Metadata } from "next";
+import { DEFAULT_OG_IMAGE_STORAGE_KEY, resolveContentMediaUrl } from "@/lib/content-media";
 import { siteDescription, siteName, siteTitle, siteUrl } from "@/lib/site";
 
-const defaultOgImagePath = "/media/portfolio/home-hero-worship-poster.jpg";
+const defaultOgImagePath =
+  resolveContentMediaUrl({
+    storageKey: DEFAULT_OG_IMAGE_STORAGE_KEY,
+    fallbackUrl: "/media/portfolio/home-hero-worship-poster.jpg",
+  }) || "/media/portfolio/home-hero-worship-poster.jpg";
 
 const defaultKeywords = [
   "마이티블레싱",

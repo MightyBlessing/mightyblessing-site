@@ -94,6 +94,17 @@ npm run dev
    **Deploy** 클릭 후 빌드가 끝나면 배포 URL로 접속할 수 있습니다.  
    이후 `main` 브랜치에 push할 때마다 자동 재배포됩니다.
 
+## Lightsail 공동 배포
+
+Vercel 대신 Ubuntu Lightsail 한 대에 여러 앱을 함께 올릴 경우에는 `Nginx + PM2 + 도메인 기반 reverse proxy` 구성을 사용합니다.
+
+- 운영 가이드: [`docs/lightsail-shared-deploy.md`](./docs/lightsail-shared-deploy.md)
+- SSH 예시: [`deploy/lightsail/ssh-config.example`](./deploy/lightsail/ssh-config.example)
+- Nginx 예시: [`deploy/lightsail/nginx/site-a.example.com.conf.example`](./deploy/lightsail/nginx/site-a.example.com.conf.example), [`deploy/lightsail/nginx/site-b.example.com.conf.example`](./deploy/lightsail/nginx/site-b.example.com.conf.example)
+- PM2 예시: [`deploy/lightsail/pm2/mb-site.ecosystem.config.cjs`](./deploy/lightsail/pm2/mb-site.ecosystem.config.cjs)
+- 서버 점검 스크립트: [`scripts/lightsail/check-server.sh`](./scripts/lightsail/check-server.sh)
+- 재배포 스크립트: [`scripts/lightsail/redeploy-mb-site.sh`](./scripts/lightsail/redeploy-mb-site.sh)
+
 ## 콘텐츠 추가
 
 - **포트폴리오**: `content/portfolio/` 에 `slug.md` 추가 (frontmatter: title, slug, date, summary, roles, categories 등)

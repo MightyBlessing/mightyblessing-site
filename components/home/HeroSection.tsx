@@ -3,6 +3,23 @@
 import { useState } from "react";
 import Link from "next/link";
 import { CTAButton } from "../CTAButton";
+import {
+  HOME_HERO_POSTER_STORAGE_KEY,
+  HOME_HERO_VIDEO_STORAGE_KEY,
+  resolveContentMediaUrl,
+} from "@/lib/content-media";
+
+const heroPosterUrl =
+  resolveContentMediaUrl({
+    storageKey: HOME_HERO_POSTER_STORAGE_KEY,
+    fallbackUrl: "/media/portfolio/home-hero-worship-poster.jpg",
+  }) || "/media/portfolio/home-hero-worship-poster.jpg";
+
+const heroVideoUrl =
+  resolveContentMediaUrl({
+    storageKey: HOME_HERO_VIDEO_STORAGE_KEY,
+    fallbackUrl: "/media/portfolio/home-hero-worship.mp4",
+  }) || "/media/portfolio/home-hero-worship.mp4";
 
 export function HeroSection() {
   const [isVideoReady, setIsVideoReady] = useState(false);
@@ -10,7 +27,7 @@ export function HeroSection() {
   return (
     <header className="relative overflow-hidden border-b border-neutral-200 bg-neutral-950 text-white">
       <img
-        src="/media/portfolio/home-hero-worship-poster.jpg"
+        src={heroPosterUrl}
         alt=""
         className="absolute inset-0 h-full w-full object-cover"
         loading="eager"
@@ -25,12 +42,12 @@ export function HeroSection() {
         muted
         loop
         playsInline
-        poster="/media/portfolio/home-hero-worship-poster.jpg"
+        poster={heroPosterUrl}
         preload="metadata"
         aria-hidden="true"
         onLoadedData={() => setIsVideoReady(true)}
       >
-        <source src="/media/portfolio/home-hero-worship.mp4" type="video/mp4" />
+        <source src={heroVideoUrl} type="video/mp4" />
       </video>
       <div className="pointer-events-none absolute inset-y-0 left-0 w-[44%] border-r border-white/8 bg-black/14 sm:w-[34%]" />
       <div className="pointer-events-none absolute inset-y-0 left-[34%] w-[24%] border-x border-white/7 bg-white/[0.03] max-sm:hidden" />

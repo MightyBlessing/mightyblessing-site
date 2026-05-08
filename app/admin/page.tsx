@@ -23,7 +23,7 @@ export default async function AdminDashboardPage() {
               포트폴리오 관리자
             </h1>
             <p className="mt-3 text-[0.98rem] leading-[1.8] text-white/62">
-              초안 저장, 발행, 보관, 복제와 미디어 교체까지 여기서 관리합니다.
+              초안 저장, 발행, 보관과 미디어 교체까지 여기서 관리합니다.
             </p>
           </div>
 
@@ -43,4 +43,3 @@ export default async function AdminDashboardPage() {
     </section>
   );
 }
-

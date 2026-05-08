@@ -4,6 +4,10 @@ import { useEffect, useId, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { PortfolioEditorPayload } from "@/lib/admin/portfolio-admin";
 import type { PortfolioStatus } from "@/lib/content";
+import {
+  FEATURED_PORTFOLIO_ORDER_VALUES,
+  type FeaturedPortfolioOrder,
+} from "@/lib/portfolio-display";
 
 type RelatedCaseOption = {
   slug: string;
@@ -229,6 +233,14 @@ export function PortfolioEditor({
     setValue((prev) => ({ ...prev, [key]: nextValue }));
   }
 
+  function updateFeatured(nextFeatured: boolean) {
+    setValue((prev) => ({
+      ...prev,
+      featured: nextFeatured,
+      featured_order: nextFeatured ? prev.featured_order : undefined,
+    }));
+  }
+
   function updateGalleryItem(id: string, updater: (item: GalleryItem) => GalleryItem) {
     setValue((prev) => ({
       ...prev,
@@ -428,14 +440,14 @@ export function PortfolioEditor({
                     <input
                       type="checkbox"
                       checked={value.featured}
-                      onChange={(event) => updateField("featured", event.target.checked)}
+                      onChange={(event) => updateFeatured(event.target.checked)}
                       className="mt-1 size-4 rounded border-white/20 bg-transparent"
                     />
                     <div>
                       <div className="flex items-center gap-2">
                         <p className="text-[0.94rem] font-medium text-white/82">대표 프로젝트</p>
                         <InfoHint text="체크하면 포트폴리오 상단 대표 프로젝트 영역 후보에 들어갑니다." />
-                        <InfoHint text="옆 숫자는 대표 프로젝트 노출 순서입니다. 숫자가 작을수록 먼저 보입니다." />
+                        <InfoHint text="대표 번호는 1~3만 사용할 수 있고, 같은 번호는 저장 시 새 문서가 우선 가져갑니다." />
                       </div>
                       <p className="mt-1 text-[0.82rem] leading-[1.6] text-white/46">
                         대표 영역 노출 여부와 순서를 함께 제어합니다.
@@ -443,19 +455,30 @@ export function PortfolioEditor({
                     </div>
                   </div>
 
-                  <div className="sm:w-[120px]">
-                    <input
-                      type="number"
-                      min={1}
-                      placeholder="순서"
+                  <div className="sm:w-[160px]">
+                    <select
                       value={value.featured_order || ""}
+                      disabled={!value.featured}
                       onChange={(event) =>
-                        updateField("featured_order", event.target.value ? Number(event.target.value) : undefined)
+                        updateField(
+                          "featured_order",
+                          event.target.value ? (Number(event.target.value) as FeaturedPortfolioOrder) : undefined,
+                        )
                       }
-                      className="w-full rounded-2xl border border-white/10 bg-neutral-950 px-4 py-3 text-white outline-none placeholder:text-white/26 focus:border-[#a9bcff]"
-                    />
+                      className="w-full rounded-2xl border border-white/10 bg-neutral-950 px-4 py-3 text-white outline-none focus:border-[#a9bcff] disabled:cursor-not-allowed disabled:text-white/32"
+                    >
+                      <option value="">대표 순서</option>
+                      {FEATURED_PORTFOLIO_ORDER_VALUES.map((order) => (
+                        <option key={order} value={order}>
+                          #{order}
+                        </option>
+                      ))}
+                    </select>
                   </div>
                 </div>
+                <p className="mt-3 text-[0.78rem] leading-[1.6] text-white/40">
+                  대표 체크를 해제하면 번호는 자동으로 비워지고, 같은 번호가 있으면 저장한 문서만 해당 슬롯을 유지합니다.
+                </p>
               </div>
             </div>
           </div>
