@@ -60,7 +60,7 @@ export default function InquiryPage() {
               프로덕트
             </h2>
             <p className="mt-5 text-[1rem] leading-[1.75] text-white/70 break-keep sm:text-[1.05rem]">
-              마이티블레싱이 함께 만든 서비스입니다.
+              마이티블레싱이 만든 서비스입니다.
             </p>
 
             <ul className="mt-10 flex flex-col gap-3">
