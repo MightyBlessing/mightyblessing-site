@@ -5,6 +5,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import type { AdminPortfolioDocument } from "@/lib/admin/portfolio-admin";
 import type { PortfolioStatus } from "@/lib/content";
+import { resolvePortfolioThumbnailUrl } from "@/lib/portfolio-display";
 
 type Props = {
   items: AdminPortfolioDocument[];
@@ -81,7 +82,7 @@ export function DashboardClient({ items, categories }: Props) {
     counts[itemStatus] += 1;
   }
 
-  async function handleAction(action: "duplicate" | "setStatus", slug: string, nextStatus?: PortfolioStatus) {
+  async function handleAction(slug: string, nextStatus: PortfolioStatus) {
     setPendingSlug(slug);
     setError("");
 
@@ -91,25 +92,16 @@ export function DashboardClient({ items, categories }: Props) {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(
-          action === "duplicate"
-            ? { action, slug }
-            : {
-                action,
-                slug,
-                status: nextStatus,
-              },
-        ),
+        body: JSON.stringify({
+          action: "setStatus",
+          slug,
+          status: nextStatus,
+        }),
       });
 
-      const data = (await response.json()) as { error?: string; slug?: string };
+      const data = (await response.json()) as { error?: string };
       if (!response.ok) {
         throw new Error(data.error || "처리 중 오류가 발생했습니다.");
-      }
-
-      if (action === "duplicate" && data.slug) {
-        router.push(`/admin/portfolio/${data.slug}`);
-        return;
       }
 
       router.refresh();
@@ -182,6 +174,7 @@ export function DashboardClient({ items, categories }: Props) {
         <div className="mt-6 grid gap-4">
           {filteredItems.map((item) => {
             const itemStatus = item.frontmatter.status || "published";
+            const thumbnailUrl = resolvePortfolioThumbnailUrl(item.frontmatter);
             return (
               <article
                 key={item.slug}
@@ -190,10 +183,10 @@ export function DashboardClient({ items, categories }: Props) {
                 <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_280px] lg:items-start">
                   <div className="flex gap-4">
                     <div className="hidden h-[92px] w-[124px] overflow-hidden rounded-[1.1rem] border border-white/10 bg-white/5 sm:block">
-                      {item.frontmatter.thumbnail ? (
+                      {thumbnailUrl ? (
                         // eslint-disable-next-line @next/next/no-img-element
                         <img
-                          src={item.frontmatter.thumbnail}
+                          src={thumbnailUrl}
                           alt={item.frontmatter.title}
                           className="h-full w-full object-cover"
                         />
@@ -242,18 +235,10 @@ export function DashboardClient({ items, categories }: Props) {
                     >
                       수정
                     </Link>
-                    <button
-                      type="button"
-                      onClick={() => handleAction("duplicate", item.slug)}
-                      disabled={pendingSlug === item.slug}
-                      className="inline-flex min-h-[40px] items-center justify-center rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-[0.85rem] font-medium text-white/78 transition-colors hover:bg-white/[0.08] hover:text-white disabled:opacity-60"
-                    >
-                      복제
-                    </button>
                     {itemStatus !== "published" && (
                       <button
                         type="button"
-                        onClick={() => handleAction("setStatus", item.slug, "published")}
+                        onClick={() => handleAction(item.slug, "published")}
                         disabled={pendingSlug === item.slug}
                         className="inline-flex min-h-[40px] items-center justify-center rounded-full border border-[#9ce2b0]/15 bg-[#9ce2b0]/10 px-4 py-2 text-[0.85rem] font-medium text-[#c1f1cb] transition-colors hover:bg-[#9ce2b0]/16 disabled:opacity-60"
                       >
@@ -263,7 +248,7 @@ export function DashboardClient({ items, categories }: Props) {
                     {itemStatus !== "draft" && (
                       <button
                         type="button"
-                        onClick={() => handleAction("setStatus", item.slug, "draft")}
+                        onClick={() => handleAction(item.slug, "draft")}
                         disabled={pendingSlug === item.slug}
                         className="inline-flex min-h-[40px] items-center justify-center rounded-full border border-[#a9bcff]/20 bg-[#a9bcff]/10 px-4 py-2 text-[0.85rem] font-medium text-[#d7e0ff] transition-colors hover:bg-[#a9bcff]/16 disabled:opacity-60"
                       >
@@ -273,7 +258,7 @@ export function DashboardClient({ items, categories }: Props) {
                     {itemStatus !== "archived" && (
                       <button
                         type="button"
-                        onClick={() => handleAction("setStatus", item.slug, "archived")}
+                        onClick={() => handleAction(item.slug, "archived")}
                         disabled={pendingSlug === item.slug}
                         className="inline-flex min-h-[40px] items-center justify-center rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-[0.85rem] font-medium text-white/62 transition-colors hover:bg-white/[0.08] hover:text-white disabled:opacity-60"
                       >

@@ -1,10 +1,10 @@
-import { getAllPortfolios } from "@/lib/content";
+import { getFeaturedPortfolios } from "@/lib/content";
+import { resolvePortfolioThumbnailUrl } from "@/lib/portfolio-display";
 import { Card } from "../Card";
 import Link from "next/link";
 
 export function FeaturedPortfolioSection() {
-  const all = getAllPortfolios();
-  const featured = all.slice(0, 3);
+  const featured = getFeaturedPortfolios(3);
   if (featured.length === 0) return null;
   return (
     <section className="overflow-hidden bg-[#F8F9FB] py-24 dark:bg-[#0F0F12]">
@@ -24,7 +24,7 @@ export function FeaturedPortfolioSection() {
               href={`/portfolio/${slug}`}
               tags={frontmatter.roles?.slice(0, 3)}
               date={frontmatter.date}
-              thumbnail={frontmatter.thumbnail}
+              thumbnail={resolvePortfolioThumbnailUrl(frontmatter)}
             />
           ))}
         </div>

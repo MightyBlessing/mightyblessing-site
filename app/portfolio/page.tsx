@@ -2,9 +2,13 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import type { PortfolioEntry, PortfolioFrontmatter } from "@/lib/content";
 import { filterPortfolios, getFeaturedPortfolios, getPortfolioCategories } from "@/lib/content";
+import {
+  resolvePortfolioCardMedia,
+  resolvePortfolioThumbnailUrl,
+} from "@/lib/portfolio-display";
 import { Tag } from "@/components/Tag";
 import { PortfolioMediaTile } from "@/components/portfolio/PortfolioMediaTile";
-import { portfolioFallbackImageUrl, portfolioHeroMedia } from "@/lib/portfolio-media";
+import { portfolioFallbackImageUrl, portfolioHeroMedia, type PortfolioMediaAsset } from "@/lib/portfolio-media";
 import { buildPageMetadata } from "@/lib/seo";
 
 const ARCHIVE_PAGE_SIZE = 12;
@@ -61,11 +65,14 @@ function buildPortfolioHref({
   return serialized ? `/portfolio?${serialized}#portfolio-archive` : "/portfolio#portfolio-archive";
 }
 
-function getPrimaryMedia(frontmatter: PortfolioFrontmatter) {
+function getCardMedia(frontmatter: PortfolioFrontmatter): PortfolioMediaAsset {
   return (
-    frontmatter.heroMedia || {
-      type: "image" as const,
-      url: frontmatter.thumbnail || portfolioFallbackImageUrl,
+    resolvePortfolioCardMedia(frontmatter, {
+      fallbackUrl: portfolioFallbackImageUrl,
+      fallbackAlt: frontmatter.title,
+    }) || {
+      type: "image",
+      url: portfolioFallbackImageUrl,
       alt: frontmatter.title,
     }
   );
@@ -96,7 +103,7 @@ function FeaturedCard({
   item: PortfolioEntry;
   large?: boolean;
 }) {
-  const media = getPrimaryMedia(item.frontmatter);
+  const media = getCardMedia(item.frontmatter);
 
   return (
     <Link href={`/portfolio/${item.slug}`} className="group block">
@@ -151,7 +158,7 @@ function FeaturedCard({
 }
 
 function ArchiveCard({ item }: { item: PortfolioEntry }) {
-  const media = getPrimaryMedia(item.frontmatter);
+  const media = getCardMedia(item.frontmatter);
 
   return (
     <Link href={`/portfolio/${item.slug}`} className="group block h-full">
@@ -222,8 +229,9 @@ export default async function PortfolioPage({ searchParams }: Props) {
   const featuredItems = !hasFilters ? getFeaturedPortfolios(3) : [];
   const heroChips = categories.slice(0, 4);
   const heroPreviewImage =
-    featuredItems[0]?.frontmatter.heroMedia?.poster ||
-    featuredItems[0]?.frontmatter.thumbnail ||
+    resolvePortfolioThumbnailUrl(featuredItems[0]?.frontmatter, {
+      fallbackUrl: portfolioFallbackImageUrl,
+    }) ||
     portfolioFallbackImageUrl;
 
   const totalPages = Math.max(1, Math.ceil(filteredItems.length / ARCHIVE_PAGE_SIZE));

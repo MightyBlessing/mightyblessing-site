@@ -8,10 +8,13 @@ import {
   type PortfolioStatus,
   normalizePortfolioFrontmatter,
 } from "@/lib/content";
+import {
+  normalizePortfolioFeaturedSelection,
+  type FeaturedPortfolioOrder,
+} from "@/lib/portfolio-display";
 import { base64ToString, stringToBase64 } from "./base64";
 import { getAdminRepository } from "./repository";
 import {
-  copyContentMediaFile,
   deleteContentMediaFiles,
   isContentMediaStorageConfigured,
   uploadContentMediaFile,
@@ -47,7 +50,7 @@ export type PortfolioEditorPayload = {
   location?: string;
   partner?: string;
   featured: boolean;
-  featured_order?: number;
+  featured_order?: FeaturedPortfolioOrder;
   status: PortfolioStatus;
   roles: string[];
   categories: string[];
@@ -156,18 +159,6 @@ function slugify(value: string) {
     .replace(/^-|-$/g, "");
 }
 
-function uniqueSlug(baseSlug: string, usedSlugs: Set<string>) {
-  let nextSlug = baseSlug;
-  let index = 2;
-
-  while (usedSlugs.has(nextSlug)) {
-    nextSlug = `${baseSlug}-${index}`;
-    index += 1;
-  }
-
-  return nextSlug;
-}
-
 function createPortfolioMediaId(seed?: string) {
   const normalized = slugify(seed || "");
   return normalized || `portfolio-${randomUUID().slice(0, 8)}`;
@@ -263,10 +254,12 @@ function toStoredMediaAsset(asset?: PortfolioMediaAsset) {
 }
 
 function cleanFrontmatter(frontmatter: PortfolioFrontmatter): PortfolioFrontmatter {
+  const featuredSelection = normalizePortfolioFeaturedSelection(frontmatter);
+
   return normalizePortfolioFrontmatter({
     ...frontmatter,
+    ...featuredSelection,
     thumbnail: undefined,
-    featured_order: frontmatter.featured ? frontmatter.featured_order : undefined,
     metrics: (frontmatter.metrics || []).filter((item) => item.label.trim() && item.value.trim()),
     related_cases: (frontmatter.related_cases || []).filter(Boolean),
     search_terms: (frontmatter.search_terms || []).filter(Boolean),
@@ -311,7 +304,7 @@ async function readPortfolioFile(slug: string) {
   } satisfies AdminPortfolioDocument;
 }
 
-function commitMessage(action: "create" | "update" | "publish" | "archive" | "duplicate", slug: string) {
+function commitMessage(action: "create" | "update" | "publish" | "archive", slug: string) {
   return `admin: ${action} portfolio ${slug}`;
 }
 
@@ -485,6 +478,12 @@ export async function saveAdminPortfolio(
   const existingFrontmatter = existing?.frontmatter;
   const createdStorageKeys = new Set<string>();
   const deletes = new Set<string>();
+  const nextStatus =
+    action === "publish" ? "published" : action === "archive" ? "archived" : ensureStatus(payload.status);
+  const featuredSelection = normalizePortfolioFeaturedSelection({
+    featured: payload.featured,
+    featured_order: payload.featured_order,
+  });
 
   const heroMedia = await buildHeroMedia(mediaId, payload, uploads, createdStorageKeys);
   const gallery = await buildGalleryMedia(mediaId, payload, uploads, createdStorageKeys);
@@ -494,9 +493,9 @@ export async function saveAdminPortfolio(
     slug: nextSlug,
     mediaId,
     date: payload.date,
-    status: ensureStatus(payload.status),
-    featured: payload.featured,
-    featured_order: payload.featured ? payload.featured_order : undefined,
+    status: nextStatus,
+    featured: featuredSelection.featured,
+    featured_order: featuredSelection.featured_order,
     location: payload.location?.trim() || undefined,
     partner: payload.partner?.trim() || undefined,
     summary: payload.summary.trim(),
@@ -516,6 +515,25 @@ export async function saveAdminPortfolio(
     heroMedia,
     gallery,
   });
+  const conflictingFeaturedItems =
+    frontmatter.featured_order === undefined
+      ? []
+      : allItems.filter(
+          (item) => item.slug !== previousSlug && item.frontmatter.featured_order === frontmatter.featured_order,
+        );
+  const conflictingUpserts = conflictingFeaturedItems.map((item) => ({
+    path: portfolioContentPath(item.slug),
+    contentBase64: stringToBase64(
+      serializePortfolioFile(
+        cleanFrontmatter({
+          ...item.frontmatter,
+          featured: false,
+          featured_order: undefined,
+        }),
+        item.content,
+      ),
+    ),
+  }));
 
   const nextManagedStorageKeys = new Set(collectManagedStorageKeys(frontmatter));
   const removedStorageKeys = existingFrontmatter
@@ -541,6 +559,7 @@ export async function saveAdminPortfolio(
           path: portfolioContentPath(nextSlug),
           contentBase64: stringToBase64(markdownContent),
         },
+        ...conflictingUpserts,
       ],
       deletes: [...deletes].filter((filePath) => filePath !== portfolioContentPath(nextSlug)),
     });
@@ -559,101 +578,6 @@ export async function saveAdminPortfolio(
 
   return { slug: nextSlug };
 }
-
-async function duplicateStorageBackedAsset(
-  asset: PortfolioMediaAsset,
-  nextMediaId: string,
-  fileBaseName: string,
-  createdStorageKeys: Set<string>,
-): Promise<PortfolioMediaAsset | undefined> {
-  const nextStorageKey = asset.storageKey
-    ? buildPortfolioStorageKey(nextMediaId, `${fileBaseName}${fileExtension(asset.storageKey) || ".jpg"}`)
-    : undefined;
-  const nextPosterStorageKey = asset.posterStorageKey
-    ? buildPortfolioStorageKey(nextMediaId, `${fileBaseName}-poster${fileExtension(asset.posterStorageKey) || ".jpg"}`)
-    : undefined;
-
-  if (asset.storageKey && nextStorageKey) {
-    await copyContentMediaFile(asset.storageKey, nextStorageKey);
-    createdStorageKeys.add(nextStorageKey);
-  }
-
-  if (asset.posterStorageKey && nextPosterStorageKey) {
-    await copyContentMediaFile(asset.posterStorageKey, nextPosterStorageKey);
-    createdStorageKeys.add(nextPosterStorageKey);
-  }
-
-  return resolveManagedMediaAsset({
-    type: asset.type,
-    storageKey: nextStorageKey,
-    legacyUrl: !asset.storageKey ? asset.url : undefined,
-    posterStorageKey: nextPosterStorageKey,
-    legacyPosterUrl: !asset.posterStorageKey ? asset.poster : undefined,
-    alt: asset.alt,
-    caption: asset.caption,
-  });
-}
-
-export async function duplicateAdminPortfolio(slug: string) {
-  const repository = getAdminRepository();
-  const existing = await getAdminPortfolio(slug);
-  if (!existing) {
-    throw new Error("복제할 포트폴리오를 찾을 수 없습니다.");
-  }
-
-  const allItems = await listAdminPortfolios();
-  const nextSlug = uniqueSlug(`${existing.slug}-copy`, new Set(allItems.map((item) => item.slug)));
-  const nextTitle = `${existing.frontmatter.title} 복사본`;
-  const nextMediaId = createPortfolioMediaId(nextSlug);
-  const createdStorageKeys = new Set<string>();
-
-  try {
-    const duplicatedHero = existing.frontmatter.heroMedia
-      ? await duplicateStorageBackedAsset(existing.frontmatter.heroMedia, nextMediaId, "hero", createdStorageKeys)
-      : undefined;
-    const duplicatedGallery = (
-      await Promise.all(
-        (existing.frontmatter.gallery || []).map((item, index) =>
-          duplicateStorageBackedAsset(
-            item,
-            nextMediaId,
-            `detail-${String(index + 1).padStart(2, "0")}`,
-            createdStorageKeys,
-          ),
-        ),
-      )
-    ).filter((item): item is PortfolioMediaAsset => Boolean(item));
-
-    const nextFrontmatter = cleanFrontmatter({
-      ...existing.frontmatter,
-      title: nextTitle,
-      slug: nextSlug,
-      mediaId: nextMediaId,
-      status: "draft",
-      featured: false,
-      featured_order: undefined,
-      heroMedia: duplicatedHero,
-      gallery: duplicatedGallery,
-    });
-
-    await repository.commitChanges({
-      message: commitMessage("duplicate", nextSlug),
-      upserts: [
-        {
-          path: portfolioContentPath(nextSlug),
-          contentBase64: stringToBase64(serializePortfolioFile(nextFrontmatter, existing.content)),
-        },
-      ],
-      deletes: [],
-    });
-  } catch (error) {
-    await cleanupCreatedStorageKeys(createdStorageKeys);
-    throw error;
-  }
-
-  return { slug: nextSlug };
-}
-
 export async function updateAdminPortfolioStatus(slug: string, status: PortfolioStatus) {
   const existing = await getAdminPortfolio(slug);
   if (!existing) {
