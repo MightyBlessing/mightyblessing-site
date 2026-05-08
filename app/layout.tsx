@@ -26,6 +26,11 @@ export const metadata: Metadata = {
     shortcut: "/favicon.ico",
     apple: "/favicon.ico",
   },
+  verification: {
+    other: {
+      "naver-site-verification": "60bd4071883dc996d703fa46ad4677d7e92a026d",
+    },
+  },
 };
 
 const organizationJsonLd = {
