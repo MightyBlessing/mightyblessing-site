@@ -2,9 +2,7 @@ const CONTACT_EMAIL = "contact@mightyblessing.com";
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 type InquiryPayload = {
-  name?: string;
   email?: string;
-  organization?: string;
   message?: string;
   company?: string;
 };
@@ -18,45 +16,28 @@ function escapeHtml(value: string) {
     .replaceAll("'", "&#39;");
 }
 
-function buildMailBody(payload: Required<Pick<InquiryPayload, "name" | "email" | "message">> & InquiryPayload) {
+function buildMailBody(email: string, message: string) {
   return [
     "새 프로젝트 문의가 도착했습니다.",
     "",
-    `이름: ${payload.name}`,
-    `이메일: ${payload.email}`,
-    `단체명: ${payload.organization || "-"}`,
+    `회신 받을 이메일: ${email}`,
     "",
     "[문의 내용]",
-    payload.message,
+    message,
   ].join("\n");
 }
 
-function buildMailHtml(payload: Required<Pick<InquiryPayload, "name" | "email" | "message">> & InquiryPayload) {
-  const rows = [
-    ["이름", payload.name],
-    ["이메일", payload.email],
-    ["단체명", payload.organization || "-"],
-  ];
-
+function buildMailHtml(email: string, message: string) {
   return `
     <div style="font-family:Arial,sans-serif;line-height:1.7;color:#111827">
       <h2 style="margin:0 0 16px">새 프로젝트 문의가 도착했습니다.</h2>
-      <table style="width:100%;border-collapse:collapse;margin-bottom:24px">
-        <tbody>
-          ${rows
-            .map(
-              ([label, value]) => `
-                <tr>
-                  <td style="padding:8px 0;color:#6b7280;width:140px;vertical-align:top">${escapeHtml(label)}</td>
-                  <td style="padding:8px 0">${escapeHtml(value)}</td>
-                </tr>`,
-            )
-            .join("")}
-        </tbody>
-      </table>
+      <p style="margin:0 0 16px;color:#374151">
+        회신 받을 이메일:
+        <a href="mailto:${escapeHtml(email)}" style="color:#4338ca">${escapeHtml(email)}</a>
+      </p>
       <div>
         <p style="margin:0 0 8px;color:#6b7280">문의 내용</p>
-        <div style="white-space:pre-wrap">${escapeHtml(payload.message)}</div>
+        <div style="white-space:pre-wrap">${escapeHtml(message)}</div>
       </div>
     </div>
   `;
@@ -70,21 +51,18 @@ export async function POST(request: Request) {
       return Response.json({ ok: true }, { status: 200 });
     }
 
-    const name = payload.name?.trim() || "";
     const email = payload.email?.trim() || "";
     const message = payload.message?.trim() || "";
 
-    if (!name || !email || !message) {
-      return Response.json({ error: "이름, 이메일, 문의 내용은 꼭 입력해 주세요." }, { status: 400 });
+    if (!email || !message) {
+      return Response.json({ error: "이메일과 문의 내용을 입력해 주세요." }, { status: 400 });
     }
 
     if (!EMAIL_PATTERN.test(email)) {
       return Response.json({ error: "올바른 이메일 형식을 입력해 주세요." }, { status: 400 });
     }
 
-    const subjectBase = payload.organization?.trim() || name;
-    const subject = `[프로젝트 문의] ${subjectBase}`;
-    const normalizedPayload = { ...payload, name, email, message };
+    const subject = `[프로젝트 문의] ${email}`;
 
     const resendApiKey = process.env.RESEND_API_KEY;
     const fromEmail = process.env.INQUIRY_FROM_EMAIL;
@@ -113,8 +91,8 @@ export async function POST(request: Request) {
         to: [toEmail],
         reply_to: email,
         subject,
-        text: buildMailBody(normalizedPayload),
-        html: buildMailHtml(normalizedPayload),
+        text: buildMailBody(email, message),
+        html: buildMailHtml(email, message),
       }),
     });
 
