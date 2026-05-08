@@ -54,49 +54,16 @@ npm run dev
   - `ADMIN_ID`
   - `ADMIN_PASSWORD`
   - `ADMIN_SESSION_SECRET`
-- GitHub 연동 시 admin 저장은 저장소 커밋으로 이어지고, Vercel 재배포 후 공개 사이트에 반영됩니다.
+- GitHub 연동 시 admin 저장은 저장소 커밋으로 이어지고, 다음 재배포 시 공개 사이트에 반영됩니다.
   - `GITHUB_TOKEN`
   - `GITHUB_OWNER`
   - `GITHUB_REPO`
   - `GITHUB_BRANCH`
 - GitHub 환경 변수가 없으면 로컬 개발 환경에서는 현재 워크스페이스 파일을 직접 수정하는 방식으로 동작합니다.
 
-## Vercel 배포
+## 배포 — Lightsail (Nginx + PM2)
 
-1. **저장소 푸시**  
-   프로젝트를 GitHub 저장소에 푸시합니다.
-   ```bash
-   git init
-   git add .
-   git commit -m "Initial commit"
-   git remote add origin https://github.com/YOUR_USERNAME/mightyblessing-site.git
-   git push -u origin main
-   ```
-
-2. **Vercel 연결**  
-   - [vercel.com](https://vercel.com) 로그인 후 **Add New → Project**
-   - GitHub에서 `mightyblessing-site` 저장소 선택
-   - **Framework Preset**: Next.js (자동 감지)
-   - **Build Command**: `npm run build` (기본값)
-   - **Output Directory**: 비워 두기 (Next.js 기본값)
-   - **Install Command**: `npm install` (기본값)
-
-3. **환경 변수 (선택)**  
-   프로젝트 설정 → **Environment Variables**에서 추가:
-   - `NEXT_PUBLIC_SITE_URL` = 배포된 사이트 URL  
-     (예: `https://mightyblessing-site.vercel.app` 또는 커스텀 도메인)  
-   → sitemap·robots에 사용됩니다.
-   - `NEXT_PUBLIC_GA_MEASUREMENT_ID` = GA4 측정 ID  
-     (예: `G-X195JMZNYZ`)  
-   → 전체 페이지 방문 추적에 사용됩니다.
-
-4. **Deploy**  
-   **Deploy** 클릭 후 빌드가 끝나면 배포 URL로 접속할 수 있습니다.  
-   이후 `main` 브랜치에 push할 때마다 자동 재배포됩니다.
-
-## Lightsail 공동 배포
-
-Vercel 대신 Ubuntu Lightsail 한 대에 여러 앱을 함께 올릴 경우에는 `Nginx + PM2 + 도메인 기반 reverse proxy` 구성을 사용합니다.
+운영은 Ubuntu Lightsail 한 대에서 `Nginx + PM2 + 도메인 기반 reverse proxy` 구성으로 동작합니다. 같은 인스턴스에 다른 앱을 함께 올리는 공동 운영 형태도 지원합니다.
 
 - 운영 가이드: [`docs/lightsail-shared-deploy.md`](./docs/lightsail-shared-deploy.md)
 - SSH 예시: [`deploy/lightsail/ssh-config.example`](./deploy/lightsail/ssh-config.example)

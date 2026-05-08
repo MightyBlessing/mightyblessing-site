@@ -271,7 +271,7 @@ SEO: sitemap/robots, OG, JSON-LD(옵션)
 
 Analytics: GA4 또는 Plausible
 
-Deployment: Vercel
+Deployment: Lightsail (Ubuntu, Nginx + PM2)
 
 10. 이벤트/분석(최소)
 
