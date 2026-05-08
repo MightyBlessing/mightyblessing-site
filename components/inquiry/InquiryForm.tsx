@@ -104,7 +104,7 @@ export function InquiryForm() {
         value={value.email}
         onChange={(event) => updateField("email", event.target.value)}
         placeholder="이메일"
-        className="w-full border-b border-white/15 bg-transparent px-0 py-3 text-[1rem] text-white outline-none placeholder:text-white/35 focus:border-[#a9bcff]"
+        className="w-full rounded-xl border border-[#a9bcff]/40 bg-[#a9bcff]/[0.12] px-4 py-3 text-[1rem] text-white outline-none transition-colors placeholder:text-white/45 focus:border-[#a9bcff]/70 focus:bg-[#a9bcff]/[0.18]"
         autoComplete="email"
         required
       />
@@ -114,7 +114,7 @@ export function InquiryForm() {
         onChange={(event) => updateField("message", event.target.value)}
         placeholder="문의 내용을 자유롭게 적어주세요."
         rows={6}
-        className="w-full resize-y border-b border-white/15 bg-transparent px-0 py-3 text-[1rem] leading-[1.8] text-white outline-none placeholder:text-white/35 focus:border-[#a9bcff]"
+        className="w-full resize-y rounded-xl border border-[#a9bcff]/40 bg-[#a9bcff]/[0.12] px-4 py-3 text-[1rem] leading-[1.8] text-white outline-none transition-colors placeholder:text-white/45 focus:border-[#a9bcff]/70 focus:bg-[#a9bcff]/[0.18]"
         required
       />
 

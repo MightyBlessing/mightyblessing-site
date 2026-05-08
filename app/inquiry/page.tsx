@@ -105,10 +105,10 @@ export default function InquiryPage() {
                 if (product.upcoming) {
                   return (
                     <li key={product.name}>
-                      <div className="flex items-center gap-4 rounded-2xl border border-white/10 bg-white/[0.03] p-4">
+                      <div className="flex items-center gap-4 rounded-2xl border border-[#a9bcff]/45 bg-[#a9bcff]/[0.14] p-4">
                         {tile}
                         {info}
-                        <span className="flex-shrink-0 rounded-full border border-white/15 bg-white/[0.06] px-2.5 py-1 text-[0.72rem] font-medium tracking-[0.05em] text-white/65">
+                        <span className="flex-shrink-0 rounded-full border border-[#a9bcff]/55 bg-[#a9bcff]/[0.20] px-2.5 py-1 text-[0.72rem] font-medium tracking-[0.05em] text-[#d7e0ff]">
                           예정
                         </span>
                       </div>
@@ -122,7 +122,7 @@ export default function InquiryPage() {
                       href={product.href}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="group flex items-center gap-4 rounded-2xl border border-white/10 bg-white/[0.03] p-4 transition-colors hover:border-white/25 hover:bg-white/[0.06]"
+                      className="group flex items-center gap-4 rounded-2xl border border-[#a9bcff]/45 bg-[#a9bcff]/[0.14] p-4 transition-colors hover:border-[#a9bcff]/65 hover:bg-[#a9bcff]/[0.20]"
                     >
                       {tile}
                       {info}
