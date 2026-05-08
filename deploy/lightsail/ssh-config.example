@@ -1,0 +1,7 @@
+Host lightsail-mbweb
+  HostName 3.34.255.172
+  User ubuntu
+  IdentityFile ~/.ssh/lightsail-mbweb.pem
+  IdentitiesOnly yes
+  ServerAliveInterval 30
+  ServerAliveCountMax 3
