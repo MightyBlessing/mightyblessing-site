@@ -3,12 +3,12 @@
 set -euo pipefail
 
 KEY_PATH="${1:-${LIGHTSAIL_KEY_PATH:-}}"
-HOST="${2:-${LIGHTSAIL_HOST:-3.34.255.172}}"
+HOST="${2:-${LIGHTSAIL_HOST:-15.165.62.46}}"
 USER_NAME="${LIGHTSAIL_USER:-ubuntu}"
 
 if [[ -z "${KEY_PATH}" ]]; then
   echo "Usage: $0 <pem-path> [host]" >&2
-  echo "Example: $0 ~/.ssh/lightsail-mbweb.pem 3.34.255.172" >&2
+  echo "Example: $0 ~/.ssh/lightsail-mbweb.pem 15.165.62.46" >&2
   exit 1
 fi
 

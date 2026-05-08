@@ -1,6 +1,6 @@
 # Lightsail 공동 배포 가이드
 
-이 문서는 `3.34.255.172` Ubuntu Lightsail 인스턴스 한 대에 두 개의 웹앱을 함께 운영하기 위한 표준 배포 가이드입니다.
+이 문서는 `15.165.62.46` Ubuntu Lightsail 인스턴스 한 대에 두 개의 웹앱을 함께 운영하기 위한 표준 배포 가이드입니다.
 
 - 외부 진입: 도메인/서브도메인 기준 분기
 - 내부 런타임: PM2 + 로컬 포트 분리
@@ -30,7 +30,7 @@ chmod 400 ~/.ssh/lightsail-mbweb.pem
 직접 접속:
 
 ```bash
-ssh -i ~/.ssh/lightsail-mbweb.pem ubuntu@3.34.255.172
+ssh -i ~/.ssh/lightsail-mbweb.pem ubuntu@15.165.62.46
 ```
 
 반복 접속이 많다면 [`deploy/lightsail/ssh-config.example`](../deploy/lightsail/ssh-config.example)을 `~/.ssh/config`에 반영합니다.
@@ -152,7 +152,7 @@ sudo systemctl reload nginx
 
 도메인이 아직 없으면 이 단계는 보류합니다.
 
-DNS가 준비되면 각 서브도메인이 `3.34.255.172`를 가리키도록 설정한 뒤 아래 순서로 진행합니다.
+DNS가 준비되면 각 서브도메인이 `15.165.62.46`를 가리키도록 설정한 뒤 아래 순서로 진행합니다.
 
 ```bash
 sudo nginx -t

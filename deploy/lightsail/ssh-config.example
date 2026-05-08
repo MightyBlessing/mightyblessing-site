@@ -1,5 +1,5 @@
 Host lightsail-mbweb
-  HostName 3.34.255.172
+  HostName 15.165.62.46
   User ubuntu
   IdentityFile ~/.ssh/lightsail-mbweb.pem
   IdentitiesOnly yes

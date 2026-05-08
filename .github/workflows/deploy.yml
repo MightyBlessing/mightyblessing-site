@@ -27,6 +27,4 @@ jobs:
           chmod 400 ~/.ssh/lightsail-mbweb.pem
 
       - name: Redeploy
-        env:
-          LIGHTSAIL_HOST: 15.165.62.46
         run: ./scripts/lightsail/redeploy-mb-site.sh ~/.ssh/lightsail-mbweb.pem
