@@ -19,7 +19,6 @@ export type ContentMediaAssetInput = Partial<Omit<ContentMediaAsset, "url">> & {
 
 export const HOME_HERO_VIDEO_STORAGE_KEY = "home/hero/video.mp4";
 export const HOME_HERO_POSTER_STORAGE_KEY = "home/hero/poster.jpg";
-export const DEFAULT_OG_IMAGE_STORAGE_KEY = HOME_HERO_POSTER_STORAGE_KEY;
 
 const homeHeroFallbacks: Record<string, string> = {
   [HOME_HERO_VIDEO_STORAGE_KEY]: "/media/portfolio/home-hero-worship.mp4",
