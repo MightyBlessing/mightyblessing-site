@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-const blogUrl = "https://mbplatform-eight.vercel.app/";
+const blogUrl = "https://blog.mightyblessing.com/";
 
 const nav = [
   { label: "홈", href: "/" },
