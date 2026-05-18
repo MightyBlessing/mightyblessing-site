@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-const blogUrl = "https://blog.mightyblessing.com/";
+const blogUrl = process.env.NEXT_PUBLIC_BLOG_URL ?? "https://blog.mightyblessing.com/";
 
 const nav = [
   { label: "홈", href: "/" },
