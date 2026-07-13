@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import type { ReactNode } from "react";
 import { InquiryForm } from "@/components/inquiry/InquiryForm";
 import { buildPageMetadata } from "@/lib/seo";
 
@@ -14,6 +15,7 @@ type Product = {
   tagline: string;
   href?: string;
   logo?: string;
+  mark?: ReactNode;
   upcoming?: boolean;
 };
 
@@ -33,7 +35,18 @@ const products: Product[] = [
   {
     name: "라이브텍스트",
     tagline: "관객의 현장 메시지를 무대로 실시간 송출",
-    upcoming: true,
+    href: "https://livetext.mightyblessing.com/",
+    mark: (
+      <span className="flex items-center gap-1.5">
+        <span
+          aria-hidden="true"
+          className="h-1.5 w-1.5 flex-shrink-0 rounded-full bg-[#ff6b6b]"
+        />
+        <span className="text-[0.66rem] font-bold tracking-[0.14em] text-white">
+          LIVE TEXT
+        </span>
+      </span>
+    ),
   },
 ];
 
@@ -74,6 +87,8 @@ export default function InquiryPage() {
                         alt={`${product.name} 로고`}
                         className="h-full w-full object-contain"
                       />
+                    ) : product.mark ? (
+                      product.mark
                     ) : (
                       <svg
                         aria-hidden="true"
