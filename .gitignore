@@ -38,3 +38,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# User-supplied originals and local review output
+/input/
+/artifacts-local/
+__pycache__/
+*.pyc

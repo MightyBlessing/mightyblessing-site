@@ -61,7 +61,7 @@ export async function uploadContentMediaFile(storageKey: string, file: UploadedB
   const { client, bucket } = createStorageClient();
   const binary = base64ToBytes(file.contentBase64);
   const { error } = await client.storage.from(bucket).upload(storageKey, binary, {
-    upsert: true,
+    upsert: false,
     contentType: detectContentType(file.name),
   });
 

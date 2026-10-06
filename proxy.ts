@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { ADMIN_SESSION_COOKIE } from "@/lib/admin/constants";
-import { verifySessionToken } from "@/lib/admin/auth";
-import { getAdminSessionSecret } from "@/lib/admin/env";
+import { verifyAdminSessionToken } from "@/lib/admin/auth";
+import { getAdminAuthConfig } from "@/lib/admin/env";
 
 function isProtectedPath(pathname: string) {
   return pathname.startsWith("/admin") || pathname.startsWith("/api/admin");
@@ -19,9 +19,11 @@ export async function proxy(request: NextRequest) {
     return NextResponse.next();
   }
 
-  const secret = getAdminSessionSecret();
+  if (!getAdminAuthConfig() && pathname.startsWith("/api/admin")) {
+    return NextResponse.json({ error: "관리자 인증 설정이 준비되지 않아 사용할 수 없습니다." }, { status: 503 });
+  }
   const token = request.cookies.get(ADMIN_SESSION_COOKIE)?.value;
-  const session = await verifySessionToken(token, secret);
+  const session = await verifyAdminSessionToken(token);
 
   if (pathname === "/admin/login" && session) {
     return NextResponse.redirect(new URL("/admin", request.url));

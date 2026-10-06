@@ -1,4 +1,5 @@
 import { ADMIN_SESSION_MAX_AGE } from "./constants";
+import { getAdminAuthConfig } from "./env";
 
 function toBase64Url(bytes: Uint8Array) {
   let binary = "";
@@ -43,15 +44,23 @@ export async function createSessionToken(userId: string, secret: string) {
 export async function verifySessionToken(token: string | undefined, secret: string) {
   if (!token) return null;
 
-  const [userId, expiresAt, signature] = token.split(".");
+  const parts = token.split(".");
+  if (parts.length !== 3) return null;
+  const [userId, expiresAt, signature] = parts;
   if (!userId || !expiresAt || !signature) return null;
-
-  const payload = `${userId}:${expiresAt}`;
-  const expectedSignature = await signValue(payload, secret);
-  if (signature !== expectedSignature) return null;
 
   const expiresAtNumber = Number(expiresAt);
   if (!Number.isFinite(expiresAtNumber) || expiresAtNumber <= Date.now()) {
+    return null;
+  }
+
+  try {
+    const key = await createKey(secret);
+    const valid = await crypto.subtle.verify(
+      "HMAC", key, fromBase64Url(signature), new TextEncoder().encode(`${userId}:${expiresAt}`),
+    );
+    if (!valid) return null;
+  } catch {
     return null;
   }
 
@@ -59,6 +68,13 @@ export async function verifySessionToken(token: string | undefined, secret: stri
     userId,
     expiresAt: expiresAtNumber,
   };
+}
+
+export async function verifyAdminSessionToken(token: string | undefined) {
+  const config = getAdminAuthConfig();
+  if (!config) return null;
+  const session = await verifySessionToken(token, config.secret);
+  return session?.userId === config.id ? session : null;
 }
 
 export function getSessionCookieOptions() {
@@ -78,4 +94,3 @@ export function encodeFileContent(value: string) {
 export function decodeFileContent(value: string) {
   return new TextDecoder().decode(fromBase64Url(value));
 }
-

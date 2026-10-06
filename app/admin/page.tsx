@@ -23,7 +23,7 @@ export default async function AdminDashboardPage() {
               포트폴리오 관리자
             </h1>
             <p className="mt-3 text-[0.98rem] leading-[1.8] text-white/62">
-              초안 저장, 발행, 보관과 미디어 교체까지 여기서 관리합니다.
+              콘텐츠 상태와 미디어를 관리합니다. 저장 후 운영 사이트 반영은 빌드·배포 결과에서 확인합니다.
             </p>
           </div>
 
@@ -38,7 +38,7 @@ export default async function AdminDashboardPage() {
           </div>
         </div>
 
-        <DashboardClient items={items} categories={categories} />
+        <DashboardClient items={items.map(({ slug, revision, frontmatter, content }) => ({ slug, revision, frontmatter, content }))} categories={categories} />
       </div>
     </section>
   );

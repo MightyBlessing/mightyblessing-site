@@ -6,6 +6,7 @@ export const FEATURED_PORTFOLIO_ORDER_VALUES = [1, 2, 3] as const;
 export type FeaturedPortfolioOrder = (typeof FEATURED_PORTFOLIO_ORDER_VALUES)[number];
 
 type PortfolioDisplayInput = {
+  schemaVersion?: number;
   title?: string;
   featured?: boolean;
   featured_order?: number;
@@ -87,7 +88,10 @@ export function resolvePortfolioThumbnailUrl(
     return heroPreview.url;
   }
 
-  const galleryPreview = (input?.gallery || []).map((item) => resolvePortfolioPreviewMedia(item)).find(Boolean);
+  // Event records require an explicitly selected cover. Detail-only photos must
+  // not become covers when an unsuitable hero is removed. Keep legacy fallback.
+  const galleryPreview = input?.schemaVersion === 2 ? undefined
+    : (input?.gallery || []).map((item) => resolvePortfolioPreviewMedia(item)).find(Boolean);
   if (galleryPreview?.url) {
     return galleryPreview.url;
   }
@@ -113,7 +117,8 @@ export function resolvePortfolioCardMedia(
     return heroPreview;
   }
 
-  const galleryPreview = (input?.gallery || []).map((item) => resolvePortfolioPreviewMedia(item)).find(Boolean);
+  const galleryPreview = input?.schemaVersion === 2 ? undefined
+    : (input?.gallery || []).map((item) => resolvePortfolioPreviewMedia(item)).find(Boolean);
   if (galleryPreview) {
     return galleryPreview;
   }

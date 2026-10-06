@@ -1,0 +1,302 @@
+[
+  {
+    "id": "R0648",
+    "projectSlug": "sos-2024",
+    "desktopFocal": "50% 48%",
+    "mobileFocal": "54% 50%",
+    "alt": "화면과 현장을 함께 바라보는 제작석",
+    "centerShade": 0.3,
+    "leftShade": 0.12,
+    "mobileLeftShade": 0.12
+  },
+  {
+    "id": "R0511",
+    "projectSlug": "sos-2024",
+    "desktopFocal": "52% 50%",
+    "mobileFocal": "76% 50%",
+    "alt": "무대와 객석 전경",
+    "centerShade": 0.2,
+    "leftShade": 0.36,
+    "mobileLeftShade": 0.18
+  },
+  {
+    "id": "P032",
+    "projectSlug": "love-and-revival-2025",
+    "desktopFocal": "50% 40%",
+    "mobileFocal": "56% 40%",
+    "alt": "함께 참여하는 관객",
+    "centerShade": 0.12,
+    "leftShade": 0.24,
+    "mobileLeftShade": 0.15
+  },
+  {
+    "id": "P035",
+    "projectSlug": "love-and-revival-2025",
+    "desktopFocal": "50% 50%",
+    "mobileFocal": "50% 50%",
+    "alt": "무대 뒤에서 바라본 공연장과 관객",
+    "centerShade": 0.24,
+    "leftShade": 0.36,
+    "mobileLeftShade": 0.18
+  },
+  {
+    "id": "R2978",
+    "projectSlug": "multitracks-korea-launch-2024",
+    "desktopFocal": "50% 50%",
+    "mobileFocal": "38% 50%",
+    "alt": "패널 토크와 참석자",
+    "centerShade": 0.1,
+    "leftShade": 0.36,
+    "mobileLeftShade": 0.18
+  },
+  {
+    "id": "P043",
+    "projectSlug": "welove-reconciliation-2026",
+    "desktopFocal": "50% 50%",
+    "mobileFocal": "50% 50%",
+    "alt": "관객이 둘러싼 무대의 위쪽 전경",
+    "centerShade": 0.1,
+    "leftShade": 0.36,
+    "mobileLeftShade": 0.18
+  },
+  {
+    "id": "P050",
+    "projectSlug": "campus-worship-2026",
+    "desktopFocal": "50% 50%",
+    "mobileFocal": "48% 50%",
+    "alt": "공연 화면과 현장 운영석",
+    "centerShade": 0.24,
+    "leftShade": 0.6,
+    "mobileLeftShade": 0.5
+  },
+  {
+    "id": "P001",
+    "projectSlug": "welove-hapsim-2024",
+    "desktopFocal": "50% 50%",
+    "mobileFocal": "50% 50%",
+    "alt": "무대 뒤에서 바라본 관객과 공간",
+    "centerShade": 0.24,
+    "leftShade": 0.36,
+    "mobileLeftShade": 0.18
+  },
+  {
+    "id": "P014",
+    "projectSlug": "created-to-be-creative-2024",
+    "desktopFocal": "50% 50%",
+    "mobileFocal": "58% 50%",
+    "alt": "공연 중인 출연진과 관객",
+    "centerShade": 0.1,
+    "leftShade": 0.36,
+    "mobileLeftShade": 0.18
+  },
+  {
+    "id": "P016",
+    "projectSlug": "time-to-renew-2024",
+    "desktopFocal": "50% 50%",
+    "mobileFocal": "60% 50%",
+    "alt": "따뜻한 조명의 무대와 객석",
+    "centerShade": 0.1,
+    "leftShade": 0.36,
+    "mobileLeftShade": 0.18
+  },
+  {
+    "id": "P052",
+    "projectSlug": "campus-worship-2026",
+    "desktopFocal": "50% 50%",
+    "mobileFocal": "34% 50%",
+    "alt": "공연 화면을 확인하는 현장",
+    "centerShade": 0.1,
+    "leftShade": 0.36,
+    "mobileLeftShade": 0.18
+  },
+  {
+    "id": "P031",
+    "projectSlug": "love-and-revival-2025",
+    "desktopFocal": "50% 50%",
+    "mobileFocal": "50% 50%",
+    "alt": "붉은 무대 조명과 출연진",
+    "centerShade": 0.1,
+    "leftShade": 0.36,
+    "mobileLeftShade": 0.18
+  },
+  {
+    "id": "R0325",
+    "projectSlug": "sos-2024",
+    "desktopFocal": "50% 50%",
+    "mobileFocal": "55% 50%",
+    "alt": "관객 입장을 준비하는 현장",
+    "centerShade": 0.4,
+    "leftShade": 0.6,
+    "mobileLeftShade": 0.5
+  },
+  {
+    "id": "P022",
+    "projectSlug": "welove-lament-2025",
+    "desktopFocal": "50% 50%",
+    "mobileFocal": "58% 50%",
+    "alt": "푸른 조명 속 무대와 관객",
+    "centerShade": 0.24,
+    "leftShade": 0.36,
+    "mobileLeftShade": 0.18
+  },
+  {
+    "id": "P068",
+    "projectSlug": "campus-worship-2026",
+    "desktopFocal": "50% 50%",
+    "mobileFocal": "50% 50%",
+    "alt": "무대를 향해 이동하는 현장 스태프",
+    "centerShade": 0.1,
+    "leftShade": 0.36,
+    "mobileLeftShade": 0.18
+  },
+  {
+    "id": "R2993",
+    "projectSlug": "multitracks-korea-launch-2024",
+    "desktopFocal": "50% 50%",
+    "mobileFocal": "52% 50%",
+    "alt": "패널 토크 장면",
+    "centerShade": 0.1,
+    "leftShade": 0.36,
+    "mobileLeftShade": 0.18
+  },
+  {
+    "id": "P007",
+    "projectSlug": "created-to-be-creative-2024",
+    "desktopFocal": "50% 50%",
+    "mobileFocal": "48% 50%",
+    "alt": "무대 가까이에서 바라본 관객",
+    "centerShade": 0.1,
+    "leftShade": 0.36,
+    "mobileLeftShade": 0.18
+  },
+  {
+    "id": "P045",
+    "projectSlug": "welove-reconciliation-2026",
+    "desktopFocal": "50% 50%",
+    "mobileFocal": "50% 50%",
+    "alt": "조명 아래 펼쳐진 무대와 객석",
+    "centerShade": 0.1,
+    "leftShade": 0.36,
+    "mobileLeftShade": 0.18
+  },
+  {
+    "id": "P047",
+    "projectSlug": "campus-worship-2026",
+    "desktopFocal": "50% 50%",
+    "mobileFocal": "0% 50%",
+    "alt": "아레나의 무대와 관객석",
+    "centerShade": 0.24,
+    "leftShade": 0.6,
+    "mobileLeftShade": 0.5
+  },
+  {
+    "id": "P020",
+    "projectSlug": "time-to-renew-2024",
+    "desktopFocal": "50% 50%",
+    "mobileFocal": "48% 50%",
+    "alt": "무대를 바라보는 관객의 현장 반응",
+    "centerShade": 0.1,
+    "leftShade": 0.36,
+    "mobileLeftShade": 0.18
+  },
+  {
+    "id": "P079",
+    "projectSlug": "campus-worship-2026",
+    "desktopFocal": "50% 50%",
+    "mobileFocal": "55% 50%",
+    "alt": "현장 촬영 카메라와 운영 장면",
+    "centerShade": 0.1,
+    "leftShade": 0.36,
+    "mobileLeftShade": 0.18
+  },
+  {
+    "id": "P034",
+    "projectSlug": "love-and-revival-2025",
+    "desktopFocal": "50% 50%",
+    "mobileFocal": "25% 50%",
+    "alt": "객석 위에서 바라본 공연장",
+    "centerShade": 0.1,
+    "leftShade": 0.36,
+    "mobileLeftShade": 0.18
+  },
+  {
+    "id": "R3013",
+    "projectSlug": "multitracks-korea-launch-2024",
+    "desktopFocal": "50% 50%",
+    "mobileFocal": "48% 50%",
+    "alt": "행사장에서 대화하는 참석자",
+    "centerShade": 0.24,
+    "leftShade": 0.6,
+    "mobileLeftShade": 0.5
+  },
+  {
+    "id": "P008",
+    "projectSlug": "created-to-be-creative-2024",
+    "desktopFocal": "50% 50%",
+    "mobileFocal": "58% 50%",
+    "alt": "측면에서 바라본 공연 공간",
+    "centerShade": 0.1,
+    "leftShade": 0.36,
+    "mobileLeftShade": 0.18
+  },
+  {
+    "id": "P044",
+    "projectSlug": "welove-reconciliation-2026",
+    "desktopFocal": "50% 50%",
+    "mobileFocal": "50% 50%",
+    "alt": "행사 입장 구역",
+    "centerShade": 0.4,
+    "leftShade": 0.6,
+    "mobileLeftShade": 0.5
+  },
+  {
+    "id": "P019",
+    "projectSlug": "time-to-renew-2024",
+    "desktopFocal": "50% 50%",
+    "mobileFocal": "50% 50%",
+    "alt": "무대 뒤에서 본 푸른 조명과 객석",
+    "centerShade": 0.1,
+    "leftShade": 0.36,
+    "mobileLeftShade": 0.18
+  },
+  {
+    "id": "P081",
+    "projectSlug": "campus-worship-2026",
+    "desktopFocal": "50% 50%",
+    "mobileFocal": "42% 50%",
+    "alt": "붉은 조명 속 무대와 관객",
+    "centerShade": 0.1,
+    "leftShade": 0.36,
+    "mobileLeftShade": 0.18
+  },
+  {
+    "id": "P023",
+    "projectSlug": "welove-lament-2025",
+    "desktopFocal": "50% 50%",
+    "mobileFocal": "18% 50%",
+    "alt": "무대 측면의 출연진과 공연 장비",
+    "centerShade": 0.1,
+    "leftShade": 0.36,
+    "mobileLeftShade": 0.18
+  },
+  {
+    "id": "P096",
+    "projectSlug": "campus-worship-2026",
+    "desktopFocal": "50% 50%",
+    "mobileFocal": "54% 50%",
+    "alt": "현장에서 마우스와 작업 문서를 함께 사용하는 장면",
+    "centerShade": 0.1,
+    "leftShade": 0.36,
+    "mobileLeftShade": 0.18
+  },
+  {
+    "id": "P004",
+    "projectSlug": "welove-hapsim-2024",
+    "desktopFocal": "50% 50%",
+    "mobileFocal": "50% 50%",
+    "alt": "공연장 뒤에서 바라본 무대와 객석",
+    "centerShade": 0.1,
+    "leftShade": 0.36,
+    "mobileLeftShade": 0.18
+  }
+]

@@ -1,0 +1,27 @@
+{
+  "duration": 6.5,
+  "fps": 24,
+  "revision": "20260914-continuous-live",
+  "posterMediaId": "P032",
+  "cuts": [
+    {
+      "id": "live",
+      "mediaId": "HV01",
+      "kind": "video",
+      "sourceIn": 1,
+      "loopBlend": 0.5,
+      "start": 0,
+      "end": 6.5,
+      "projectSlug": "love-and-revival-2025",
+      "desktopFocal": [
+        50,
+        50
+      ],
+      "mobileFocal": [
+        36,
+        50
+      ],
+      "shade": 0.12
+    }
+  ]
+}

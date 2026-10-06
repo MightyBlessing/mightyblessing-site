@@ -12,6 +12,7 @@ const DEFAULT_CATEGORIES = ["컨퍼런스", "예배·집회", "투어·라이브
 function createInitialValue(): PortfolioEditorPayload {
   return {
     title: "",
+    shortTitle: "",
     slug: "",
     date: new Date().toISOString().slice(0, 10),
     summary: "",
@@ -73,4 +74,3 @@ export default async function NewPortfolioPage() {
     </section>
   );
 }
-

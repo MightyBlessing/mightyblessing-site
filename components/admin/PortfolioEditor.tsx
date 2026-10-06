@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect, useId, useMemo, useState } from "react";
+import { useEffect, useId, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { PortfolioEditorPayload } from "@/lib/admin/portfolio-admin";
 import type { PortfolioStatus } from "@/lib/content";
+import { homeProjectTitle } from "@/lib/project-presentation";
 import {
   FEATURED_PORTFOLIO_ORDER_VALUES,
   type FeaturedPortfolioOrder,
@@ -86,7 +87,7 @@ function MediaPreview({
         <img src={displayUrl} alt={label} className="aspect-[16/10] w-full object-cover" />
       )}
       <div className="border-t border-white/10 px-4 py-2.5 text-[0.78rem] text-white/52">
-        {file ? `${label} 새 파일 선택됨: ${file.name}` : `${label} 현재 공개 중`}
+        {file ? `${label} 새 파일 선택됨: ${file.name}` : `${label} 저장된 파일`}
       </div>
     </div>
   );
@@ -221,6 +222,8 @@ export function PortfolioEditor({
   const [heroPosterFile, setHeroPosterFile] = useState<File | null>(null);
   const [galleryFiles, setGalleryFiles] = useState<Record<string, File | null>>({});
   const [galleryPosterFiles, setGalleryPosterFiles] = useState<Record<string, File | null>>({});
+  const [uploadRevision, setUploadRevision] = useState(0);
+  const submitting = useRef(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
@@ -264,6 +267,8 @@ export function PortfolioEditor({
   }
 
   async function handleSave(action: "create" | "update" | "publish" | "archive") {
+    if (submitting.current) return;
+    submitting.current = true;
     setIsSubmitting(true);
     setError("");
     setSuccess("");
@@ -298,30 +303,38 @@ export function PortfolioEditor({
         body: formData,
       });
 
-      const data = (await response.json()) as { error?: string; slug?: string };
+      const data = (await response.json()) as { error?: string; slug?: string; payload?: PortfolioEditorPayload; commitSha?: string };
       if (!response.ok) {
         throw new Error(data.error || "저장 중 오류가 발생했습니다.");
       }
+      if (!data.payload) throw new Error("저장 결과를 확인하지 못했습니다. 편집 화면을 다시 열어 저장 상태를 확인해 주세요.");
 
       const nextSlug = data.slug || value.slug;
-      setSuccess(action === "publish" ? "발행이 완료되었습니다." : action === "archive" ? "보관 처리되었습니다." : "저장되었습니다.");
+      setValue(data.payload);
+      setHeroFile(null);
+      setHeroPosterFile(null);
+      setGalleryFiles({});
+      setGalleryPosterFiles({});
+      setUploadRevision(revision => revision + 1);
+      setSuccess(`콘텐츠가 저장되었습니다.${data.commitSha ? ` 저장 번호 ${data.commitSha.slice(0, 7)}.` : ""} 운영 사이트 반영은 빌드·배포 후 확인해야 합니다.`);
       router.push(`/admin/portfolio/${nextSlug}`);
       router.refresh();
     } catch (error) {
       setError(error instanceof Error ? error.message : "저장 중 오류가 발생했습니다.");
     } finally {
+      submitting.current = false;
       setIsSubmitting(false);
     }
   }
 
   return (
-    <div className="space-y-6">
+    <fieldset disabled={isSubmitting} aria-label="프로젝트 편집" className="min-w-0 space-y-6">
       <div className="flex flex-col gap-4 rounded-[1.8rem] border border-white/10 bg-white/[0.04] p-5 sm:flex-row sm:items-center sm:justify-between sm:p-6">
         <div>
           <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-white/46">
             {mode === "create" ? "새 포트폴리오" : "포트폴리오 수정"}
           </p>
-          <h1 className="mt-3 text-[1.7rem] leading-[1.08] font-semibold tracking-[-0.05em] text-white sm:text-[2.2rem]">
+          <h1 className="mt-3 break-words text-[1.7rem] leading-[1.08] font-semibold tracking-[-0.05em] text-white sm:text-[2.2rem]">
             {value.title || "제목을 입력해 주세요"}
           </h1>
           <p className="mt-2 text-[0.92rem] text-white/48">{value.slug || "slug가 아직 없습니다."}</p>
@@ -342,7 +355,7 @@ export function PortfolioEditor({
             onClick={() => handleSave("publish")}
             className="inline-flex items-center justify-center rounded-full bg-[#a9bcff] px-4 py-2.5 text-[0.88rem] font-semibold text-[#162349] transition-colors hover:bg-[#bfd0ff] disabled:opacity-60"
           >
-            발행
+            공개 상태로 저장
           </button>
           <button
             type="button"
@@ -355,8 +368,10 @@ export function PortfolioEditor({
         </div>
       </div>
 
+      <p className="text-sm text-white/60">이미지 JPG·PNG·WebP 8MB, 영상 MP4 24MB 이하. 한 번에 총 32MB까지 저장할 수 있습니다.</p>
       {(error || success) && (
         <div
+          role={error ? "alert" : "status"}
           className={`rounded-[1.4rem] border px-4 py-3 text-[0.92rem] ${
             error
               ? "border-[#ffb1b1]/20 bg-[#ffb1b1]/8 text-[#ffb1b1]"
@@ -373,12 +388,27 @@ export function PortfolioEditor({
             <SectionHeading label="기본 정보" hint="포트폴리오 목록과 상세에 직접 노출되는 핵심 정보입니다." />
             <div className="mt-5 grid gap-4 sm:grid-cols-2">
               <div className="sm:col-span-2">
-                <FieldLabel label="제목" hint="공개 목록과 상세 상단에 그대로 노출되는 프로젝트 이름입니다." />
+                <FieldLabel label="상세 제목" hint="상세 페이지와 검색 엔진에 표시하는 공식 행사명입니다." />
                 <input
+                  aria-label="상세 제목"
                   value={value.title}
                   onChange={(event) => updateField("title", event.target.value)}
                   className="mt-2 w-full rounded-2xl border border-white/10 bg-black/20 px-4 py-3 text-white outline-none placeholder:text-white/26 focus:border-[#a9bcff]"
                 />
+              </div>
+              <div className="sm:col-span-2">
+                <FieldLabel label="목록용 제목" />
+                <input
+                  aria-label="목록용 제목"
+                  value={value.shortTitle || ""}
+                  onChange={(event) => updateField("shortTitle", event.target.value)}
+                  placeholder="비워 두면 상세 제목을 사용합니다"
+                  className="mt-2 w-full rounded-2xl border border-white/10 bg-black/20 px-4 py-3 text-white outline-none placeholder:text-white/26 focus:border-[#a9bcff]"
+                />
+                <p className="mt-2 text-xs leading-relaxed text-white/55">프로젝트 목록과 왼쪽 색인에 표시합니다. 비워 두면 상세 제목을 사용하며, 끝의 중복 연도는 생략합니다.</p>
+                <p className="mt-3 break-words text-sm text-white/75" aria-label="목록 제목 미리보기">
+                  목록 표시: {homeProjectTitle({ title: value.shortTitle?.trim() || value.title.trim(), year: value.date.slice(0, 4) }) || "제목을 입력해 주세요"}
+                </p>
               </div>
               <div>
                 <FieldLabel label="Slug" hint="관리 URL과 공개 상세 URL에 들어가는 고유 주소입니다. 변경하면 관련 미디어 경로도 함께 따라갑니다." />
@@ -398,7 +428,7 @@ export function PortfolioEditor({
                 />
               </div>
               <div className="sm:col-span-2">
-                <FieldLabel label="Summary" hint="목록 카드와 상세 첫 문단에 들어가는 짧은 요약입니다." />
+                <FieldLabel label="행사 소개" hint="어떤 행사인지 짧게 설명합니다. 맡은 업무는 수행 범위에 따로 작성합니다." />
                 <textarea
                   value={value.summary}
                   onChange={(event) => updateField("summary", event.target.value)}
@@ -639,8 +669,9 @@ export function PortfolioEditor({
                 <div>
                   <label className="text-[11px] font-medium uppercase tracking-[0.18em] text-white/46">Hero 업로드</label>
                   <input
+                    key={`hero-file-${uploadRevision}`}
                     type="file"
-                    accept={value.heroMedia.type === "video" ? "video/mp4" : "image/*"}
+                    accept={value.heroMedia.type === "video" ? "video/mp4" : "image/jpeg,image/png,image/webp"}
                     onChange={(event) => setHeroFile(event.target.files?.[0] || null)}
                     className="mt-2 block w-full text-[0.9rem] text-white/65 file:mr-4 file:rounded-full file:border-0 file:bg-[#a9bcff] file:px-4 file:py-2 file:text-[0.84rem] file:font-semibold file:text-[#162349]"
                   />
@@ -650,8 +681,9 @@ export function PortfolioEditor({
                   <div>
                     <label className="text-[11px] font-medium uppercase tracking-[0.18em] text-white/46">Poster 업로드</label>
                     <input
+                      key={`hero-poster-${uploadRevision}`}
                       type="file"
-                      accept="image/*"
+                      accept="image/jpeg,image/png,image/webp"
                       onChange={(event) => setHeroPosterFile(event.target.files?.[0] || null)}
                       className="mt-2 block w-full text-[0.9rem] text-white/65 file:mr-4 file:rounded-full file:border-0 file:bg-white file:px-4 file:py-2 file:text-[0.84rem] file:font-semibold file:text-[#162349]"
                     />
@@ -750,8 +782,9 @@ export function PortfolioEditor({
                         className="rounded-2xl border border-white/10 bg-black/20 px-4 py-3 text-white outline-none placeholder:text-white/26 focus:border-[#a9bcff]"
                       />
                       <input
+                        key={`gallery-file-${uploadRevision}`}
                         type="file"
-                        accept={item.type === "video" ? "video/mp4" : "image/*"}
+                        accept={item.type === "video" ? "video/mp4" : "image/jpeg,image/png,image/webp"}
                         onChange={(event) =>
                           setGalleryFiles((prev) => ({
                             ...prev,
@@ -762,8 +795,9 @@ export function PortfolioEditor({
                       />
                       {item.type === "video" && (
                         <input
+                          key={`gallery-poster-${uploadRevision}`}
                           type="file"
-                          accept="image/*"
+                          accept="image/jpeg,image/png,image/webp"
                           onChange={(event) =>
                             setGalleryPosterFiles((prev) => ({
                               ...prev,
@@ -820,6 +854,6 @@ export function PortfolioEditor({
           </div>
         </section>
       </div>
-    </div>
+    </fieldset>
   );
 }

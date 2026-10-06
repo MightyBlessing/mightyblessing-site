@@ -1,4 +1,5 @@
 import { LoginForm } from "@/components/admin/LoginForm";
+import { getAdminAuthConfig } from "@/lib/admin/env";
 
 type Props = {
   searchParams: Promise<{ next?: string }>;
@@ -27,10 +28,13 @@ export default async function AdminLoginPage({ searchParams }: Props) {
             </p>
           </div>
 
-          <LoginForm next={params.next} />
+          {getAdminAuthConfig() ? <LoginForm next={params.next} /> : (
+            <p role="status" className="rounded-[1.8rem] border border-white/10 bg-white/[0.04] p-6 text-white/78 sm:p-7">
+              관리자 인증 설정이 준비되지 않아 로그인할 수 없습니다. 운영 담당자에게 설정 확인을 요청해 주세요.
+            </p>
+          )}
         </div>
       </div>
     </section>
   );
 }
-

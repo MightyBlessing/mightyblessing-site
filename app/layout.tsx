@@ -3,13 +3,18 @@ import "./globals.css";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { GoogleAnalytics } from "@/components/GoogleAnalytics";
-import { siteDescription, siteName, siteUrl } from "@/lib/site";
+import { siteDescription, siteName, siteNameKo, siteUrl } from "@/lib/site";
+import { JsonLd } from "@/components/JsonLd";
 import { buildPageMetadata, toAbsoluteUrl } from "@/lib/seo";
+import { getAllPortfolios } from "@/lib/content";
+import { selectRailProjects } from "@/lib/project-presentation";
+import { motionVariables } from "@/lib/motion";
+import { SiteFrame } from "@/components/redesign/SiteFrame";
 
 export const metadata: Metadata = {
   ...buildPageMetadata({
     path: "/",
-    keywords: ["예배 연출", "행사 운영", "교회 행사 운영", "예배 제작"],
+    keywords: ["공연 기획", "행사 연출", "프로덕션", "현장 운영"],
   }),
   metadataBase: new URL(siteUrl),
   applicationName: siteName,
@@ -33,7 +38,9 @@ const organizationJsonLd = {
   "@graph": [
     {
       "@type": "Organization",
+      "@id": `${siteUrl}/#organization`,
       name: siteName,
+      alternateName: siteNameKo,
       url: siteUrl,
       description: siteDescription,
       email: "contact@mightyblessing.com",
@@ -41,10 +48,13 @@ const organizationJsonLd = {
     },
     {
       "@type": "WebSite",
+      "@id": `${siteUrl}/#website`,
       name: siteName,
+      alternateName: siteNameKo,
       url: siteUrl,
       description: siteDescription,
       inLanguage: "ko-KR",
+      publisher: { "@id": `${siteUrl}/#organization` },
     },
   ],
 };
@@ -55,8 +65,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ko">
+    <html lang="ko" style={motionVariables} suppressHydrationWarning>
       <head>
+        <link rel="preload" href="/brand/mightyblessing-title.ttf" as="font" type="font/ttf" crossOrigin="anonymous" />
         <link
           rel="stylesheet"
           href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/variable/pretendardvariable.css"
@@ -65,15 +76,12 @@ export default function RootLayout({
           href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined"
           rel="stylesheet"
         />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
-        />
+        <JsonLd data={organizationJsonLd} />
       </head>
       <body className="bg-white text-neutral-900 antialiased">
         <GoogleAnalytics />
-        <Header />
-        <main>{children}</main>
+        <Header projects={selectRailProjects(getAllPortfolios())} />
+        <main id="main-content" tabIndex={-1}><SiteFrame projects={selectRailProjects(getAllPortfolios())}>{children}</SiteFrame></main>
         <Footer />
       </body>
     </html>

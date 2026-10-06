@@ -11,3 +11,15 @@ npm-debug.log
 .claude
 coverage
 *.log
+
+# Originals and internal planning material are not application build inputs.
+input
+docs
+design
+artifacts-local
+tests
+AGENTS.md
+.env
+.env.*
+!.env.example
+**/__pycache__

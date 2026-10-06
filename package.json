@@ -7,16 +7,26 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "migrate:content-media": "node scripts/migrate-content-media-to-supabase.mjs"
+    "migrate:content-media": "node scripts/migrate-content-media-to-supabase.mjs",
+    "test": "node --require ./tests/register.cjs --test tests/*.test.cjs",
+    "preview:assets": "node scripts/prepare-site-preview.mjs",
+    "design-system:assets": "node scripts/prepare-design-system.mjs",
+    "preview:design-system": "npm run design-system:assets && npm run preview",
+    "preview": "npm run preview:assets && npm run preview:hero && npm run preview:film && next dev --hostname 127.0.0.1 --port 3017",
+    "preview:hero": "node scripts/prepare-hero-photos.mjs",
+    "preview:film": "python3 scripts/prepare-home-film.py"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.101.1",
     "@tailwindcss/typography": "^0.5.19",
     "gray-matter": "^4.0.3",
+    "mdast-util-to-markdown": "^2.1.2",
     "next": "16.1.6",
     "react": "19.2.3",
     "react-dom": "19.2.3",
-    "react-markdown": "^10.1.0"
+    "react-markdown": "^10.1.0",
+    "remark-parse": "^11.0.0",
+    "unified": "^11.0.5"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
@@ -25,6 +35,7 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.1.6",
+    "sharp": "^0.34.5",
     "tailwindcss": "^4",
     "typescript": "^5"
   }

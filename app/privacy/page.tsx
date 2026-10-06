@@ -22,7 +22,7 @@ export default function PrivacyPage() {
           <section>
             <h2 className="text-[1.15rem] font-semibold text-neutral-950">1. 수집하는 정보</h2>
             <p className="mt-3">
-              문의 이메일을 통해 이름, 소속, 연락처, 프로젝트 관련 정보와 같이 상담에 필요한 내용을 받을 수 있습니다.
+              문의 양식에서 이메일 주소와 문의 내용을 받습니다. 이메일로 보내주시는 이름, 소속, 연락처, 프로젝트 자료도 상담에 필요한 정보로 처리할 수 있습니다.
             </p>
           </section>
 

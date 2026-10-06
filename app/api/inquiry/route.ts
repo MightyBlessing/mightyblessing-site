@@ -1,3 +1,4 @@
+import { limitedJson, sameOrigin, rateLimitResponse, requestErrorResponse, RequestError } from "@/lib/request-guard";
 const CONTACT_EMAIL = "contact@mightyblessing.com";
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -45,7 +46,11 @@ function buildMailHtml(email: string, message: string) {
 
 export async function POST(request: Request) {
   try {
-    const payload = (await request.json()) as InquiryPayload;
+    sameOrigin(request);
+    const limited = rateLimitResponse("inquiry");
+    if (limited) return limited;
+    const payload = (await limitedJson(request, 48 * 1024)) as InquiryPayload;
+    if (!payload || [payload.email, payload.message, payload.company].some(value => value !== undefined && typeof value !== "string")) throw new RequestError("문의 입력 형식이 올바르지 않습니다.");
 
     if (payload.company) {
       return Response.json({ ok: true }, { status: 200 });
@@ -62,6 +67,7 @@ export async function POST(request: Request) {
       return Response.json({ error: "올바른 이메일 형식을 입력해 주세요." }, { status: 400 });
     }
 
+    if (email.length > 254 || message.length > 10000) throw new RequestError("이메일은 254자, 문의 내용은 10,000자 이내로 입력해 주세요.");
     const subject = `[프로젝트 문의] ${email}`;
 
     const resendApiKey = process.env.RESEND_API_KEY;
@@ -82,6 +88,7 @@ export async function POST(request: Request) {
 
     const resendResponse = await fetch("https://api.resend.com/emails", {
       method: "POST",
+      signal: AbortSignal.timeout(15_000),
       headers: {
         Authorization: `Bearer ${resendApiKey}`,
         "Content-Type": "application/json",
@@ -97,12 +104,12 @@ export async function POST(request: Request) {
     });
 
     if (!resendResponse.ok) {
-      const errorText = await resendResponse.text();
-      return Response.json({ error: `메일 전송에 실패했습니다. ${errorText}` }, { status: 502 });
+      return Response.json({ error: "메일 전송에 실패했습니다. 잠시 후 다시 시도해 주세요." }, { status: 502 });
     }
 
     return Response.json({ ok: true, delivery: "email" }, { status: 200 });
-  } catch {
-    return Response.json({ error: "문의 전송 중 오류가 발생했습니다." }, { status: 500 });
+  } catch (error) {
+    if (error instanceof Error && ["TimeoutError", "AbortError"].includes(error.name)) return Response.json({ error: "메일 접수 결과를 확인하지 못했습니다. 이메일로 접수 여부를 확인한 뒤 다시 보내 주세요." }, { status: 504 });
+    return requestErrorResponse(error instanceof RequestError ? error : null, "문의 전송 중 오류가 발생했습니다.");
   }
 }

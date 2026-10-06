@@ -1,15 +1,12 @@
 ---
-title: 기독 학생 대회 및 지역 예배 집회 운영
+title: "기독학생대회·지역 예배 운영"
 slug: regional-worship-case
 date: '2022-11-01'
+displayDate: '2020–2022'
 featured: true
 featured_order: 3
-summary: '2021·2022 기독 학생 대회, 오륜교회 ALLIN 컨퍼런스 등 다양한 오프라인·온라인 집회 운영 경험을 담았습니다.'
-roles:
-  - 기획
-  - 운영
-  - 프로그램
-  - 기술
+summary: "기독학생대회와 BACK TO CAMPUS, 온라인 예배의 진행과 중계 운영에 참여했습니다."
+roles: ["예배 운영","프로그램 진행","온라인 중계","자막 송출"]
 categories:
   - 컨퍼런스
   - 예배·집회
@@ -23,18 +20,10 @@ heroMedia:
   type: video
   storageKey: portfolio/regional-worship-case/hero.mp4
   posterStorageKey: portfolio/regional-worship-case/poster.jpg
-  alt: 지역 집회와 학생 대회의 현장 분위기를 담은 군중 영상
-goals: |
-  학생·교회 대상 집회의 기획부터 당일 운영까지 원스톱 지원.
-  온라인·오프라인 하이브리드 대응.
-our_role: |
-  - 전체 기획 및 프로그램 설계
-  - 온라인 방탈출·등록 페이지 등 디지털 도구 제작·운영
-  - 접수·숙소·현장 운영
-process: |
-  1. 준비: 컨셉·프로그램 회의, 온라인 도구 구축, 스탭·체크리스트
-  2. 현장/온라인: 진행 지원, 기술 지원
-  3. 사후: 회고, 데이터 정리
+  alt: 지역 집회와 학생 대회에 참여한 관객 영상
+goals: "현장과 온라인에서 예배에 참여할 수 있도록 진행과 중계를 준비합니다."
+our_role: "예배 진행과 온라인 중계를 운영했습니다. BACK TO CAMPUS에서는 온라인 레크리에이션과 자막 송출도 맡았습니다."
+process: "행사 형식에 맞춰 프로그램과 중계를 준비하고, 현장 진행과 온라인 송출을 운영했습니다."
 metrics:
   - label: 집회 유형
     value: 오프라인·온라인·촬영
@@ -50,8 +39,8 @@ gallery:
     caption: 현장 교제
   - type: image
     storageKey: portfolio/regional-worship-case/detail-03.jpg
-    alt: 예배 공간의 무드를 만드는 조명
-    caption: 공간 무드
+    alt: 예배 공간을 비추는 조명
+    caption: 예배 공간
   - type: image
     storageKey: portfolio/shared/worship-hands.jpg
     alt: 함께 손을 들고 예배하는 현장의 분위기
@@ -61,6 +50,4 @@ related_cases:
   - the-sent-case
 mediaId: regional-worship-case
 ---
-기독 학생 대회 "누가 우리를 대적하리오", "Back to Campus", 오륜교회 ALLIN 컨퍼런스, kouny·디지털 말씀 사경회·NAMELESS 등 온라인 집회까지 다양한 규모와 형태의 예배·집회를 기획·운영했습니다.
-
-프로그래밍을 활용한 등록 페이지·방탈출 등으로 행사 효율을 높였고, 회고를 통해 운영 매뉴얼을 지속 보완하고 있습니다.
+기독학생대회와 디지털 말씀 사경회, KOUNY 온라인 예배에서 예배 운영과 온라인 중계를 맡았습니다. BACK TO CAMPUS에서는 온라인 레크리에이션을 진행하고 자막을 송출했습니다.

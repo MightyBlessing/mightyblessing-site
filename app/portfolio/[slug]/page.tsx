@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { ProjectDetail } from "@/components/redesign/ProjectDetail";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { getPortfolioBySlug, getPortfolioSlugs, getRelatedPortfolios } from "@/lib/content";
@@ -10,13 +11,11 @@ import { HOME_HERO_POSTER_STORAGE_KEY, resolveContentMediaUrl } from "@/lib/cont
 import { resolvePortfolioCardMedia, resolvePortfolioThumbnailUrl } from "@/lib/portfolio-display";
 import { portfolioFallbackImageUrl } from "@/lib/portfolio-media";
 import { buildPageMetadata } from "@/lib/seo";
+import { projectDisplayDate } from "@/lib/project-presentation";
+import { JsonLd } from "@/components/JsonLd";
+import { buildProjectJsonLd } from "@/lib/structured-data";
 
 type Props = { params: Promise<{ slug: string }> };
-
-function formatDate(date?: string) {
-  if (!date) return "";
-  return new Date(date).toLocaleDateString("ko-KR", { year: "numeric", month: "long" });
-}
 
 export async function generateStaticParams() {
   const slugs = getPortfolioSlugs();
@@ -26,13 +25,7 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const item = getPortfolioBySlug(slug);
-  if (!item) {
-    return buildPageMetadata({
-      title: "포트폴리오",
-      description: "마이티블레싱 프로젝트 포트폴리오입니다.",
-      path: "/portfolio",
-    });
-  }
+  if (!item) notFound();
 
   const image =
     resolvePortfolioThumbnailUrl(item.frontmatter) ||
@@ -44,7 +37,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   return buildPageMetadata({
     title: item.frontmatter.title,
-    description: item.frontmatter.summary,
+    description: item.frontmatter.summary || item.frontmatter.our_role,
     path: `/portfolio/${slug}`,
     images: [image],
     keywords: [...(item.frontmatter.roles || []), ...(item.frontmatter.categories || []), ...(item.frontmatter.search_terms || [])],
@@ -58,6 +51,8 @@ export default async function PortfolioDetailPage({ params }: Props) {
   if (!item) notFound();
 
   const { frontmatter, content } = item;
+  const structuredData = <JsonLd data={buildProjectJsonLd(slug, frontmatter)} />;
+  if (frontmatter.schemaVersion === 2) return <>{structuredData}<ProjectDetail project={frontmatter} content={content} /></>;
   const heroMedia = frontmatter.heroMedia || {
     type: "image" as const,
     url: frontmatter.thumbnail || portfolioFallbackImageUrl,
@@ -71,7 +66,7 @@ export default async function PortfolioDetailPage({ params }: Props) {
     frontmatter.process ? { label: "운영 방식", value: frontmatter.process } : null,
   ].filter((block): block is { label: string; value: string } => block !== null);
   const factItems = [
-    { label: "진행 시기", value: formatDate(frontmatter.date) },
+    { label: "진행 시기", value: projectDisplayDate(frontmatter) },
     frontmatter.location ? { label: "장소", value: frontmatter.location } : null,
     frontmatter.partner ? { label: "협업 파트너", value: frontmatter.partner } : null,
     frontmatter.categories?.length ? { label: "프로젝트 형태", value: frontmatter.categories.join(" / ") } : null,
@@ -93,7 +88,8 @@ export default async function PortfolioDetailPage({ params }: Props) {
   ];
 
   return (
-    <>
+    <div className="legacy-project-page">
+      {structuredData}
       <section className="border-b border-neutral-200 bg-white">
         <div className="container-wide py-6 sm:py-8 lg:py-10">
           <Link
@@ -115,7 +111,7 @@ export default async function PortfolioDetailPage({ params }: Props) {
             <div className="space-y-6 xl:pb-4">
               <div>
                 <p className="text-[11px] font-medium tracking-[0.16em] text-neutral-500 uppercase">
-                  {formatDate(frontmatter.date)}
+                  {projectDisplayDate(frontmatter)}
                 </p>
                 <h1 className="mt-3 max-w-[12ch] text-[1.7rem] leading-[1.05] font-semibold tracking-[-0.055em] text-neutral-950 sm:text-[2.35rem] xl:max-w-[10ch] xl:text-[3rem]">
                   {frontmatter.title}
@@ -161,7 +157,7 @@ export default async function PortfolioDetailPage({ params }: Props) {
             <div className="mb-6">
               <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-neutral-500">장면 기록</p>
               <h2 className="mt-2 text-[1.65rem] leading-[1.1] font-semibold tracking-[-0.045em] text-neutral-950 sm:text-[2.2rem]">
-                프로젝트를 기억하게 하는 순간들
+                현장 사진
               </h2>
             </div>
 
@@ -186,7 +182,7 @@ export default async function PortfolioDetailPage({ params }: Props) {
             <div className="mb-6">
               <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-neutral-500">프로젝트 노트</p>
               <h2 className="mt-2 text-[1.65rem] leading-[1.1] font-semibold tracking-[-0.045em] text-neutral-950 sm:text-[2.2rem]">
-                핵심만 짧게 정리한 운영 개요
+                프로젝트에서 맡은 일
               </h2>
             </div>
 
@@ -225,7 +221,7 @@ export default async function PortfolioDetailPage({ params }: Props) {
                 함께 보면 좋은 프로젝트
               </h2>
             </div>
-            <CTAButton href="/inquiry" label="이 프로젝트 문의하기" className="shadow-none" />
+            <CTAButton href="/inquiry" label="프로젝트 문의" className="shadow-none" />
           </div>
 
           {relatedItems.length > 0 && (
@@ -252,7 +248,7 @@ export default async function PortfolioDetailPage({ params }: Props) {
                       />
                       <div className="p-5">
                         <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-neutral-500">
-                          {formatDate(related.frontmatter.date)}
+                          {projectDisplayDate(related.frontmatter)}
                         </p>
                         <h3 className="mt-2 text-[1.18rem] leading-[1.18] font-semibold tracking-[-0.035em] text-neutral-950">
                           {related.frontmatter.title}
@@ -275,11 +271,11 @@ export default async function PortfolioDetailPage({ params }: Props) {
               href="/portfolio#portfolio-archive"
               className="inline-flex items-center justify-center rounded-full border border-neutral-300 px-5 py-2.5 text-sm font-medium text-neutral-700 transition-colors hover:bg-neutral-50"
             >
-              포트폴리오 목록으로
+              전체 프로젝트 보기
             </Link>
           </div>
         </section>
       </article>
-    </>
+    </div>
   );
 }

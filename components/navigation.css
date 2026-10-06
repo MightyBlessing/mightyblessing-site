@@ -1,0 +1,58 @@
+.global-header { position: sticky; top: 0; z-index: 60; display: flex; align-items: center; justify-content: space-between; gap: 24px; height: var(--header-height); padding: 0 40px 0 24px; border-bottom: 1px solid var(--rule); background: var(--background); color: var(--foreground); }
+.global-logo { display: flex; flex-shrink: 0; align-items: center; min-height: 44px; }
+.global-logo img { display: block; width: 162px; height: auto; }
+.global-nav { display: flex; align-items: center; gap: 36px; font-size: 14px; }
+.global-nav a, .global-mobile-actions a, .global-mobile-actions button { display: inline-flex; align-items: center; min-height: 44px; gap: 12px; white-space: nowrap; }
+.global-nav .global-contact { color: var(--primary); margin-left: 12px; }
+.global-nav a:hover, .global-nav a[aria-current], .global-mobile-actions a:hover, .global-mobile-actions button:hover { color: var(--primary); }
+.global-mobile-actions { display: none; align-items: center; gap: 24px; font-size: 14px; }
+.global-menu-trigger { display: none !important; }
+.global-dialog { margin: auto; padding: 0; width: min(540px, calc(100% - 32px)); max-height: calc(100dvh - 48px); color: var(--foreground); background: var(--background); border: 1px solid var(--rule); overscroll-behavior: contain; }
+.global-dialog::backdrop { background: rgb(0 0 0 / .35); }
+.global-dialog-content { padding: 24px; }
+.global-dialog-top { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 24px; }
+.global-dialog-top h2 { font-size: 18px; font-weight: 500; }
+.global-dialog-top button { min-width: 60px; min-height: 44px; font-size: 14px; }
+.global-dialog nav a { display: flex; justify-content: space-between; align-items: center; gap: 16px; min-height: 60px; padding: 14px 0; border-bottom: 1px solid var(--rule); font-size: 16px; line-height: 1.45; word-break: keep-all; overflow-wrap: anywhere; }
+.global-dialog nav a:hover, .global-dialog nav a[aria-current] { color: var(--primary); }
+.global-dialog nav a[aria-current] { border-left: 2px solid var(--primary); padding-left: 12px; }
+.global-dialog nav small { display: block; margin-top: 4px; color: var(--text-muted); font-size: 13px; }
+.global-dialog nav h3 { padding-top: 24px; font-size: 13px; color: var(--text-muted); }
+.global-dialog-all, .global-dialog-email { display: flex; align-items: center; min-height: 44px; margin-top: 24px; font-size: 14px; }
+.global-dialog-all { color: var(--primary); }
+@media (max-width: 1279px) {
+  .global-header { padding: 0 32px; gap: 20px; }
+  .global-nav { margin-left: auto; gap: 24px; }
+  .global-nav > a:first-child { display: none; }
+  .global-nav .global-contact { margin-left: 0; }
+  .global-mobile-actions { display: flex; }
+}
+@media (max-width: 767px) {
+  .global-header { padding: 0 20px; gap: 12px; }
+  .global-logo img { width: 136px; }
+  .global-nav { display: none; }
+  .global-mobile-actions { gap: 18px; font-size: 13px; }
+  .global-mobile-actions a, .global-mobile-actions button { gap: 6px; }
+  .global-menu-trigger { display: inline-flex !important; }
+  .global-dialog-content { padding: 20px; }
+}
+@media (max-width: 359px) { .global-logo img { width: 115px; } .global-header { padding-inline: 16px; } .global-mobile-actions { gap: 12px; } }
+
+/* Home navigation is grouped in the left rail on desktop. */
+.home-brand-mark { display: block; width: 104px; aspect-ratio: 690 / 212; flex-shrink: 0; background-color: var(--primary); mask: url("/brand/mighty-blessing.svg") center / contain no-repeat; }
+.home-noscript-nav { display: none; }
+@media (min-width: 1024px) { .global-header--home { display: none; } }
+@media (max-width: 1023px) {
+  .global-header--home { top: 8px; height: 64px; margin: 8px 8px 8px; padding-inline: 20px; border: 0; border-radius: 12px; }
+  .global-header--home .home-brand-mark { width: 104px; }
+  .global-header--home .global-nav { display: none; }
+  .global-header--home .global-mobile-actions { display: flex; gap: 18px; font-size: 13px; }
+  .global-header--home .global-menu-trigger { display: inline-flex !important; }
+  .home-noscript-nav { display: flex; flex-wrap: wrap; gap: 8px 16px; margin: 8px; padding: 12px; border-radius: 12px; background: #fff; font-size: 13px; }
+  .home-noscript-nav a { min-height: 44px; display: inline-flex; align-items: center; }
+}
+@media (max-width: 359px) {
+  .global-header--home { padding-inline: 12px; }
+  .global-header--home .home-brand-mark { width: 96px; }
+  .global-header--home .global-mobile-actions { gap: 12px; }
+}

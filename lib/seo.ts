@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { siteDescription, siteName, siteTitle, siteUrl } from "@/lib/site";
+import { siteDescription, siteName, siteNameKo, siteTitle, siteUrl } from "@/lib/site";
 
 const defaultOgImagePath = "/media/og-default.png";
 
@@ -46,11 +46,12 @@ export function buildPageMetadata({
   path = "/",
   keywords = [],
   images = [defaultOgImagePath],
-  noIndex = false,
+  noIndex = process.env.NODE_ENV === "development",
   type = "website",
 }: MetadataOptions = {}): Metadata {
   const canonical = normalizePath(path);
-  const resolvedTitle = title ? `${title} | ${siteName}` : siteTitle;
+  const resolvedTitle = title ? `${title} | ${siteNameKo}` : siteTitle;
+  const preventIndexing = noIndex || process.env.NODE_ENV === "development";
   const resolvedKeywords = [...new Set([...defaultKeywords, ...keywords])];
   const resolvedImages = (images.length > 0 ? images : [defaultOgImagePath]).map((image) => ({
     url: toAbsoluteUrl(image),
@@ -80,10 +81,10 @@ export function buildPageMetadata({
       images: resolvedImages.map((image) => image.url),
     },
     robots: {
-      index: !noIndex,
+      index: !preventIndexing,
       follow: true,
       googleBot: {
-        index: !noIndex,
+        index: !preventIndexing,
         follow: true,
         "max-image-preview": "large",
         "max-snippet": -1,

@@ -40,6 +40,7 @@ export function DashboardClient({ items, categories }: Props) {
   const [status, setStatus] = useState<PortfolioStatus | "all">("all");
   const [category, setCategory] = useState("all");
   const [pendingSlug, setPendingSlug] = useState("");
+  const [saved, setSaved] = useState("");
   const [error, setError] = useState("");
 
   const filteredItems = items.filter((item) => {
@@ -85,6 +86,7 @@ export function DashboardClient({ items, categories }: Props) {
   async function handleAction(slug: string, nextStatus: PortfolioStatus) {
     setPendingSlug(slug);
     setError("");
+    setSaved("");
 
     try {
       const response = await fetch("/api/admin/portfolio/action", {
@@ -95,6 +97,7 @@ export function DashboardClient({ items, categories }: Props) {
         body: JSON.stringify({
           action: "setStatus",
           slug,
+          revision: items.find(item => item.slug === slug)?.revision,
           status: nextStatus,
         }),
       });
@@ -104,6 +107,7 @@ export function DashboardClient({ items, categories }: Props) {
         throw new Error(data.error || "처리 중 오류가 발생했습니다.");
       }
 
+      setSaved("상태가 저장되었습니다. 사이트 반영은 배포 후 확인해 주세요.");
       router.refresh();
     } catch (error) {
       setError(error instanceof Error ? error.message : "처리 중 오류가 발생했습니다.");
@@ -169,7 +173,8 @@ export function DashboardClient({ items, categories }: Props) {
           </Link>
         </div>
 
-        {error && <p className="mt-4 text-[0.92rem] text-[#ffb1b1]">{error}</p>}
+        {saved && <p role="status" className="mt-4 text-sm text-white/70">{saved}</p>}
+        {error && <p role="alert" className="mt-4 text-[0.92rem] text-[#ffb1b1]">{error}</p>}
 
         <div className="mt-6 grid gap-4">
           {filteredItems.map((item) => {
@@ -239,7 +244,7 @@ export function DashboardClient({ items, categories }: Props) {
                       <button
                         type="button"
                         onClick={() => handleAction(item.slug, "published")}
-                        disabled={pendingSlug === item.slug}
+                        disabled={Boolean(pendingSlug)}
                         className="inline-flex min-h-[40px] items-center justify-center rounded-full border border-[#9ce2b0]/15 bg-[#9ce2b0]/10 px-4 py-2 text-[0.85rem] font-medium text-[#c1f1cb] transition-colors hover:bg-[#9ce2b0]/16 disabled:opacity-60"
                       >
                         발행
@@ -249,7 +254,7 @@ export function DashboardClient({ items, categories }: Props) {
                       <button
                         type="button"
                         onClick={() => handleAction(item.slug, "draft")}
-                        disabled={pendingSlug === item.slug}
+                        disabled={Boolean(pendingSlug)}
                         className="inline-flex min-h-[40px] items-center justify-center rounded-full border border-[#a9bcff]/20 bg-[#a9bcff]/10 px-4 py-2 text-[0.85rem] font-medium text-[#d7e0ff] transition-colors hover:bg-[#a9bcff]/16 disabled:opacity-60"
                       >
                         초안
@@ -259,7 +264,7 @@ export function DashboardClient({ items, categories }: Props) {
                       <button
                         type="button"
                         onClick={() => handleAction(item.slug, "archived")}
-                        disabled={pendingSlug === item.slug}
+                        disabled={Boolean(pendingSlug)}
                         className="inline-flex min-h-[40px] items-center justify-center rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-[0.85rem] font-medium text-white/62 transition-colors hover:bg-white/[0.08] hover:text-white disabled:opacity-60"
                       >
                         보관

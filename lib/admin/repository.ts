@@ -1,18 +1,21 @@
 import fs from "fs/promises";
 import path from "path";
 import { base64ToBytes, bytesToBase64 } from "./base64";
+import { checkExpectedFiles, EditConflict } from "./revision";
 import { getGithubConfig } from "./env";
 
 export type RepositoryChangeSet = {
   message: string;
+  expectedFiles?: Record<string, string | null>;
   upserts: { path: string; contentBase64: string }[];
   deletes: string[];
 };
 
 export interface AdminRepository {
+  assertWritable?(): void;
   listFiles(prefix: string): Promise<string[]>;
   readFile(filePath: string): Promise<string | null>;
-  commitChanges(changeSet: RepositoryChangeSet): Promise<void>;
+  commitChanges(changeSet: RepositoryChangeSet): Promise<{ commitSha?: string } | void>;
 }
 
 async function listLocalFiles(directory: string): Promise<string[]> {
@@ -34,8 +37,16 @@ async function listLocalFiles(directory: string): Promise<string[]> {
   }
 }
 
+const localWrites = new Map<string, Promise<unknown>>();
+
 class LocalRepository implements AdminRepository {
-  constructor(private readonly rootDir: string) {}
+  constructor(private readonly rootDir: string, private readonly writable: boolean) {}
+
+  assertWritable() {
+    if (!this.writable) {
+      throw new Error("GitHub 저장소 설정이 준비되지 않아 저장할 수 없습니다. 운영 담당자에게 설정 확인을 요청해 주세요.");
+    }
+  }
 
   async listFiles(prefix: string) {
     const fullPath = path.join(this.rootDir, prefix);
@@ -53,20 +64,31 @@ class LocalRepository implements AdminRepository {
   }
 
   async commitChanges(changeSet: RepositoryChangeSet) {
-    for (const file of changeSet.upserts) {
-      const absolutePath = path.join(this.rootDir, file.path);
-      await fs.mkdir(path.dirname(absolutePath), { recursive: true });
-      await fs.writeFile(absolutePath, base64ToBytes(file.contentBase64));
-    }
-
-    for (const filePath of changeSet.deletes) {
-      try {
-        await fs.unlink(path.join(this.rootDir, filePath));
-      } catch {
-        // ignore missing files in local mode
+    this.assertWritable();
+    const previous = localWrites.get(this.rootDir) || Promise.resolve();
+    const write = previous.catch(() => {}).then(async () => {
+      await checkExpectedFiles(changeSet.expectedFiles, file => this.readFile(file));
+      for (const file of changeSet.upserts) {
+        const absolutePath = path.join(this.rootDir, file.path);
+        await fs.mkdir(path.dirname(absolutePath), { recursive: true });
+        await fs.writeFile(absolutePath, base64ToBytes(file.contentBase64));
       }
-    }
+
+      for (const filePath of changeSet.deletes) {
+        try {
+          await fs.unlink(path.join(this.rootDir, filePath));
+        } catch {
+          // ignore missing files in local mode
+        }
+      }
+    });
+    localWrites.set(this.rootDir, write);
+    try { await write; } finally { if (localWrites.get(this.rootDir) === write) localWrites.delete(this.rootDir); }
   }
+}
+
+class GithubRequestError extends Error {
+  constructor(public readonly status: number) { super(`GitHub request failed: ${status}`); }
 }
 
 type GithubBlobResponse = {
@@ -95,8 +117,7 @@ class GithubRepository implements AdminRepository {
     });
 
     if (!response.ok) {
-      const message = await response.text();
-      throw new Error(`GitHub request failed: ${response.status} ${message}`);
+      throw new GithubRequestError(response.status);
     }
 
     if (response.status === 204) {
@@ -131,12 +152,12 @@ class GithubRepository implements AdminRepository {
       .map((entry) => entry.path);
   }
 
-  async readFile(filePath: string) {
+  async readFile(filePath: string, ref = this.branch) {
     const safePath = filePath.split("/").map(encodeURIComponent).join("/");
 
     try {
       const file = await this.request<{ content: string; encoding: string }>(
-        `/repos/${this.owner}/${this.repo}/contents/${safePath}?ref=${encodeURIComponent(this.branch)}`,
+        `/repos/${this.owner}/${this.repo}/contents/${safePath}?ref=${encodeURIComponent(ref)}`,
       );
 
       if (file.encoding === "base64") {
@@ -145,7 +166,7 @@ class GithubRepository implements AdminRepository {
 
       return null;
     } catch (error) {
-      if (error instanceof Error && error.message.includes("404")) {
+      if (error instanceof GithubRequestError && error.status === 404) {
         return null;
       }
       throw error;
@@ -158,6 +179,8 @@ class GithubRepository implements AdminRepository {
     }
 
     const branchState = await this.getBranchState();
+    // Read at the exact parent commit; force:false below closes the check/write race.
+    await checkExpectedFiles(changeSet.expectedFiles, file => this.readFile(file, branchState.commitSha));
     const blobs = await Promise.all(
       changeSet.upserts.map((file) =>
         this.request<GithubBlobResponse>(`/repos/${this.owner}/${this.repo}/git/blobs`, {
@@ -200,13 +223,19 @@ class GithubRepository implements AdminRepository {
       }),
     });
 
-    await this.request(`/repos/${this.owner}/${this.repo}/git/refs/heads/${this.branch}`, {
-      method: "PATCH",
-      body: JSON.stringify({
-        sha: commit.sha,
-        force: false,
-      }),
-    });
+    try {
+      await this.request(`/repos/${this.owner}/${this.repo}/git/refs/heads/${this.branch}`, {
+        method: "PATCH",
+        body: JSON.stringify({
+          sha: commit.sha,
+          force: false,
+        }),
+      });
+    } catch (error) {
+      if (error instanceof GithubRequestError && [409, 422].includes(error.status)) throw new EditConflict();
+      throw error;
+    }
+    return { commitSha: commit.sha };
   }
 }
 
@@ -216,6 +245,5 @@ export function getAdminRepository(): AdminRepository {
     return new GithubRepository(github.token, github.owner, github.repo, github.branch);
   }
 
-  return new LocalRepository(process.cwd());
+  return new LocalRepository(process.cwd(), process.env.NODE_ENV === "development");
 }
-

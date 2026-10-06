@@ -15,6 +15,14 @@ const contentDir = path.join(process.cwd(), "content");
 export type PortfolioStatus = "draft" | "published" | "archived";
 
 export type PortfolioFrontmatter = {
+  schemaVersion?: number;
+  shortTitle?: string;
+  displayDate?: string;
+  homeOrder?: number;
+  railOrder?: number;
+  homeHero?: boolean;
+  excludedRoles?: string[];
+  credits?: { name: string; role: string }[];
   title: string;
   slug: string;
   date: string;
@@ -42,8 +50,10 @@ export type PortfolioFrontmatter = {
 
 export type PortfolioEntry = { frontmatter: PortfolioFrontmatter; slug: string };
 
-function shouldIncludePortfolio(status: PortfolioStatus, includeUnpublished?: boolean) {
-  return includeUnpublished || status === "published";
+function shouldIncludePortfolio(frontmatter: PortfolioFrontmatter, includeUnpublished?: boolean) {
+  return includeUnpublished || frontmatter.status === "published" || (
+    process.env.NODE_ENV === "development" && frontmatter.status === "draft" && frontmatter.schemaVersion === 2
+  );
 }
 
 export function normalizePortfolioFrontmatter(frontmatter: Partial<PortfolioFrontmatter>): PortfolioFrontmatter {
@@ -54,6 +64,14 @@ export function normalizePortfolioFrontmatter(frontmatter: Partial<PortfolioFron
   const featuredSelection = normalizePortfolioFeaturedSelection(frontmatter);
 
   return {
+    schemaVersion: frontmatter.schemaVersion,
+    shortTitle: frontmatter.shortTitle,
+    displayDate: frontmatter.displayDate,
+    homeOrder: frontmatter.homeOrder,
+    railOrder: frontmatter.railOrder,
+    homeHero: frontmatter.homeHero,
+    excludedRoles: frontmatter.excludedRoles || [],
+    credits: (frontmatter.credits || []).map(({ name, role }) => ({ name, role })),
     title: frontmatter.title || "",
     slug: frontmatter.slug || "",
     date: frontmatter.date || "",
@@ -101,13 +119,14 @@ export function getPortfolioBySlug(
   slug: string,
   options: { includeUnpublished?: boolean } = {},
 ): { frontmatter: PortfolioFrontmatter; content: string } | null {
+  if (!/^[a-zA-Z0-9가-힣-]+$/.test(slug)) return null;
   const fullPath = path.join(contentDir, "portfolio", `${slug}.md`);
   if (!fs.existsSync(fullPath)) return null;
   const raw = fs.readFileSync(fullPath, "utf-8");
   const { data, content } = matter(raw);
   const frontmatter = normalizePortfolioFrontmatter(data as Partial<PortfolioFrontmatter>);
 
-  if (!shouldIncludePortfolio(frontmatter.status || "published", options.includeUnpublished)) {
+  if (!shouldIncludePortfolio(frontmatter, options.includeUnpublished)) {
     return null;
   }
 
@@ -210,6 +229,7 @@ export function filterPortfolios({
     const haystack = normalizeSearchValue(
       [
         frontmatter.title,
+        frontmatter.shortTitle || "",
         ...(frontmatter.roles || []),
         ...(frontmatter.categories || []),
         ...(frontmatter.search_terms || []),
