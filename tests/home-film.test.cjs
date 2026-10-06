@@ -29,16 +29,17 @@ test('decoded video timestamps map both sides of every cut and loop to the match
   assert.equal(filmCutAt([], 4), undefined);
 });
 
-test('a baked film requires all projects, and can never be served in production', () => {
-  assert.equal(canReviewFilm(projects, 'development'), true);
-  assert.equal(canReviewFilm(projects.slice(1), 'development'), false);
-  assert.equal(canReviewFilm([], 'development'), false);
-  assert.equal(canReviewFilm(projects, 'production'), false);
-  assert.equal(getHomeFilm(projects, 'production'), undefined);
+test('a baked film requires all projects in the visible collection, including production', () => {
+  assert.equal(canReviewFilm(projects), true);
+  assert.equal(canReviewFilm(projects.slice(1)), false);
+  assert.equal(canReviewFilm([]), false);
+  assert.equal(canReviewFilm(projects), true);
+  assert.match(getHomeFilm(projects).desktop, /^\/media\/home-film\/desktop.mp4/);
+  assert.equal(getHomeFilm([]), undefined);
 });
 
 test('film presentation copies real scope and credits, with no source paths or invented records', () => {
-  const film = getHomeFilm(projects, 'development');
+  const film = getHomeFilm(projects);
   assert.equal(film.duration, timeline.duration);
   for (const cut of film.cuts) {
     assert.deepEqual(cut.project.excludedRoles, ['음향']);

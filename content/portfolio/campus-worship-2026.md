@@ -1,6 +1,6 @@
 ---
 schemaVersion: 2
-status: draft
+status: published
 title: WELOVE Retouched V — CAMPUS WORSHIP 2026
 shortTitle: CAMPUS WORSHIP
 slug: campus-worship-2026
@@ -25,16 +25,16 @@ metrics:
     value: '3,000명'
 heroMedia:
   type: image
-  url: /api/preview-media/p047-1920.webp
+  url: /media/events/p047-1920.webp
   alt: KBS 아레나의 무대와 관객석을 함께 담은 CAMPUS WORSHIP 현장
   caption: CAMPUS WORSHIP · KBS 아레나
 gallery:
   - type: image
-    url: /api/design-system-media/registration.webp
+    url: /media/products/registration.webp
     alt: CAMPUS WORSHIP의 구역별 등록 부스와 입장을 기다리는 관객
     caption: CAMPUS WORSHIP · 구역별 등록 현장
   - type: image
-    url: /api/preview-media/p050-1920.webp
+    url: /media/events/p050-1920.webp
     alt: CAMPUS WORSHIP의 공연 화면과 운영석
     caption: 공연 화면과 현장 운영석
 search_terms:
@@ -52,13 +52,13 @@ search_terms:
 
 입장 안내에는 스탠딩 구역과 좌석 구역을 구분하고, 등록 부스에서 티켓을 확인한 뒤 팔찌를 수령하는 절차와 구역별 입장 방식을 정리했습니다. 현장에서는 구역별 등록 부스에서 관객을 안내하고 입장을 운영했습니다.
 
-![CAMPUS WORSHIP의 구역별 등록 현장](/api/design-system-media/registration.webp)
+![CAMPUS WORSHIP의 구역별 등록 현장](/media/products/registration.webp)
 
 ## 무대와 관객을 함께 운영하기
 
 마이티블레싱은 행사 기획과 현장 연출, 영상·자막 송출을 맡았습니다. 무대의 진행을 운영하는 일과 함께 관객의 입장과 현장 안내를 담당했습니다. 아래 사진은 공연 화면과 이를 운영하는 제작석을 함께 보여줍니다.
 
-![CAMPUS WORSHIP의 공연 화면과 운영석](/api/preview-media/p050-1920.webp)
+![CAMPUS WORSHIP의 공연 화면과 운영석](/media/events/p050-1920.webp)
 
 ## 등록과 참여에 사용한 도구
 

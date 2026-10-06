@@ -22,7 +22,7 @@ test('all 35 supplied events are retained while 30 ready records appear in the l
     assert.ok(detail, entry.slug);
     assert.ok(detail.frontmatter.roles.length, entry.slug);
     assert.ok(detail.frontmatter.our_role, entry.slug);
-    assert.equal(detail.frontmatter.status, 'draft');
+    assert.equal(detail.frontmatter.status, 'published');
     assert.equal(detail.frontmatter.sourceRow, undefined);
   }
   const rail = selectRailProjects(index);
@@ -46,10 +46,14 @@ test('confirmed corrections and partial scope survive the sheet import', () => w
   assert.deepEqual(getPortfolioBySlug('welove-reconciliation-2026').frontmatter.excludedRoles, ['음향']);
 }));
 
-test('production retains the existing public index and excludes review records', () => withEnvironment('production', () => {
+test('production includes published events, preserves old detail URLs and excludes held records', () => withEnvironment('production', () => {
   const rail = selectRailProjects(getAllPortfolios());
-  assert.deepEqual(new Set(rail.map(p => p.slug)), new Set(['welove-case','the-sent-case','regional-worship-case']));
-  for (const {slug} of mapping.events) assert.equal(getPortfolioBySlug(slug), null);
+  assert.equal(rail.length, 30);
+  for (const slug of ['welove-case','the-sent-case','regional-worship-case']) assert.ok(getPortfolioBySlug(slug));
+  for (const {slug} of mapping.events) {
+    const stored = getPortfolioBySlug(slug, { includeUnpublished: true });
+    assert.equal(Boolean(getPortfolioBySlug(slug)), stored.frontmatter.status === 'published');
+  }
 }));
 
 test('a text-only selection clears the old image and cannot be replaced by its late load', () => {
@@ -67,8 +71,8 @@ test('home curation omits held work without replacing it or changing the remaini
   assert.deepEqual(selected.map(p => p.slug), ['campus-worship-2026','multitracks-korea-launch-2024','sos-2024','love-and-revival-2025','welove-reconciliation-2026']);
   assert.equal(selectRailProjects(all).length, 30);
   assert.deepEqual(selected.filter(p => !p.image).map(p => p.slug), []);
-  assert.equal(selected.find(p => p.slug === 'welove-reconciliation-2026').image, '/api/preview-media/p043-1920.webp');
-  assert.equal(selectRailProjects(all).find(p => p.slug === 'welove-reconciliation-2026').image, '/api/preview-media/p043-1920.webp');
+  assert.equal(selected.find(p => p.slug === 'welove-reconciliation-2026').image, '/media/events/p043-1920.webp');
+  assert.equal(selectRailProjects(all).find(p => p.slug === 'welove-reconciliation-2026').image, '/media/events/p043-1920.webp');
   assert.ok(selectHomeProjects(all).every(p => p.frontmatter.heroMedia));
 }));
 
@@ -117,9 +121,9 @@ test('production home never pads public work with review drafts or duplicate rec
   const all = getAllPortfolios();
   const selected = selectFeaturedRailProjects(all);
   const cards = selectHomeProjects(all);
-  assert.equal(selected.length, 3);
-  assert.equal(cards.length, 3);
-  assert.equal(new Set(selected.map(p => p.slug)).size, 3);
+  assert.equal(selected.length, 5);
+  assert.equal(cards.length, 4);
+  assert.equal(new Set(selected.map(p => p.slug)).size, 5);
   assert.ok(selected.every(p => !p.image.startsWith('/api/preview-media/')));
   assert.ok(cards.every(p => p.frontmatter.status === 'published'));
 }));

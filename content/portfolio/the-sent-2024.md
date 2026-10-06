@@ -1,6 +1,6 @@
 ---
 schemaVersion: 2
-status: draft
+status: published
 title: THE SENT 선교 콘퍼런스 2024
 slug: the-sent-2024
 date: '2024-05-05'
@@ -26,12 +26,12 @@ search_terms:
   - THE SENT 2024
 heroMedia:
   type: image
-  url: /api/preview-media/r0847-1920.webp
+  url: /media/events/r0847-1920.webp
   alt: "THE SENT 2024 · THE SENT 2024 예배 현장"
   caption: "THE SENT 2024 예배 현장"
 gallery:
   - type: image
-    url: /api/preview-media/r0882-1920.webp
+    url: /media/events/r0882-1920.webp
     alt: "THE SENT 2024 · THE SENT 2024 무대와 객석"
     caption: "THE SENT 2024 무대와 객석"
 ---

@@ -1,6 +1,6 @@
 ---
 schemaVersion: 2
-status: draft
+status: published
 title: "WELOVE Back to the Garden 2022 — 부산"
 slug: welove-tour-busan-2022
 date: '2022-12-03'
@@ -28,12 +28,12 @@ search_terms:
   - 다시 일어나
 heroMedia:
   type: image
-  url: /api/preview-media/r3172-1920.webp
+  url: /media/events/r3172-1920.webp
   alt: "2022 Back to the Garden — 부산 · 부산 공연의 무대와 객석"
   caption: "부산 공연의 무대와 객석"
 gallery:
   - type: image
-    url: /api/preview-media/r3177-1920.webp
+    url: /media/events/r3177-1920.webp
     alt: "2022 Back to the Garden — 부산 · 객석에서 관객을 안내하는 현장"
     caption: "부산 공연의 관객 안내 현장"
 ---

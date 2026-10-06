@@ -21,7 +21,7 @@ test('held cases remain editable but cannot leak through details, search, indexe
       const stored = getAllPortfolios({ includeUnpublished: true });
       assert.equal(stored.length, 38);
       assert.deepEqual(stored.filter(p => p.frontmatter.status === 'archived').map(p => p.slug).sort(), [...held].sort());
-      assert.equal(selectRailProjects(visible).length, environment === 'development' ? 30 : 3);
+      assert.equal(selectRailProjects(visible).length, 30);
       for (const slug of held) {
         const original = getPortfolioBySlug(slug, { includeUnpublished: true });
         assert.ok(original.frontmatter.summary);

@@ -71,8 +71,8 @@ test('production home shells contain only the published set and do not fill the 
   pathname = '/';
   const projects = selectRailProjects(getAllPortfolios());
   for (const {slugs} of renderIndexes(projects)) {
-    assert.equal(slugs.length, 3);
+    assert.equal(slugs.length, 30);
     assert.deepEqual(slugs, groupProjectsByYear(projects).flatMap(group => group.projects.map(p => p.slug)));
-    assert.ok(!slugs.includes('campus-worship-2026'));
+    assert.ok(!slugs.includes('fia-welove-2026'));
   }
 }));

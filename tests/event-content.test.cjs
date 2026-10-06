@@ -15,7 +15,7 @@ test('enriched event records retain introductions and scope without requiring pa
   assert.equal(index.length, 35);
   for (const entry of index) {
     const detail = getPortfolioBySlug(entry.slug, { includeUnpublished: true });
-    assert.ok(['draft', 'archived'].includes(detail.frontmatter.status), entry.slug);
+    assert.ok(['published', 'archived'].includes(detail.frontmatter.status), entry.slug);
     assert.ok(detail.frontmatter.shortTitle, entry.slug);
     assert.ok(detail.frontmatter.summary.trim(), entry.slug);
     assert.ok(detail.frontmatter.our_role.trim(), entry.slug);
@@ -109,6 +109,6 @@ test('partial work, creator credits and actual photos survive richer storytellin
   const multitracks = getPortfolioBySlug('multitracks-korea-launch-2024');
   assert.ok(multitracks.frontmatter.credits.some(c => /MultiTracks/.test(c.name) && /키비주얼/.test(c.role)));
   const campus = getPortfolioBySlug('campus-worship-2026');
-  assert.deepEqual(markdownImageSources(campus.content), ['/api/design-system-media/registration.webp', '/api/preview-media/p050-1920.webp']);
+  assert.deepEqual(markdownImageSources(campus.content), ['/media/products/registration.webp', '/media/events/p050-1920.webp']);
   assert.equal(homeProjectTitle(toProjectLink({slug: 'campus-worship-2026', frontmatter: campus.frontmatter})), 'CAMPUS WORSHIP');
 }));

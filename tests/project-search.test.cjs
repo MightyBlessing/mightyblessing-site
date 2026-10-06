@@ -20,7 +20,7 @@ test('archive combines aliases, event type and year without widening publication
     assert.equal(searchProjects(index, { query: 'F.I.A' }).length, 0);
     process.env.NODE_ENV = 'production';
     const publicIndex = selectIndexProjects(getAllPortfolios());
-    assert.equal(searchProjects(publicIndex, {}).length, 3);
-    assert.ok(searchProjects(publicIndex, { query: 'CAMPUS' }).every(p => p.frontmatter.status === 'published' && p.slug !== 'campus-worship-2026'));
+    assert.equal(searchProjects(publicIndex, {}).length, 30);
+    assert.ok(searchProjects(publicIndex, { query: 'CAMPUS' }).every(p => p.frontmatter.status === 'published' && p.slug !== 'fia-welove-2026'));
   } finally { if (previous === undefined) delete process.env.NODE_ENV; else process.env.NODE_ENV = previous; }
 });

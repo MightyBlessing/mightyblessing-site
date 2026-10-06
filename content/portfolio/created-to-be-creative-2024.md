@@ -1,6 +1,6 @@
 ---
 schemaVersion: 2
-status: draft
+status: published
 title: "WELOVE Nar Night — CREATED TO BE CREATIVE 2024"
 slug: created-to-be-creative-2024
 date: '2024-11-16'
@@ -26,12 +26,12 @@ search_terms:
   - "WELOVE CREATED TO BE CREATIVE 2024"
 heroMedia:
   type: image
-  url: /api/preview-media/p014-1920.webp
+  url: /media/events/p014-1920.webp
   alt: "CREATED TO BE CREATIVE · CREATED TO BE CREATIVE 예배 현장"
   caption: "CREATED TO BE CREATIVE 예배 현장"
 gallery:
   - type: image
-    url: /api/preview-media/p008-1920.webp
+    url: /media/events/p008-1920.webp
     alt: "CREATED TO BE CREATIVE · 무대와 관객 전경"
     caption: "무대와 관객 전경"
 ---

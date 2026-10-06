@@ -1,6 +1,6 @@
 ---
 schemaVersion: 2
-status: draft
+status: published
 title: BACK TO CAMPUS — 캠퍼스 파송예배 2022
 slug: back-to-campus-2022
 date: '2022-09-03'

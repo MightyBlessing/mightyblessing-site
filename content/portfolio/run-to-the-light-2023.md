@@ -1,6 +1,6 @@
 ---
 schemaVersion: 2
-status: draft
+status: published
 title: WELOVE Run To The Light 녹음집회 2023
 slug: run-to-the-light-2023
 date: '2023-05-20'
@@ -24,7 +24,7 @@ search_terms:
   - WELOVE Run To The Light
 heroMedia:
   type: image
-  url: /api/preview-media/r3090-1920.webp
+  url: /media/events/r3090-1920.webp
   alt: "WELOVE Run To The Light · Run To The Light 녹음집회 현장"
   caption: "Run To The Light 녹음집회 현장"
 ---

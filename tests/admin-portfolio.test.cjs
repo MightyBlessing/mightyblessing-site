@@ -121,7 +121,8 @@ test('public reading excludes review drafts in production and blocks path traver
   const previous = process.env.NODE_ENV;
   try {
     process.env.NODE_ENV = 'production';
-    assert.equal(getPortfolioBySlug('campus-worship-2026'), null);
+    assert.ok(getPortfolioBySlug('campus-worship-2026'));
+    assert.equal(getPortfolioBySlug('fia-welove-2026'), null);
     assert.equal(getPortfolioBySlug('../../README'), null);
     for (const slug of ['welove-case', 'the-sent-case', 'regional-worship-case']) assert.ok(getPortfolioBySlug(slug));
     process.env.NODE_ENV = 'development';

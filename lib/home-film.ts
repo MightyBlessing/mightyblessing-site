@@ -10,15 +10,15 @@ export type FilmCut = typeof timeline.cuts[number] & { project: FilmProject };
 export type HomeFilm = { duration: number; desktop: string; mobile: string; posterDesktop: string; posterMobile: string; cuts: FilmCut[] };
 
 /** A baked multi-project film is indivisible: never merely filter its captions. */
-export function canReviewFilm(projects: { slug: string }[], environment = process.env.NODE_ENV) {
+export function canReviewFilm(projects: { slug: string }[]) {
   const allowed = new Set(projects.map(project => project.slug));
-  return environment === "development" && timeline.cuts.every(cut => allowed.has(cut.projectSlug));
+  return timeline.cuts.every(cut => allowed.has(cut.projectSlug));
 }
 
-export function getHomeFilm(projects: SystemProject[], environment = process.env.NODE_ENV): HomeFilm | undefined {
-  if (!canReviewFilm(projects, environment)) return;
+export function getHomeFilm(projects: SystemProject[]): HomeFilm | undefined {
+  if (!canReviewFilm(projects)) return;
   const allowed = new Map(projects.map(project => [project.slug, project]));
-  const url = (file: FilmFile) => `/api/preview-film/${file}?v=${timeline.revision}`;
+  const url = (file: FilmFile) => `/media/home-film/${file}?v=${timeline.revision}`;
   return {
     duration: timeline.duration, desktop: url("desktop.mp4"), mobile: url("mobile.mp4"),
     posterDesktop: url("poster-desktop.webp"), posterMobile: url("poster-mobile.webp"),

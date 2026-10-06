@@ -42,7 +42,7 @@ export function toProjectLink({ slug, frontmatter: project }: PortfolioEntry): P
 }
 
 export function imageSrcSet(url: string) {
-  return /^\/api\/preview-media\/[pr]\d{3,4}-1920\.webp$/.test(url)
+  return /^\/(?:api\/preview-media|media\/events)\/[pr]\d{3,4}-1920\.webp$/.test(url)
     ? [640, 1280, 1920].map((width) => `${url.replace("-1920", `-${width}`)} ${width}w`).join(", ")
     : reviewPhotoSrcSet(url);
 }

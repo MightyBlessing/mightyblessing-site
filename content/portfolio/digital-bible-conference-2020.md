@@ -1,6 +1,6 @@
 ---
 schemaVersion: 2
-status: draft
+status: published
 title: 디지털 말씀 사경회 2020
 slug: digital-bible-conference-2020
 date: '2020-11-02'
@@ -18,10 +18,10 @@ search_terms:
   - 디지털 말씀 사경회
   - "디말사"
   - "디지탈 말씀 사경회"
-thumbnail: /api/preview-media/w008-500.webp
+thumbnail: /media/events/w008-500.webp
 gallery:
   - type: image
-    url: /api/preview-media/w008-500.webp
+    url: /media/events/w008-500.webp
     alt: 디지털 말씀 사경회 둘째 날 WELOVE 찬양 실황 화면
     caption: 2020.11.03 둘째 날 실황 캡처 · 제이어스 유튜브 / 기독일보 게재
 ---

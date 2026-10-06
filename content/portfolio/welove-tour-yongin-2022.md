@@ -1,6 +1,6 @@
 ---
 schemaVersion: 2
-status: draft
+status: published
 title: "WELOVE Back to the Garden 2022 — 용인"
 slug: welove-tour-yongin-2022
 date: '2022-12-17'
@@ -28,12 +28,12 @@ search_terms:
   - 다시 일어나
 heroMedia:
   type: image
-  url: /api/preview-media/r3062-1920.webp
+  url: /media/events/r3062-1920.webp
   alt: "2022 Back to the Garden — 용인 · 용인 공연의 무대와 객석"
   caption: "용인 공연의 무대와 객석"
 gallery:
   - type: image
-    url: /api/preview-media/r3078-1920.webp
+    url: /media/events/r3078-1920.webp
     alt: "2022 Back to the Garden — 용인 · 용인 공연의 무대 설치 현장"
     caption: "용인 공연의 무대 설치 현장"
 ---

@@ -1,6 +1,6 @@
 ---
 schemaVersion: 2
-status: draft
+status: published
 title: '2020 KOUNY 온라인 컨퍼런스 — 회복, 그 다음'
 slug: kouny-online-worship-2020
 date: '2020-08-17'
@@ -20,7 +20,7 @@ search_terms:
   - KOUNY 온라인 컨퍼런스
 heroMedia:
   type: image
-  url: /api/preview-media/r3228-1920.webp
+  url: /media/events/r3228-1920.webp
   alt: "2020 KOUNY 온라인 컨퍼런스 · KOUNY 온라인 예배 촬영 현장"
   caption: "KOUNY 온라인 예배 촬영 현장"
 ---

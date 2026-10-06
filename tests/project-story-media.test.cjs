@@ -19,7 +19,7 @@ const { projectDisplayDate, toProjectLink } = require('../lib/project-presentati
 const original = fs.readFileSync(path.join(__dirname, '../content/portfolio/campus-worship-2026.md'), 'utf8');
 const originalParsed = matter(original);
 const filename = 'content/portfolio/campus-worship-2026.md';
-const registration = '/api/design-system-media/registration.webp';
+const registration = '/media/products/registration.webp';
 const noUploads = () => ({ galleryFiles: {}, galleryPosterFiles: {} });
 const replacementFile = { name: 'replacement.webp', contentBase64: 'dGVzdA==' };
 function fixture(source = original) {
@@ -70,7 +70,7 @@ test('deleting a gallery photo removes only its real inline image from the saved
   payload.gallery = payload.gallery.filter(item => item.existingUrl !== registration);
   await saveAdminPortfolio(payload, noUploads(), 'update', state.services);
   const result = saved(state);
-  assert.equal(result.content.trim(), before.replace(/!\[[^\]]*\]\(\/api\/design-system-media\/registration\.webp\)/, '').trim());
+  assert.equal(result.content.trim(), before.replace(/!\[[^\]]*\]\(\/media\/products\/registration\.webp\)/, '').trim());
   assert.equal(markdownImageSources(result.content).includes(registration), false);
   const rendered = images(render(result.data, result.content));
   assert.equal(rendered.length, 2);
@@ -199,7 +199,8 @@ test('publish rejects each review media endpoint in hero, gallery, poster and ac
 });
 
 test('development media remains editable as draft, while approved uploads replace the story before publish validation', async () => {
-  const state = fixture(), payload = await payloadFor(state);
+  const draft = original.replace('status: published', 'status: draft').replaceAll('/media/events/', '/api/preview-media/').replaceAll('/media/products/', '/api/design-system-media/');
+  const state = fixture(draft), payload = await payloadFor(state);
   await saveAdminPortfolio(payload, noUploads(), 'update', state.services);
   assert.equal(saved(state).data.status, 'draft');
   const next = await payloadFor(state);
@@ -227,6 +228,7 @@ test('unused review definitions and literal code examples do not block approved 
 
 test('rejected publication cleans newly uploaded files without committing or deleting existing assets', async () => {
   const state = fixture(), payload = await payloadFor(state);
+  payload.content += '\n![review](/api/preview-media/example.webp)';
   await assert.rejects(saveAdminPortfolio(payload, { ...noUploads(), heroFile: replacementFile }, 'publish', state.services), /로컬 검토용 미디어는 공개할 수 없습니다/);
   assert.deepEqual(state.removals, state.uploads);
   assert.equal(state.uploads.length, 1);
@@ -272,7 +274,7 @@ test('supporting portraits stay small, roles precede the hero and inquiry retain
   assert.match(html, /\/inquiry\?project=gyeongnam-worship-2024/);
   const campus = render(originalParsed.data, originalParsed.content);
   assert.ok(campus.indexOf('마이티블레싱 수행 범위') < campus.indexOf('class="detail-hero"'));
-  assert.deepEqual(images(campus), [originalParsed.data.heroMedia.url, registration, '/api/preview-media/p050-1920.webp']);
+  assert.deepEqual(images(campus), [originalParsed.data.heroMedia.url, registration, '/media/events/p050-1920.webp']);
 });
 
 test('inquiry context resolves only visible projects and never echoes an arbitrary query', async () => {
@@ -287,6 +289,6 @@ test('inquiry context resolves only visible projects and never echoes an arbitra
       assert.doesNotMatch(html, /class="inquiry-reference"|arbitrary-query/);
     }
     process.env.NODE_ENV = 'production';
-    assert.doesNotMatch(await page('campus-worship-2026'), /class="inquiry-reference"/);
+    assert.match(await page('campus-worship-2026'), /class="inquiry-reference"/);
   } finally { if (previous === undefined) delete process.env.NODE_ENV; else process.env.NODE_ENV = previous; }
 });

@@ -1,6 +1,6 @@
 ---
 schemaVersion: 2
-status: draft
+status: published
 title: 2024 광복 79주년 기념 8·15 특별성회 — 창원
 slug: gyeongnam-worship-2024
 date: '2024-08-11'
@@ -26,7 +26,7 @@ search_terms:
   - 8·15 특별성회 — 창원
 gallery:
   - type: image
-    url: /api/preview-media/r3094-1920.webp
+    url: /media/events/r3094-1920.webp
     alt: "2024 광복 79주년 8·15 특별성회 — 창원 · 특별성회 무대 설치 현장 · 2024.08.09"
     caption: "특별성회 무대 설치 현장 · 2024.08.09"
 ---

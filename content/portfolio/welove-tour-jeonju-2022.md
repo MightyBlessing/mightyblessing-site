@@ -1,6 +1,6 @@
 ---
 schemaVersion: 2
-status: draft
+status: published
 title: "WELOVE Back to the Garden 2022 — 전주"
 slug: welove-tour-jeonju-2022
 date: '2022-12-10'
@@ -28,12 +28,12 @@ search_terms:
   - 다시 일어나
 heroMedia:
   type: image
-  url: /api/preview-media/r3058-1920.webp
+  url: /media/events/r3058-1920.webp
   alt: "2022 Back to the Garden — 전주 · 전주 공연의 무대와 객석"
   caption: "전주 공연의 무대와 객석"
 gallery:
   - type: image
-    url: /api/preview-media/r3056-1920.webp
+    url: /media/events/r3056-1920.webp
     alt: "2022 Back to the Garden — 전주 · Back to the Garden 현장 포토월"
     caption: "Back to the Garden 현장 포토월"
 ---

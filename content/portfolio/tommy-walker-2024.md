@@ -1,6 +1,6 @@
 ---
 schemaVersion: 2
-status: draft
+status: published
 title: 토미 워커 내한 예배 2024 — 안산
 slug: tommy-walker-2024
 date: '2024-02-17'

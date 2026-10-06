@@ -1,6 +1,6 @@
 ---
 schemaVersion: 2
-status: draft
+status: published
 title: 2021 기독학생대회 NAMELESS — 온라인 예배
 slug: christian-student-conference-2021
 date: '2021-02-20'
@@ -19,12 +19,12 @@ search_terms:
   - 기독학생대회 NAMELESS
 heroMedia:
   type: image
-  url: /api/preview-media/r3021-1920.webp
+  url: /media/events/r3021-1920.webp
   alt: "2021 기독학생대회 NAMELESS · 온라인 예배 촬영을 위한 무대 설치"
   caption: "온라인 예배 촬영을 위한 무대 설치"
 gallery:
   - type: image
-    url: /api/preview-media/r3249-1920.webp
+    url: /media/events/r3249-1920.webp
     alt: "2021 기독학생대회 NAMELESS · 카메라와 조명이 설치된 촬영 현장"
     caption: "카메라와 조명이 설치된 촬영 현장"
 ---

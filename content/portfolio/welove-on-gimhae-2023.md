@@ -1,6 +1,6 @@
 ---
 schemaVersion: 2
-status: draft
+status: published
 title: WELOVE ON 2023 — 김해
 slug: welove-on-gimhae-2023
 date: '2023-09-16'
@@ -28,7 +28,7 @@ search_terms:
   - "WELOVE ON GIMHAE"
 heroMedia:
   type: image
-  url: /api/preview-media/w001-1440.webp
+  url: /media/events/w001-1440.webp
   alt: 김해 WELOVE ON 현장에서 관객과 함께한 단체사진
   caption: '김해 WELOVE ON 현장 · 출처: WELOVE CREATIVE TEAM'
 ---

@@ -1,6 +1,6 @@
 ---
 schemaVersion: 2
-status: draft
+status: published
 title: 어노인팅 예배캠프 2025 — 영광의 소망
 slug: anointing-worship-camp-2025
 date: '2025-08-12'

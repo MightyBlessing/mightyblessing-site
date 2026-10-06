@@ -1,6 +1,6 @@
 ---
 schemaVersion: 2
-status: draft
+status: published
 title: WELOVE 애가 찬양집회 2025
 slug: welove-lament-2025
 date: '2025-04-05'
@@ -22,12 +22,12 @@ search_terms:
   - WELOVE 애가
 heroMedia:
   type: image
-  url: /api/preview-media/p022-1920.webp
+  url: /media/events/p022-1920.webp
   alt: "WELOVE 애가 · 무대와 객석 전경"
   caption: "무대와 객석 전경"
 gallery:
   - type: image
-    url: /api/preview-media/p023-1920.webp
+    url: /media/events/p023-1920.webp
     alt: "WELOVE 애가 · 관객과 함께한 애가 예배"
     caption: "관객과 함께한 애가 예배"
 ---

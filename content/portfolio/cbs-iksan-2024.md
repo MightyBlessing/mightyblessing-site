@@ -1,6 +1,6 @@
 ---
 schemaVersion: 2
-status: draft
+status: published
 title: 2024 한밤의 프레이즈 — 익산
 slug: cbs-iksan-2024
 date: '2024-08-31'
@@ -22,10 +22,10 @@ search_terms:
   - 한밤의 프레이즈
   - 익산종합운동장
   - 한밤의 프레이즈 — 익산
-thumbnail: /api/preview-media/w006-710.webp
+thumbnail: /media/events/w006-710.webp
 gallery:
   - type: image
-    url: /api/preview-media/w006-710.webp
+    url: /media/events/w006-710.webp
     alt: 2024 한밤의 프레이즈 익산 공연의 경기장과 관객
     caption: '익산종합경기장 현장 · 출처: CBS 노컷뉴스 최명국 기자'
 ---

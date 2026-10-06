@@ -1,6 +1,6 @@
 ---
 schemaVersion: 2
-status: draft
+status: published
 title: THE SENT 선교 콘퍼런스 2025
 slug: the-sent-2025
 date: '2025-06-06'

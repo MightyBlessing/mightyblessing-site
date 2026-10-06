@@ -1,6 +1,6 @@
 ---
 schemaVersion: 2
-status: draft
+status: published
 railOrder: 5
 title: WELOVE 정규 2집 화해 2026
 slug: welove-reconciliation-2026
@@ -29,16 +29,16 @@ search_terms:
   - WELOVE 화해
 heroMedia:
   type: image
-  url: /api/preview-media/p043-1920.webp
+  url: /media/events/p043-1920.webp
   alt: "WELOVE 화해 · 무대와 객석 전경"
   caption: "무대와 객석 전경"
 gallery:
   - type: image
-    url: /api/preview-media/p044-1920.webp
+    url: /media/events/p044-1920.webp
     alt: "WELOVE 화해 · 현장 신청·안내 공간"
     caption: "현장 신청·안내 공간"
   - type: image
-    url: /api/preview-media/p045-1920.webp
+    url: /media/events/p045-1920.webp
     alt: "WELOVE 화해 · 화해 예배 현장"
     caption: "화해 예배 현장"
 ---

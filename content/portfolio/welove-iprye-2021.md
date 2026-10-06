@@ -1,6 +1,6 @@
 ---
 schemaVersion: 2
-status: draft
+status: published
 title: WELOVE 입례 녹음예배 2021
 slug: welove-iprye-2021
 date: '2021-07-05'
@@ -20,7 +20,7 @@ search_terms:
   - WELOVE 입례 녹음예배
 heroMedia:
   type: image
-  url: /api/preview-media/r3155-1920.webp
+  url: /media/events/r3155-1920.webp
   alt: "2021 WELOVE 입례 녹음예배 · 입례 녹음예배 현장"
   caption: "입례 녹음예배 현장"
 ---

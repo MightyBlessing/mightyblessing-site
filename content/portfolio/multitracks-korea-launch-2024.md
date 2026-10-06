@@ -1,6 +1,6 @@
 ---
 schemaVersion: 2
-status: draft
+status: published
 title: MultiTracks 한국 론칭 행사 2024
 shortTitle: MultiTracks 한국 론칭
 slug: multitracks-korea-launch-2024
@@ -26,12 +26,12 @@ metrics:
     value: VIP 100명
 heroMedia:
   type: image
-  url: /api/preview-media/r2978-1920.webp
+  url: /media/events/r2978-1920.webp
   alt: MultiTracks 한국 론칭의 패널토크 무대
   caption: MultiTracks 한국 론칭 · 홍대 온맘씨어터
 gallery:
   - type: image
-    url: /api/preview-media/r2993-1920.webp
+    url: /media/events/r2993-1920.webp
     alt: MultiTracks 한국 론칭의 현장
     caption: 브랜드 론칭 현장
 search_terms:
@@ -49,4 +49,4 @@ MultiTracks 본사가 제작한 키비주얼을 초청장·상세 페이지·브
 
 홍대 온맘씨어터에서 열린 한국 론칭 행사에서는 게스트 입장과 패널토크를 운영하고 케이터링을 준비했습니다. 브랜드를 소개하는 제작물과 함께, 초청 게스트가 도착해 프로그램에 참여하는 현장 운영을 맡았습니다.
 
-![MultiTracks 한국 론칭의 현장](/api/preview-media/r2993-1920.webp)
+![MultiTracks 한국 론칭의 현장](/media/events/r2993-1920.webp)

@@ -1,6 +1,6 @@
 ---
 schemaVersion: 2
-status: draft
+status: published
 title: WELOVE LOVE & REVIVAL 2025
 shortTitle: LOVE & REVIVAL
 slug: love-and-revival-2025
@@ -27,12 +27,12 @@ metrics:
     value: 2회차
 heroMedia:
   type: image
-  url: /api/preview-media/r1778-1920.webp
+  url: /media/events/r1778-1920.webp
   alt: LOVE & REVIVAL의 붉은 무대 조명과 관객 전경
   caption: LOVE & REVIVAL · 2025.12
 gallery:
   - type: image
-    url: /api/preview-media/r2179-1920.webp
+    url: /media/events/r2179-1920.webp
     alt: LOVE & REVIVAL의 무대와 객석
     caption: 무대와 객석의 현장 모습
 search_terms:

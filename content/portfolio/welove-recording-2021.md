@@ -1,6 +1,6 @@
 ---
 schemaVersion: 2
-status: draft
+status: published
 title: 'WELOVE Your Kingdom, Our Home 녹음예배 2021'
 slug: welove-recording-2021
 date: '2021-10-03'
@@ -20,7 +20,7 @@ search_terms:
   - 'Your Kingdom, Our Home'
 heroMedia:
   type: image
-  url: /api/preview-media/r3115-1920.webp
+  url: /media/events/r3115-1920.webp
   alt: "2021 Your Kingdom, Our Home 녹음예배 · 녹음예배 제작·설치 현장"
   caption: "녹음예배 제작·설치 현장"
 ---

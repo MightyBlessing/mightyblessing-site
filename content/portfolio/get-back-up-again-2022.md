@@ -1,6 +1,6 @@
 ---
 schemaVersion: 2
-status: draft
+status: published
 title: 'WELOVE 다시, GET BACK UP AGAIN 2022'
 slug: get-back-up-again-2022
 date: '2022-08-13'
@@ -21,12 +21,12 @@ search_terms:
   - '다시, GET BACK UP AGAIN'
 heroMedia:
   type: image
-  url: /api/preview-media/r3123-1920.webp
+  url: /media/events/r3123-1920.webp
   alt: "2022 다시, GET BACK UP AGAIN · 무대 조명과 객석 전경"
   caption: "무대 조명과 객석 전경"
 gallery:
   - type: image
-    url: /api/preview-media/r3048-1920.webp
+    url: /media/events/r3048-1920.webp
     alt: "2022 다시, GET BACK UP AGAIN · 무대와 객석 전경"
     caption: "무대와 객석 전경"
 ---

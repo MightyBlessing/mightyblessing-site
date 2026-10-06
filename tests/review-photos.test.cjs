@@ -66,7 +66,7 @@ test('confirmed local photos reach project cards and details without publishing 
   for (const [slug, id] of Object.entries(confirmed)) {
     const project = getPortfolioBySlug(slug, { includeUnpublished: true });
     const hero = project.frontmatter.heroMedia;
-    assert.equal(hero.url, `/api/preview-media/${id}-1920.webp`);
+    assert.equal(hero.url, `${project.frontmatter.status === 'published' ? '/media/events' : '/api/preview-media'}/${id}-1920.webp`);
     assert.equal(toProjectLink(project).image, hero.url);
     for (const media of [hero, ...project.frontmatter.gallery]) {
       assert.ok(getReviewPhoto(media.url), media.url);
@@ -103,9 +103,9 @@ test('confirmed local photos reach project cards and details without publishing 
   assert.equal(anointing.frontmatter.gallery.length, 0);
   assert.doesNotMatch(anointing.content, /현장 사진 출처/);
   const busan = getPortfolioBySlug('welove-tour-busan-2022', { includeUnpublished: true });
-  assert.equal(busan.frontmatter.gallery[0].url, '/api/preview-media/r3177-1920.webp');
+  assert.equal(busan.frontmatter.gallery[0].url, '/media/events/r3177-1920.webp');
   assert.match(busan.frontmatter.gallery[0].alt, /관객을 안내/);
   assert.match(busan.frontmatter.gallery[0].caption, /관객 안내/);
   assert.equal(getReviewPhoto('/api/preview-media/r3249-1920.webp').height, 2560);
-  assert.equal(getAllPortfolios({ includeUnpublished: true }).filter(p => p.frontmatter.status === 'published').length, 3);
+  assert.equal(getAllPortfolios({ includeUnpublished: true }).filter(p => p.frontmatter.status === 'published').length, 33);
 });

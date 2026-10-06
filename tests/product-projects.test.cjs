@@ -11,9 +11,13 @@ function withEnvironment(value, callback) {
 
 test('production product recommendations cannot reveal unpublished application records', () => withEnvironment('production', () => {
   const publicProjects = getAllPortfolios();
-  assert.equal(publicProjects.length, 3);
-  assert.deepEqual(getProductProjects('grapetree', publicProjects), []);
-  assert.deepEqual(getProductProjects('live-text', publicProjects), []);
+  assert.equal(publicProjects.length, 33);
+  for (const product of ['grapetree', 'live-text']) {
+    const links = getProductProjects(product, publicProjects);
+    assert.ok(links.length > 0);
+    assert.ok(links.every(link => link.project.status === 'published'));
+    assert.ok(!links.some(link => link.projectSlug === 'fia-welove-2026'));
+  }
 }));
 
 test('recommendations honor the supplied visible collection and preserve its records', () => withEnvironment('development', () => {

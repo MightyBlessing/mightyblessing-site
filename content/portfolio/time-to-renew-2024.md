@@ -1,6 +1,6 @@
 ---
 schemaVersion: 2
-status: draft
+status: published
 title: "WELOVE IT’S TIME TO RENEW (갱신) 2024"
 slug: time-to-renew-2024
 date: '2024-12-21'
@@ -26,16 +26,16 @@ search_terms:
   - "WELOVE IT’S TIME TO RENEW 2024"
 heroMedia:
   type: image
-  url: /api/preview-media/p016-1920.webp
+  url: /media/events/p016-1920.webp
   alt: "IT’S TIME TO RENEW (갱신) · 무대와 객석 전경"
   caption: "무대와 객석 전경"
 gallery:
   - type: image
-    url: /api/preview-media/p019-1920.webp
+    url: /media/events/p019-1920.webp
     alt: "IT’S TIME TO RENEW (갱신) · 함께 모인 예배 현장"
     caption: "함께 모인 예배 현장"
   - type: image
-    url: /api/preview-media/p020-1920.webp
+    url: /media/events/p020-1920.webp
     alt: "IT’S TIME TO RENEW (갱신) · 객석에서 함께하는 예배"
     caption: "객석에서 함께하는 예배"
 ---

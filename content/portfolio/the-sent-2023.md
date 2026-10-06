@@ -1,6 +1,6 @@
 ---
 schemaVersion: 2
-status: draft
+status: published
 title: THE SENT 선교 콘퍼런스 2023
 slug: the-sent-2023
 date: '2023-07-21'
@@ -26,12 +26,12 @@ search_terms:
   - THE SENT 2023
 heroMedia:
   type: image
-  url: /api/preview-media/r0009-1920.webp
+  url: /media/events/r0009-1920.webp
   alt: "THE SENT 2023 · THE SENT CONFERENCE 23 예배 현장"
   caption: "THE SENT CONFERENCE 23 예배 현장"
 gallery:
   - type: image
-    url: /api/preview-media/r0011-1920.webp
+    url: /media/events/r0011-1920.webp
     alt: "THE SENT 2023 · 행사장 외부 부스 현장"
     caption: "행사장 외부 부스 현장"
 ---

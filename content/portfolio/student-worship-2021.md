@@ -1,6 +1,6 @@
 ---
 schemaVersion: 2
-status: draft
+status: published
 title: NAMELESS — 누가 우리를 대적하리오 2021
 slug: student-worship-2021
 date: '2021-11-18'
@@ -18,12 +18,12 @@ search_terms:
   - NAMELESS — 누가 우리를 대적하리오
 heroMedia:
   type: image
-  url: /api/preview-media/r3207-1920.webp
+  url: /media/events/r3207-1920.webp
   alt: "2021 NAMELESS — 누가 우리를 대적하리오 · 예배 무대와 가사 화면"
   caption: "예배 무대와 가사 화면"
 gallery:
   - type: image
-    url: /api/preview-media/r3210-1920.webp
+    url: /media/events/r3210-1920.webp
     alt: "2021 NAMELESS — 누가 우리를 대적하리오 · 무대 옆에서 바라본 객석"
     caption: "무대 옆에서 바라본 객석"
 ---
