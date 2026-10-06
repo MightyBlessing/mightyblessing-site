@@ -1,0 +1,227 @@
+{
+  "source": "project-sheet-2026-09-07.json",
+  "normalization": "../assets/project-register.csv",
+  "events": [
+    {
+      "sheetRow": 3,
+      "slug": "kouny-online-worship-2020",
+      "date": "2020.08.17",
+      "title": "KOUNY 코로나 온라인 예배"
+    },
+    {
+      "sheetRow": 4,
+      "slug": "digital-bible-conference-2020",
+      "date": "2020.11.02",
+      "title": "디지털 말씀 사경회"
+    },
+    {
+      "sheetRow": 5,
+      "slug": "christian-student-conference-2021",
+      "date": "2021.02.20",
+      "title": "기독학생대회"
+    },
+    {
+      "sheetRow": 6,
+      "slug": "welove-iprye-2021",
+      "date": "2021.07.05",
+      "title": "입례 녹음예배"
+    },
+    {
+      "sheetRow": 7,
+      "slug": "welove-recording-2021",
+      "date": "2021.10.03",
+      "title": "WELOVE 녹음"
+    },
+    {
+      "sheetRow": 8,
+      "slug": "student-worship-2021",
+      "date": "2021.11.18",
+      "title": "수능날 기독학생대회"
+    },
+    {
+      "sheetRow": 9,
+      "slug": "get-back-up-again-2022",
+      "date": "2022.08.13",
+      "title": "다시 GET BACK. UP. AGAIN"
+    },
+    {
+      "sheetRow": 10,
+      "slug": "back-to-campus-2022",
+      "date": "2022.09.03",
+      "title": "BACK TO CAMPUS"
+    },
+    {
+      "sheetRow": 11,
+      "slug": "welove-tour-busan-2022",
+      "date": "2022.12.03",
+      "title": "WELOVE 전국투어 부산"
+    },
+    {
+      "sheetRow": 12,
+      "slug": "welove-tour-jeonju-2022",
+      "date": "2022.12.10",
+      "title": "WELOVE 전국투어 전주"
+    },
+    {
+      "sheetRow": 13,
+      "slug": "welove-tour-yongin-2022",
+      "date": "2022.12.17",
+      "title": "WELOVE 전국투어 용인"
+    },
+    {
+      "sheetRow": 14,
+      "slug": "run-to-the-light-2023",
+      "date": "2023.05.20",
+      "title": "WELOVE Run To The Light"
+    },
+    {
+      "sheetRow": 15,
+      "slug": "wist-2023",
+      "date": "2023.06.01",
+      "title": "WIST"
+    },
+    {
+      "sheetRow": 16,
+      "slug": "the-sent-2023",
+      "date": "2023.07.21",
+      "title": "THE SENT"
+    },
+    {
+      "sheetRow": 17,
+      "slug": "welove-on-gimhae-2023",
+      "date": "2023.09.16",
+      "title": "WELOVE ON 김해"
+    },
+    {
+      "sheetRow": 18,
+      "slug": "ram-worship-recording-2023",
+      "date": "2023.09.19",
+      "title": "램워 녹음집회"
+    },
+    {
+      "sheetRow": 19,
+      "slug": "tommy-walker-2024",
+      "date": "2024.02.17",
+      "title": "토미워커"
+    },
+    {
+      "sheetRow": 20,
+      "slug": "africa-messi-2024",
+      "date": "2024.02.22",
+      "title": "아프리카메시"
+    },
+    {
+      "sheetRow": 21,
+      "slug": "welove-hapsim-2024",
+      "date": "2024.04.10",
+      "title": "WELOVE 합심"
+    },
+    {
+      "sheetRow": 22,
+      "slug": "the-sent-2024",
+      "date": "2024.05.05",
+      "title": "THE SENT 24"
+    },
+    {
+      "sheetRow": 23,
+      "slug": "multitracks-korea-launch-2024",
+      "date": "2024.07.31",
+      "title": "MULTITRACKS 한국 런칭행사"
+    },
+    {
+      "sheetRow": 24,
+      "slug": "gyeongnam-worship-2024",
+      "date": "2024.08.11",
+      "title": "경남기총"
+    },
+    {
+      "sheetRow": 25,
+      "slug": "cbs-iksan-2024",
+      "date": "2024.08.31",
+      "title": "CBS 익산"
+    },
+    {
+      "sheetRow": 26,
+      "slug": "sos-2024",
+      "date": "2024.09.29",
+      "title": "SOS 24"
+    },
+    {
+      "sheetRow": 27,
+      "slug": "created-to-be-creative-2024",
+      "date": "2024.11.16",
+      "title": "WELOVE CREATED TO BE CREATIVE"
+    },
+    {
+      "sheetRow": 28,
+      "slug": "time-to-renew-2024",
+      "date": "2024.12.21",
+      "title": "IT'S TIME TO RENEW"
+    },
+    {
+      "sheetRow": 29,
+      "slug": "young-daniel-prayer-2025",
+      "date": "2025.04.04",
+      "title": "청년다니엘기도회"
+    },
+    {
+      "sheetRow": 30,
+      "slug": "welove-lament-2025",
+      "date": "2025.04.05",
+      "title": "WELOVE 애가"
+    },
+    {
+      "sheetRow": 31,
+      "slug": "the-sent-2025",
+      "date": "2025.06.06",
+      "title": "THE SENT 25"
+    },
+    {
+      "sheetRow": 32,
+      "slug": "anointing-worship-camp-2025",
+      "date": "2025.08.12",
+      "title": "어노인팅 예배캠프"
+    },
+    {
+      "sheetRow": 33,
+      "slug": "sos-2025",
+      "date": "2025.09.20",
+      "title": "SOS 25"
+    },
+    {
+      "sheetRow": 34,
+      "slug": "love-and-revival-2025",
+      "date": "2025.12.26 (대표 일자)",
+      "title": "WELOVE LOVE & REVIVAL"
+    },
+    {
+      "sheetRow": 35,
+      "slug": "fia-welove-2026",
+      "date": "2026.02.26",
+      "title": "F.I.A x WELOVE"
+    },
+    {
+      "sheetRow": 36,
+      "slug": "welove-reconciliation-2026",
+      "date": "2026.05.23",
+      "title": "WELOVE 화해"
+    },
+    {
+      "sheetRow": 37,
+      "slug": "campus-worship-2026",
+      "date": "2026.07.25",
+      "title": "WELOVE CAMPUS WORSHIP"
+    }
+  ],
+  "excludedUnmatched": [
+    "THE SENT 26",
+    "어노인팅 예배캠프 26"
+  ],
+  "corrections": [
+    "CAMPUS 2026.07.25",
+    "LOVE & REVIVAL 회차당 5,000명·2회차",
+    "MultiTracks 본사 키비주얼",
+    "F.I.A 입장·관객·QR 체크인 부분 운영",
+    "화해/CAMPUS 음향 제외 및 디지털 적용"
+  ]
+}
