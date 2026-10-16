@@ -1,0 +1,11 @@
+{
+  "description": "예배곡 검색부터 두 줄 자막 만들기까지",
+  "detail": "곡을 검색하고 가사를 두 줄 자막으로 미리 확인합니다. 글자 크기와 줄 간격, 배경을 조정하고 TXT·PNG ZIP·이미지 슬라이드 PPT로 저장합니다.",
+  "screen": {
+    "src": "/media/products/twoline-demo.png",
+    "alt": "두줄자막의 글자 크기·줄 간격·배경 설정과 두 줄 미리보기",
+    "caption": "두줄자막 · 실제 설정 화면의 안내용 예시",
+    "width": 1024,
+    "height": 900
+  }
+}

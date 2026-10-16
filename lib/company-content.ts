@@ -83,7 +83,7 @@ export const featuredProducts = [
     id: "live-text" as const, name: "LIVE TEXT", label: "LIVE TEXT",
     description: "관객의 메시지·사진·질문을 화면에 띄우는 서비스",
     detail: "관객이 QR로 접속해 보낸 내용을 운영자가 검토하고, 승인한 콘텐츠를 행사 화면에 보여줍니다.",
-    href: "https://live-text.app/", ui: "livetext-approval", uiAlt: "LIVE TEXT에서 관객 메시지를 승인하거나 보관하는 화면 예시", uiCaption: "LIVE TEXT 운영자 승인 화면 · 제공 자료의 데모 예시",
+    href: "https://live-text.app/", ui: "livetext-approval", uiAlt: "LIVE TEXT에서 관객 메시지를 승인하거나 보관하는 화면 예시", uiCaption: "LIVE TEXT 운영자 승인 화면 · 데모",
     field: "live-text-field", fieldAlt: "LIVE TEXT QR 참여 안내가 보이는 어노인팅 워십캠프 현장", fieldCaption: "어노인팅 워십캠프 · QR 참여 현장", width: 1200, height: 489,
     stages: [
       { title: "관객 참여", detail: "관객이 QR로 접속해 메시지·사진·질문을 보냅니다." },

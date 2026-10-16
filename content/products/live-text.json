@@ -1,0 +1,11 @@
+{
+  "description": "관객의 메시지·사진·질문을 화면에 띄우는 서비스",
+  "detail": "관객이 QR로 접속해 보낸 내용을 운영자가 검토하고, 승인한 콘텐츠를 행사 화면에 보여줍니다.",
+  "screen": {
+    "src": "/media/products/livetext-approval.webp",
+    "alt": "LIVE TEXT에서 관객 메시지를 승인하거나 보관하는 화면 예시",
+    "caption": "LIVE TEXT 운영자 승인 화면 · 데모",
+    "width": 1200,
+    "height": 489
+  }
+}

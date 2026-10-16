@@ -214,3 +214,14 @@ textarea.inquiry-field { resize: vertical; min-height: 220px; }
   .inquiry-submit { align-self: stretch; }
 }
 @media (prefers-reduced-motion: reduce) { .inquiry-field { transition: none; } }
+
+.twoline-screen { max-width: 311px; margin-top: 28px; }
+.twoline-screen img { display: block; width: 100%; height: auto; object-fit: contain; border: 1px solid var(--rule); }
+.twoline-screen figcaption { margin-top: 12px; font-size: 12px; line-height: 1.6; color: #626262; }
+.product-entry--twoline { align-items: start; }
+@media (max-width: 767px) {
+  .product-entry--twoline > div:first-child { display: contents; }
+  .product-entry--twoline .twoline-screen { grid-row: 4; margin-top: 0; }
+  .company-principles { margin-top: 40px; }
+  .product-section-nav { margin-bottom: 24px; }
+}

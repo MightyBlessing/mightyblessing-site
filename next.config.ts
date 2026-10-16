@@ -3,6 +3,7 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   devIndicators: false,
   output: "standalone",
+  outputFileTracingIncludes: { "/*": ["./content/products/*.json"] },
   outputFileTracingExcludes: {
     "/*": ["./input/**", "./artifacts-local/**", "./docs/**", "./design/**"],
   },

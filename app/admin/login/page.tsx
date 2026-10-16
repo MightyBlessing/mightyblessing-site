@@ -17,14 +17,14 @@ export default async function AdminLoginPage({ searchParams }: Props) {
           <div>
             <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-white/46">Admin</p>
             <h1 className="mt-4 max-w-[10ch] text-[2.3rem] leading-[0.96] font-semibold tracking-[-0.055em] text-white sm:text-[3.5rem]">
-              포트폴리오를
+              사이트 콘텐츠를
               <br />
               직접 관리하는
               <br />
               관리자 화면
             </h1>
             <p className="mt-6 max-w-[38rem] text-[1rem] leading-[1.85] text-white/68 break-keep">
-              포트폴리오 글, 태그, 대표 프로젝트 노출, 이미지와 영상까지 한 곳에서 관리할 수 있도록 구성합니다.
+              프로젝트와 제품 소개, 이미지와 영상을 관리합니다.
             </p>
           </div>
 

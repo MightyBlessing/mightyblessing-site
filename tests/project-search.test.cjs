@@ -24,3 +24,13 @@ test('archive combines aliases, event type and year without widening publication
     assert.ok(searchProjects(publicIndex, { query: 'CAMPUS' }).every(p => p.frontmatter.status === 'published' && p.slug !== 'fia-welove-2026'));
   } finally { if (previous === undefined) delete process.env.NODE_ENV; else process.env.NODE_ENV = previous; }
 });
+
+test('Korean and English WELOVE aliases return the same published cases', () => {
+  const index = selectIndexProjects(getAllPortfolios());
+  const slugs = query => searchProjects(index, { query }).map(item => item.slug);
+  assert.deepEqual(slugs('위러브'), slugs('WELOVE'));
+  assert.ok(slugs('위러브').includes('campus-worship-2026'));
+  assert.ok(!slugs('위러브').includes('fia-welove-2026'));
+  assert.deepEqual(slugs('VJ'), ['anointing-worship-camp-2025']);
+  assert.ok(slugs('QR 체크인').includes('campus-worship-2026'));
+});

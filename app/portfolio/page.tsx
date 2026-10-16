@@ -38,10 +38,10 @@ export default async function Portfolio({ searchParams }: Props) {
       <header className="archive-heading"><span className="section-label">PROJECT ARCHIVE</span><h1>함께한 프로젝트<span>{index.length}</span></h1><p>공연과 행사, 그 현장에서 마이티블레싱이 맡은 일을 소개합니다.</p></header>
       <section id="portfolio-archive" aria-label="전체 프로젝트 목록">
         <form key={JSON.stringify([query, category, year])} action="/portfolio#portfolio-archive" className="archive-search" role="search">
-          <label className="archive-query"><span className="sr-only">프로젝트 검색</span><input name="q" type="search" defaultValue={query} placeholder="프로젝트명, 장소, 업무 검색" /></label>
-          <label><span className="sr-only">행사 유형</span><select name="category" defaultValue={category}><option value="">전체 유형</option>{category && !categories.includes(category) && <option value={category}>{category}</option>}{categories.map((item) => <option key={item}>{item}</option>)}</select></label>
-          <label><span className="sr-only">행사 연도</span><select name="year" defaultValue={year}><option value="">전체 연도</option>{year && !years.includes(year) && <option value={year}>{year}</option>}{years.map(item => <option key={item} value={item}>{item}년</option>)}</select></label>
-          <button type="submit">검색 ↗</button>
+          <label className="archive-query"><span>프로젝트 검색</span><input name="q" type="search" defaultValue={query} placeholder="프로젝트명, 장소, 업무 검색" /></label>
+          <label><span>행사 유형</span><select name="category" defaultValue={category}><option value="">전체 유형</option>{category && !categories.includes(category) && <option value={category}>{category}</option>}{categories.map((item) => <option key={item}>{item}</option>)}</select></label>
+          <label><span>행사 연도</span><select name="year" defaultValue={year}><option value="">전체 연도</option>{year && !years.includes(year) && <option value={year}>{year}</option>}{years.map(item => <option key={item} value={item}>{item}년</option>)}</select></label>
+          <button type="submit">검색</button>
         </form>
         <div className="archive-result"><p>{filtered ? `검색 결과 ${matches.length}건` : `전체 ${index.length}개 프로젝트`}</p>{filtered && <Link href="/portfolio#portfolio-archive">검색 초기화 ×</Link>}</div>
         {groups.map((group) => <section className="archive-year" key={group.year} aria-labelledby={`year-${group.year}`}><h2 id={`year-${group.year}`}>{group.year}<span>{group.projects.length}</span></h2><div>{group.projects.map(({ slug, frontmatter: project }) => <Link className="archive-row" href={`/portfolio/${slug}`} key={slug}>
@@ -49,7 +49,7 @@ export default async function Portfolio({ searchParams }: Props) {
         </Link>)}</div></section>)}
         {!matches.length && <p className="archive-empty">검색 결과가 없습니다. 다른 프로젝트명이나 업무로 검색해 주세요.</p>}
       </section>
-      <div className="archive-contact"><p>다음 현장을 함께 준비해 볼까요?</p><Link href="/inquiry" className="text-link">프로젝트 문의 ↗</Link></div>
+      <div className="archive-contact"><p>필요한 업무를 문의하세요.</p><Link href="/inquiry" className="text-link">프로젝트 문의 ↗</Link></div>
     </div>
   </div>;
 }

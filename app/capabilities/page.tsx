@@ -46,7 +46,7 @@ export default function CapabilitiesPage() {
         </div>
       </section>;
     })}</div>
-    <section className="company-note"><h2>어디서부터 시작할지<br />고민이라면</h2><div><p>만들고 싶은 행사와 지금까지 준비한 내용을 들려주세요. 필요한 업무와 진행 순서를 함께 정리하겠습니다.</p><Link href="/about" className="company-text-link">함께 일하는 방식 보기 <span aria-hidden="true">→</span></Link></div></section>
+
     <section className="company-note company-faq" aria-labelledby="capability-questions-title" id="questions">
       <h2 id="capability-questions-title">행사를 준비할 때<br />궁금한 점</h2>
       <div>{capabilityQuestions.map(item => <section key={item.question}>

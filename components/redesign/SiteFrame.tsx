@@ -47,7 +47,7 @@ function SiteRail({ projects, preview }: Omit<Parameters<typeof SiteFrame>[0], "
 
   return <aside className="site-rail selected-rail" aria-label="사이트와 프로젝트 탐색">
     <Link href={home ? "#home-content" : "/"} className="home-rail-brand" aria-label="마이티블레싱 홈" aria-current={home && (!preview || section === "home") ? "page" : undefined}><span className="home-brand-mark" aria-hidden="true" /></Link>
-    <nav className="home-company-nav" aria-label="회사 탐색">{links.filter(link => link.section || link.external).map(link => <Link key={link.href} href={link.href} aria-current={pathname === link.href ? "page" : preview && section === link.section ? "location" : undefined}>{link.label}{link.external && <span aria-hidden="true"> ↗</span>}</Link>)}</nav>
+    <nav className="home-company-nav" aria-label="회사 탐색">{links.filter(link => link.section || link.external).map(link => <Link key={link.href} href={link.href} target={link.external ? "_blank" : undefined} rel={link.external ? "noopener noreferrer" : undefined} aria-label={link.external ? `${link.label} (새 탭)` : undefined} aria-current={pathname === link.href ? "page" : preview && section === link.section ? "location" : undefined}>{link.label}{link.external && <span aria-hidden="true"> ↗</span>}</Link>)}</nav>
     <div className="site-rail-label"><span>PROJECT INDEX</span><span>{projects.length}</span></div>
     <nav ref={list} className="site-project-index" data-project-index="desktop" aria-label="전체 프로젝트" tabIndex={0} onScroll={event => { positions.current = event.currentTarget.scrollTop; }}>
       <ProjectIndex projects={projects} activeSlug={activeSlug} />

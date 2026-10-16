@@ -118,3 +118,11 @@ html:has(.global-dialog--site-projects[open]) { overflow: hidden; padding-right:
   .site-content .archive-row { padding-block: 18px; }
   .site-archive .archive-date { font-size: 11px; }
 }
+
+/* Keep labels and controls legible as one search form. */
+.site-archive .archive-search { align-items: end; gap: 16px; }
+.archive-search label { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.archive-search label > span { font-size: 12px; color: #555; }
+.site-archive .archive-search :is(input, select) { border: 1px solid #ccc; border-radius: 4px; padding: 10px 12px; min-height: 44px; }
+.site-archive .archive-search button { padding: 10px 20px; background: var(--primary); color: white; border-radius: 4px; }
+@media (max-width: 767px) { .site-archive .archive-search { gap: 16px 12px; } }

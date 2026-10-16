@@ -9,6 +9,6 @@ export function CompanyPage({ label, title, intro, children }: { label: string; 
   </article>;
 }
 
-export function ProjectContact() {
-  return <section className="company-contact"><p>함께 준비할 현장이 있나요?</p><Link href="/inquiry">프로젝트 문의 <span aria-hidden="true">↗</span></Link></section>;
+export function ProjectContact({ prompt = "일정과 필요한 업무를 알려주세요." }: { prompt?: string }) {
+  return <section className="company-contact"><p>{prompt}</p><Link href="/inquiry">프로젝트 문의 <span aria-hidden="true">↗</span></Link></section>;
 }

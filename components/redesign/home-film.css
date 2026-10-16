@@ -14,7 +14,8 @@ body:has(.production-home) .home-footer { margin-left: calc(var(--rail-width) + 
 .home-film-project { position: absolute; top: 28px; left: 32px; right: 100px; max-width: 540px; }
 .home-film-project a { display: inline-flex; align-items: center; gap: 16px; min-height: 36px; font-size: 14px; line-height: 1.5; }
 .production-home-body .home-film-project p { font-size: 12px; line-height: 1.7; color: #fff; }
-.home-film-hero a:hover { color: #fff; text-decoration: underline; }
+.home-film-hero a:hover { color: #fff; text-decoration: none; }
+.home-film-project a:is(:hover, :focus-visible) { box-shadow: 0 1px currentColor; }
 .home-film-hero a:focus-visible, .home-film-control:focus-visible { outline: 2px solid #fff; outline-offset: 4px; }
 .home-film-message { position: absolute; top: 44%; left: 24px; right: 24px; transform: translateY(-50%); text-align: center; }
 .production-home-body .home-film-message .brand-type-title { margin: 0; font-size: min(10cqi, 112px); line-height: .94; }

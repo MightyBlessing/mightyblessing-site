@@ -156,7 +156,7 @@ class GithubRepository implements AdminRepository {
     const safePath = filePath.split("/").map(encodeURIComponent).join("/");
 
     try {
-      const file = await this.request<{ content: string; encoding: string }>(
+      const file = await this.request<{ content: string; encoding: string; sha?: string }>(
         `/repos/${this.owner}/${this.repo}/contents/${safePath}?ref=${encodeURIComponent(ref)}`,
       );
 
@@ -164,6 +164,13 @@ class GithubRepository implements AdminRepository {
         return file.content.replace(/\n/g, "");
       }
 
+      // GitHub Contents omits inline content for files larger than 1 MB.
+      if (file.encoding === "none" && file.sha) {
+        const blob = await this.request<{ content: string; encoding: string }>(
+          `/repos/${this.owner}/${this.repo}/git/blobs/${file.sha}`,
+        );
+        if (blob.encoding === "base64") return blob.content.replace(/\n/g, "");
+      }
       return null;
     } catch (error) {
       if (error instanceof GithubRequestError && error.status === 404) {

@@ -34,6 +34,7 @@ export default async function AdminDashboardPage() {
             >
               공개 포트폴리오 보기
             </Link>
+            <Link href="/admin/products" className="inline-flex items-center rounded-full border border-white/30 px-4 py-2 text-white">제품 관리</Link>
             <LogoutButton />
           </div>
         </div>

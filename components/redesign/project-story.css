@@ -1,7 +1,7 @@
 /* Editorial project stories use the existing body and gallery data. */
 .site-detail video { display: block; width: 100%; height: auto; max-height: 80vh; background: #0b0b0b; }
-.detail-role-summary { display: flex; align-items: baseline; gap: 14px; margin-top: 24px; font-size: 12px; line-height: 1.8; }
-.detail-role-summary > span { flex-shrink: 0; color: #737373; }
+.detail-role-summary { display: flex; align-items: baseline; gap: 14px; margin-top: 24px; font-size: 14px; line-height: 1.8; }
+.detail-role-summary > span { flex-shrink: 0; color: #555; }
 .detail-role-summary ul { display: flex; flex-wrap: wrap; gap: 4px 14px; padding: 0; margin: 0; list-style: none; }
 .detail-role-summary li { color: #363636; }
 .detail-gallery-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; gap: 36px 24px; margin-top: 48px; }
@@ -53,3 +53,12 @@
   .project-tools li > a { gap: 20px; }
   .project-tools h3 { font-size: 24px; }
 }
+
+.detail-heading h1 { text-wrap: balance; overflow-wrap: anywhere; }
+.detail-summary { text-wrap: pretty; }
+
+.detail-role-summary p { max-width: 680px; margin: 0; color: #363636; word-break: keep-all; overflow-wrap: anywhere; }
+.site-content .detail-hero { margin-inline: var(--site-body-gutter); }
+.site-content .detail-hero figcaption { padding-inline: 0; }
+.detail-hero img { max-width: 1200px; }
+.detail-heading h1 { letter-spacing: -.035em; }

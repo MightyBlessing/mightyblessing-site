@@ -4,7 +4,7 @@ export function adminLoginDestination(value: unknown): string {
   try {
     const url = new URL(value, "https://admin.invalid");
     const pathname = decodeURIComponent(url.pathname);
-    if (url.origin !== "https://admin.invalid" || !/^\/admin(?:\/portfolio\/[a-zA-Z0-9가-힣-]+)?\/?$/.test(pathname)) return "/admin";
+    if (url.origin !== "https://admin.invalid" || !/^\/admin(?:\/portfolio\/[a-zA-Z0-9가-힣-]+|\/products(?:\/(?:grapetree|live-text|twoline))?)?\/?$/.test(pathname)) return "/admin";
     return `${url.pathname}${url.search}${url.hash}`;
   } catch {
     return "/admin";

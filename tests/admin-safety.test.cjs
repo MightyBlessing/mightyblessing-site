@@ -16,7 +16,7 @@ const { adminLoginDestination } = require('../lib/admin/redirect.ts');
 
 test('login destinations only allow real local admin routes', () => {
   for (const unsafe of [undefined, null, ['admin'], 'javascript:alert(1)', 'data:text/html,test', '//evil.invalid', '/\\evil.invalid', 'https://evil.invalid/admin', '/admin/login', '/admin/../inquiry', '/admin%2f..%2f..%2fevil', '/admin\n', '/administer', '/api/admin/portfolio', '/admin/%']) assert.equal(adminLoginDestination(unsafe),'/admin');
-  for (const safe of ['/admin','/admin/portfolio/new','/admin/portfolio/campus-worship-2026?view=edit#media']) assert.equal(adminLoginDestination(safe),safe);
+  for (const safe of ['/admin','/admin/products','/admin/products/grapetree','/admin/products/live-text','/admin/products/twoline','/admin/portfolio/new','/admin/portfolio/campus-worship-2026?view=edit#media']) assert.equal(adminLoginDestination(safe),safe);
 });
 
 test('issued sessions authorize dotted IDs and retain signature, expiry and identity checks', async () => {

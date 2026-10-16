@@ -1,0 +1,11 @@
+{
+  "description": "행사 신청과 QR 입장을 관리하는 플랫폼",
+  "detail": "참가자는 온라인으로 행사에 신청하고, 운영자는 등록 정보를 확인해 현장에서 QR로 입장을 처리합니다.",
+  "screen": {
+    "src": "/media/products/grapetree.webp",
+    "alt": "포도나무에서 행사 티켓을 선택하는 화면",
+    "caption": "포도나무 · THE SENT 티켓 신청 화면",
+    "width": 1200,
+    "height": 1391
+  }
+}

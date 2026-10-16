@@ -298,6 +298,7 @@ test('supporting portraits stay small, roles precede the hero and inquiry retain
   assert.doesNotMatch(html, /class="detail-hero"/);
   assert.match(html, /\/inquiry\?project=gyeongnam-worship-2024/);
   const campus = render(originalParsed.data, originalParsed.content);
+  assert.ok(campus.includes('마이티블레싱 수행 범위'));
   assert.ok(campus.indexOf('마이티블레싱 수행 범위') < campus.indexOf('class="detail-hero"'));
   assert.deepEqual(images(campus), [originalParsed.data.heroMedia.url, registration, '/media/events/p050-1920.webp']);
 });
@@ -317,3 +318,11 @@ test('inquiry context resolves only visible projects and never echoes an arbitra
     assert.match(await page('campus-worship-2026'), /class="inquiry-reference"/);
   } finally { if (previous === undefined) delete process.env.NODE_ENV; else process.env.NODE_ENV = previous; }
 });
+
+ test('a role description remains visible without role tags', () => {
+  const html=render({...originalParsed.data, roles:[], our_role:'등록과 입장 운영을 맡았습니다.'},'');
+  assert.match(html,/등록과 입장 운영을 맡았습니다/);
+  assert.match(html,/detail-role-summary/);
+  const empty=render({...originalParsed.data, roles:[], our_role:''},'');
+  assert.doesNotMatch(empty,/detail-role-summary/);
+ });

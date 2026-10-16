@@ -52,6 +52,7 @@
 .home-editorial .editorial-tool-case { display: grid; gap: 8px; padding: 24px 0 4px; font-size: 16px; line-height: 1.65; word-break: keep-all; overflow-wrap: anywhere; }
 .editorial-tool-case strong { font-size: 18px; font-weight: 500; }
 .editorial-tool-case strong span { color: var(--primary); }
+.editorial-tool-body:not(:has(.editorial-tool-screen)),
 .editorial-tool-body--text { grid-template-columns: 1fr; }
 .editorial-inquiry { border-top: 1px solid #ddd; padding-top: 48px; }
 .home-editorial .editorial-inquiry h2 { font-size: clamp(34px, 5cqi, 52px); }
@@ -98,5 +99,12 @@
 }
 @media (hover: hover) and (pointer: fine) {
   .home-editorial .editorial-link:hover, .editorial-project-copy h3 a:hover, .editorial-tool-case:hover strong { color: var(--primary); }
-  .editorial-inquiry-button:hover { background: #6200d6; }
+  .production-home-body .editorial-inquiry-button:hover { background: #6200d6; color: #fff; }
+}
+
+.editorial-inquiry-actions > a:last-child:is(:hover, :focus-visible) { text-decoration: underline; text-underline-offset: 5px; }
+
+@media (max-width: 767px) {
+  .production-home .home-editorial .home-section + .home-section { margin-top: 64px; }
+  .editorial-tool-body .editorial-tool-screen { order: -1; }
 }

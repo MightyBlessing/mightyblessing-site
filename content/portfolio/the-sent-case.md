@@ -16,35 +16,21 @@ search_terms:
   - 등록 운영
   - 세션 진행
 heroMedia:
-  type: video
-  storageKey: portfolio/the-sent-case/hero.mp4
-  posterStorageKey: portfolio/the-sent-case/poster.jpg
-  alt: THE SENT 행사에 참여한 관객 영상
-goals: "행사의 프로그램과 관객 참여 공간을 준비합니다."
+  type: image
+  url: /media/events/r0009-1920.webp
+  alt: "THE SENT 2023 · THE SENT CONFERENCE 23 예배 현장"
+  caption: "THE SENT CONFERENCE 23 예배 현장"
 our_role: "행사 준비와 관객 입장, 포토존·부스·공연 운영, 협력업체 섭외를 맡았습니다."
-process: "프로그램과 현장 배치를 준비하고 협력업체와 일정을 조율했습니다. 행사 당일에는 입장과 각 프로그램의 진행을 운영했습니다."
 metrics: []
 testimonials: []
 gallery:
   - type: image
-    storageKey: portfolio/the-sent-case/detail-01.jpg
-    alt: 세션에 집중하는 참가자들의 메모 장면
-    caption: 참가자들의 메모
-  - type: image
-    storageKey: portfolio/the-sent-case/detail-02.jpg
-    alt: 행사 진행 전 조명이 세팅된 무대
-    caption: 무대 준비
-  - type: image
-    storageKey: portfolio/the-sent-case/detail-03.jpg
-    alt: 행사장의 조명
-    caption: 현장 분위기
-  - type: image
-    storageKey: portfolio/shared/audience-lights.jpg
-    alt: 행사장의 조명과 관객석
-    caption: 관객석
+    url: /media/events/r0011-1920.webp
+    alt: "THE SENT 2023 · 행사장 외부 부스 현장"
+    caption: "행사장 외부 부스 현장"
 related_cases:
-  - welove-case
-  - regional-worship-case
+  - the-sent-2023
+  - the-sent-2024
+  - the-sent-2025
 mediaId: the-sent-case
 ---
-포토존과 부스, 공연과 관객 입장을 함께 준비했습니다. 현장에서는 스태프와 협력업체의 역할을 조율하며 행사를 운영했습니다.
