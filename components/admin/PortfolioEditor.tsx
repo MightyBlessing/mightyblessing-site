@@ -5,10 +5,6 @@ import { useRouter } from "next/navigation";
 import type { PortfolioEditorPayload } from "@/lib/admin/portfolio-admin";
 import type { PortfolioStatus } from "@/lib/content";
 import { homeProjectTitle } from "@/lib/project-presentation";
-import {
-  FEATURED_PORTFOLIO_ORDER_VALUES,
-  type FeaturedPortfolioOrder,
-} from "@/lib/portfolio-display";
 
 type RelatedCaseOption = {
   slug: string;
@@ -79,7 +75,7 @@ function MediaPreview({
   return (
     <div className="overflow-hidden rounded-[1rem] border border-white/10 bg-black/20">
       {type === "video" ? (
-        <video className="aspect-[16/10] w-full object-cover" controls poster={currentPoster || undefined}>
+        <video key={displayUrl} aria-label={label} className="aspect-[16/10] w-full object-cover" controls poster={currentPoster || undefined}>
           <source src={displayUrl} type="video/mp4" />
         </video>
       ) : (
@@ -236,12 +232,10 @@ export function PortfolioEditor({
     setValue((prev) => ({ ...prev, [key]: nextValue }));
   }
 
-  function updateFeatured(nextFeatured: boolean) {
-    setValue((prev) => ({
-      ...prev,
-      featured: nextFeatured,
-      featured_order: nextFeatured ? prev.featured_order : undefined,
-    }));
+  function removeGalleryItem(id: string) {
+    setValue(prev => ({ ...prev, gallery: prev.gallery.filter(item => item.id !== id) }));
+    setGalleryFiles(prev => Object.fromEntries(Object.entries(prev).filter(([key]) => key !== id)));
+    setGalleryPosterFiles(prev => Object.fromEntries(Object.entries(prev).filter(([key]) => key !== id)));
   }
 
   function updateGalleryItem(id: string, updater: (item: GalleryItem) => GalleryItem) {
@@ -266,7 +260,7 @@ export function PortfolioEditor({
     });
   }
 
-  async function handleSave(action: "create" | "update" | "publish" | "archive") {
+  async function handleSave(action: "draft" | "publish" | "archive") {
     if (submitting.current) return;
     submitting.current = true;
     setIsSubmitting(true);
@@ -287,13 +281,13 @@ export function PortfolioEditor({
       }
 
       Object.entries(galleryFiles).forEach(([id, file]) => {
-        if (file) {
+        if (file && value.gallery.some(item => item.id === id)) {
           formData.append(`galleryFile:${id}`, file);
         }
       });
 
       Object.entries(galleryPosterFiles).forEach(([id, file]) => {
-        if (file) {
+        if (file && value.gallery.some(item => item.id === id)) {
           formData.append(`galleryPosterFile:${id}`, file);
         }
       });
@@ -344,7 +338,7 @@ export function PortfolioEditor({
           <button
             type="button"
             disabled={isSubmitting}
-            onClick={() => handleSave(mode === "create" ? "create" : "update")}
+            onClick={() => handleSave("draft")}
             className="inline-flex items-center justify-center rounded-full border border-white/10 bg-white/[0.04] px-4 py-2.5 text-[0.88rem] font-medium text-white/82 transition-colors hover:bg-white/[0.08] disabled:opacity-60"
           >
             초안 저장
@@ -369,6 +363,7 @@ export function PortfolioEditor({
       </div>
 
       <p className="text-sm text-white/60">이미지 JPG·PNG·WebP 8MB, 영상 MP4 24MB 이하. 한 번에 총 32MB까지 저장할 수 있습니다.</p>
+      {value.status === "published" && <p className="text-sm text-white/70">초안으로 저장하면 다음 배포부터 공개 목록과 상세에서 숨겨집니다. 공개를 유지하려면 ‘공개 상태로 저장’을 사용하세요.</p>}
       {(error || success) && (
         <div
           role={error ? "alert" : "status"}
@@ -411,25 +406,33 @@ export function PortfolioEditor({
                 </p>
               </div>
               <div>
-                <FieldLabel label="Slug" hint="관리 URL과 공개 상세 URL에 들어가는 고유 주소입니다. 변경하면 관련 미디어 경로도 함께 따라갑니다." />
+                <FieldLabel label="Slug" hint="공개 상세 주소입니다. 저장 후에는 기존 링크 보호를 위해 변경할 수 없습니다." />
                 <input
+                  aria-label="프로젝트 주소"
+                  readOnly={Boolean(value.previousSlug)}
                   value={value.slug}
                   onChange={(event) => updateField("slug", event.target.value)}
                   className="mt-2 w-full rounded-2xl border border-white/10 bg-black/20 px-4 py-3 text-white outline-none placeholder:text-white/26 focus:border-[#a9bcff]"
                 />
               </div>
               <div>
-                <FieldLabel label="날짜" hint="포트폴리오 카드와 상세 상단에 표시되는 진행 시기입니다." />
+                <FieldLabel label="날짜" hint="정렬과 기본 날짜에 사용합니다. 변경하면 별도 표시 날짜를 초기화합니다." />
                 <input
+                  aria-label="날짜"
                   type="date"
                   value={value.date}
-                  onChange={(event) => updateField("date", event.target.value)}
+                  onChange={(event) => setValue(prev => ({ ...prev, date: event.target.value, displayDate: "" }))}
                   className="mt-2 w-full rounded-2xl border border-white/10 bg-black/20 px-4 py-3 text-white outline-none focus:border-[#a9bcff]"
                 />
               </div>
               <div className="sm:col-span-2">
+                <FieldLabel label="표시 날짜" hint="기간·월 단위 표기를 입력할 수 있습니다. 비워 두면 위 날짜를 표시합니다." />
+                <input aria-label="표시 날짜" value={value.displayDate || ""} onChange={event => updateField("displayDate", event.target.value)} placeholder="예: 2026.07 / 2026.07.25–26" className="mt-2 w-full rounded-2xl border border-white/10 bg-black/20 px-4 py-3 text-white outline-none placeholder:text-white/26 focus:border-[#a9bcff]" />
+              </div>
+              <div className="sm:col-span-2">
                 <FieldLabel label="행사 소개" hint="어떤 행사인지 짧게 설명합니다. 맡은 업무는 수행 범위에 따로 작성합니다." />
                 <textarea
+                  aria-label="행사 소개"
                   value={value.summary}
                   onChange={(event) => updateField("summary", event.target.value)}
                   rows={4}
@@ -439,6 +442,7 @@ export function PortfolioEditor({
               <div>
                 <FieldLabel label="장소" hint="상세 페이지 상단 fact band에 들어가는 위치 정보입니다." />
                 <input
+                  aria-label="장소"
                   value={value.location || ""}
                   onChange={(event) => updateField("location", event.target.value)}
                   className="mt-2 w-full rounded-2xl border border-white/10 bg-black/20 px-4 py-3 text-white outline-none focus:border-[#a9bcff]"
@@ -447,68 +451,25 @@ export function PortfolioEditor({
               <div>
                 <FieldLabel label="파트너" hint="협업 파트너나 주최 측이 있으면 상세 fact band에 노출됩니다." />
                 <input
+                  aria-label="파트너"
                   value={value.partner || ""}
                   onChange={(event) => updateField("partner", event.target.value)}
                   className="mt-2 w-full rounded-2xl border border-white/10 bg-black/20 px-4 py-3 text-white outline-none focus:border-[#a9bcff]"
                 />
               </div>
               <div>
-                <FieldLabel label="상태" hint="draft는 관리자에서만 보이고, published만 공개 포트폴리오에 노출되며, archived는 숨김 상태로 보관됩니다." />
-                <select
-                  value={value.status}
-                  onChange={(event) => updateField("status", event.target.value as PortfolioStatus)}
-                  className="mt-2 w-full rounded-2xl border border-white/10 bg-black/20 px-4 py-3 text-white outline-none focus:border-[#a9bcff]"
-                >
-                  <option value="draft">draft</option>
-                  <option value="published">published</option>
-                  <option value="archived">archived</option>
-                </select>
+                <FieldLabel label="현재 상태" hint="상단의 초안 저장·공개 상태로 저장·보관 버튼으로 변경합니다. 운영 화면에는 배포 후 반영됩니다." />
+                <p className="mt-2 text-white/80">{value.status === "published" ? "발행" : value.status === "archived" ? "보관" : "초안"}</p>
               </div>
               <div className="sm:col-span-2 rounded-[1.4rem] border border-white/10 bg-black/20 p-4">
-                <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                  <div className="flex items-start gap-3">
-                    <input
-                      type="checkbox"
-                      checked={value.featured}
-                      onChange={(event) => updateFeatured(event.target.checked)}
-                      className="mt-1 size-4 rounded border-white/20 bg-transparent"
-                    />
-                    <div>
-                      <div className="flex items-center gap-2">
-                        <p className="text-[0.94rem] font-medium text-white/82">대표 프로젝트</p>
-                        <InfoHint text="체크하면 포트폴리오 상단 대표 프로젝트 영역 후보에 들어갑니다." />
-                        <InfoHint text="대표 번호는 1~3만 사용할 수 있고, 같은 번호는 저장 시 새 문서가 우선 가져갑니다." />
-                      </div>
-                      <p className="mt-1 text-[0.82rem] leading-[1.6] text-white/46">
-                        대표 영역 노출 여부와 순서를 함께 제어합니다.
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="sm:w-[160px]">
-                    <select
-                      value={value.featured_order || ""}
-                      disabled={!value.featured}
-                      onChange={(event) =>
-                        updateField(
-                          "featured_order",
-                          event.target.value ? (Number(event.target.value) as FeaturedPortfolioOrder) : undefined,
-                        )
-                      }
-                      className="w-full rounded-2xl border border-white/10 bg-neutral-950 px-4 py-3 text-white outline-none focus:border-[#a9bcff] disabled:cursor-not-allowed disabled:text-white/32"
-                    >
-                      <option value="">대표 순서</option>
-                      {FEATURED_PORTFOLIO_ORDER_VALUES.map((order) => (
-                        <option key={order} value={order}>
-                          #{order}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                </div>
-                <p className="mt-3 text-[0.78rem] leading-[1.6] text-white/40">
-                  대표 체크를 해제하면 번호는 자동으로 비워지고, 같은 번호가 있으면 저장한 문서만 해당 슬롯을 유지합니다.
-                </p>
+                {value.schemaVersion === 2 ? <>
+                  <label htmlFor="home-project-order" className="text-[0.94rem] font-medium text-white/82">홈 프로젝트 순서</label>
+                  <select id="home-project-order" value={value.homeOrder ?? ""} onChange={event => updateField("homeOrder", event.target.value ? Number(event.target.value) : null)} className="mt-3 w-full rounded-2xl border border-white/10 bg-neutral-950 px-4 py-3 text-white outline-none focus:border-[#a9bcff]">
+                    <option value="">미지정</option>
+                    {[1, 2, 3, 4].map(order => <option key={order} value={order}>#{order}</option>)}
+                  </select>
+                  <p className="mt-3 text-[0.82rem] leading-[1.6] text-white/60">공개된 프로젝트 중 대표 사진이 있는 앞의 두 건이 홈에 표시됩니다. 같은 번호는 이번에 저장한 프로젝트가 가져갑니다. 모든 번호가 미지정이면 최신 사례를 자동 선정합니다.</p>
+                </> : <p className="text-sm text-white/60">기존 종합 사례는 상세 주소를 유지하며, 현재 행사 목록과 홈 대표 선정에는 포함되지 않습니다.</p>}
               </div>
             </div>
           </div>
@@ -551,6 +512,7 @@ export function PortfolioEditor({
                 <div key={key}>
                   <label className="text-[11px] font-medium uppercase tracking-[0.18em] text-white/46">{label}</label>
                   <textarea
+                    aria-label={label}
                     rows={4}
                     value={fieldValue}
                     onChange={(event) => updateField(key as keyof PortfolioEditorPayload, event.target.value)}
@@ -617,6 +579,7 @@ export function PortfolioEditor({
           <div className="rounded-[1.8rem] border border-white/10 bg-white/[0.04] p-5 sm:p-6">
             <SectionHeading label="본문 Markdown" hint="상세 설명 영역에 들어가는 긴 글입니다. 줄바꿈과 목록은 markdown으로 작성합니다." />
             <textarea
+              aria-label="본문 Markdown"
               rows={12}
               value={value.content}
               onChange={(event) => updateField("content", event.target.value)}
@@ -630,6 +593,7 @@ export function PortfolioEditor({
             <SectionHeading label="Hero Media" hint="목록 대표 카드와 상세 상단 히어로에 공통으로 쓰이는 대표 미디어입니다." />
             <div className="mt-5 space-y-4">
               <select
+                aria-label="대표 미디어 형식"
                 value={value.heroMedia.type}
                 onChange={(event) =>
                   updateField("heroMedia", {
@@ -727,7 +691,7 @@ export function PortfolioEditor({
                       </button>
                       <button
                         type="button"
-                        onClick={() => updateField("gallery", value.gallery.filter((galleryItem) => galleryItem.id !== item.id))}
+                        onClick={() => removeGalleryItem(item.id)}
                         className="rounded-full border border-white/10 px-3 py-1 text-[0.76rem] text-[#ffb1b1]"
                       >
                         삭제

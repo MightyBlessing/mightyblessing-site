@@ -59,6 +59,9 @@ export type PortfolioEditorPayload = {
   shortTitle?: string;
   slug: string;
   date: string;
+  displayDate?: string;
+  schemaVersion?: number;
+  homeOrder?: number | null;
   summary: string;
   location?: string;
   partner?: string;
@@ -105,6 +108,9 @@ export function portfolioDocumentToPayload(document: AdminPortfolioDocument): Po
     shortTitle: document.frontmatter.shortTitle || "",
     slug: document.slug,
     date: document.frontmatter.date,
+    displayDate: document.frontmatter.displayDate || "",
+    schemaVersion: document.frontmatter.schemaVersion,
+    homeOrder: document.frontmatter.homeOrder ?? null,
     summary: document.frontmatter.summary,
     location: document.frontmatter.location || "",
     partner: document.frontmatter.partner || "",
@@ -280,7 +286,7 @@ function serializePortfolioFile(frontmatter: PortfolioFrontmatter, content: stri
   const originalGallery = Array.isArray(original.gallery) ? original.gallery : [];
   // Only fields supported by this editor can replace their source values.
   // New schema blocks, review records and nested credits survive legacy editing.
-  const editableFields = new Set(["title", "shortTitle", "slug", "mediaId", "date", "status", "featured", "featured_order", "location", "partner", "summary", "roles", "categories", "search_terms", "goals", "our_role", "process", "metrics", "related_cases", "thumbnail", "heroMedia", "gallery"]);
+  const editableFields = new Set(["title", "shortTitle", "slug", "mediaId", "date", "displayDate", "homeOrder", "status", "featured", "featured_order", "location", "partner", "summary", "roles", "categories", "search_terms", "goals", "our_role", "process", "metrics", "related_cases", "thumbnail", "heroMedia", "gallery"]);
   const retained = Object.fromEntries(Object.entries(original).filter(([key]) => !editableFields.has(key)));
 
   const data = Object.fromEntries(
@@ -321,7 +327,7 @@ async function readPortfolioFile(slug: string, repository = getAdminRepository()
   } satisfies AdminPortfolioDocument;
 }
 
-function commitMessage(action: "create" | "update" | "publish" | "archive", slug: string) {
+function commitMessage(action: "create" | "update" | "draft" | "publish" | "archive", slug: string) {
   return `admin: ${action} portfolio ${slug}`;
 }
 
@@ -482,7 +488,7 @@ export async function getAdminPortfolio(slug: string) {
 export async function saveAdminPortfolio(
   payload: PortfolioEditorPayload,
   uploads: PortfolioEditorUploads,
-  action: "create" | "update" | "publish" | "archive",
+  action: "create" | "update" | "draft" | "publish" | "archive",
   services: SaveServices = { repository: getAdminRepository(), upload: uploadContentMediaFile, remove: deleteContentMediaFiles },
 ) {
   const { repository, upload, remove } = services;
@@ -490,8 +496,8 @@ export async function saveAdminPortfolio(
   if (!payload || typeof payload.title !== "string" || typeof payload.slug !== "string" || typeof payload.date !== "string" || typeof payload.summary !== "string" || typeof payload.content !== "string" || !["roles", "categories", "search_terms", "metrics", "related_cases", "gallery"].every(key => Array.isArray(payload[key as keyof PortfolioEditorPayload])) || !payload.heroMedia) {
     throw new RequestError("편집 데이터 형식이 올바르지 않습니다.");
   }
-  if (!["create", "update", "publish", "archive"].includes(action) || !["draft", "published", "archived"].includes(payload.status)) throw new RequestError("저장 상태가 올바르지 않습니다.");
-  const strings = [payload.previousSlug, payload.revision, payload.location, payload.partner, payload.goals, payload.our_role, payload.process];
+  if (!["create", "update", "draft", "publish", "archive"].includes(action) || !["draft", "published", "archived"].includes(payload.status)) throw new RequestError("저장 상태가 올바르지 않습니다.");
+  const strings = [payload.previousSlug, payload.revision, payload.displayDate, payload.location, payload.partner, payload.goals, payload.our_role, payload.process];
   if (strings.some(value => value !== undefined && typeof value !== "string") || [payload.roles, payload.categories, payload.search_terms, payload.related_cases].some(list => list.some(value => typeof value !== "string")) || payload.metrics.some(item => !item || typeof item.label !== "string" || typeof item.value !== "string") || payload.gallery.length > 30) throw new RequestError("편집 데이터 형식이 올바르지 않습니다.");
   for (const media of [payload.heroMedia, ...payload.gallery]) {
     if (!media || !["image", "video"].includes(media.type) || typeof media.alt !== "string") throw new RequestError("미디어 정보가 올바르지 않습니다.");
@@ -501,12 +507,13 @@ export async function saveAdminPortfolio(
   }
   const previousSlug = payload.previousSlug?.trim();
   const desiredSlug = slugify(payload.slug || payload.title);
+  if (payload.homeOrder != null && (!Number.isInteger(payload.homeOrder) || payload.homeOrder < 1 || payload.homeOrder > 4)) throw new RequestError("홈 프로젝트 순서는 1~4만 사용할 수 있습니다.");
   if (payload.shortTitle !== undefined && typeof payload.shortTitle !== "string") {
     throw new RequestError("목록용 제목은 문자열이어야 합니다.");
   }
 
   if (!payload.title.trim() || !desiredSlug || !payload.date.trim() || !payload.summary.trim()) {
-    throw new Error("제목, slug, 날짜, summary는 필수입니다.");
+    throw new RequestError("제목, slug, 날짜, 행사 소개는 필수입니다.");
   }
 
   const allItems = await listAdminPortfolios(repository);
@@ -524,19 +531,19 @@ export async function saveAdminPortfolio(
     throw new Error("같은 slug가 이미 존재합니다.");
   }
 
-  if (previousSlug && desiredSlug !== previousSlug) {
-    usedSlugs.delete(previousSlug);
-    if (usedSlugs.has(desiredSlug)) {
-      throw new Error("변경하려는 slug가 이미 존재합니다.");
-    }
-  }
+  if (existing && desiredSlug !== previousSlug) throw new RequestError("저장된 프로젝트 주소는 변경할 수 없습니다. 기존 링크를 유지해 주세요.");
 
   const nextSlug = desiredSlug;
   const mediaId = existing?.frontmatter.mediaId || createPortfolioMediaId(nextSlug);
   const createdStorageKeys = new Set<string>();
-  const deletes = new Set<string>();
   const nextStatus =
-    action === "publish" ? "published" : action === "archive" ? "archived" : ensureStatus(payload.status);
+    action === "draft" ? "draft" : action === "publish" ? "published" : action === "archive" ? "archived" : ensureStatus(payload.status);
+  const dateChanged = Boolean(existing && payload.date !== existing.frontmatter.date);
+  const displayDate = payload.displayDate === undefined
+    ? (dateChanged ? undefined : existing?.frontmatter.displayDate)
+    : (dateChanged && payload.displayDate === existing?.frontmatter.displayDate ? undefined : payload.displayDate.trim() || undefined);
+  const homeOrder = payload.homeOrder === undefined ? existing?.frontmatter.homeOrder : payload.homeOrder ?? undefined;
+  if (existing && existing.frontmatter.schemaVersion !== 2 && homeOrder !== undefined) throw new RequestError("기존 종합 사례는 행사 색인과 홈 대표 선정에 포함되지 않습니다.");
   const featuredSelection = normalizePortfolioFeaturedSelection({
     featured: payload.featured,
     featured_order: payload.featured_order,
@@ -556,12 +563,15 @@ export async function saveAdminPortfolio(
 
     const frontmatter = cleanFrontmatter({
       ...existing?.frontmatter,
+      schemaVersion: existing ? existing.frontmatter.schemaVersion : 2,
       title: payload.title.trim(),
       // Omission preserves older editor requests; an explicit empty value clears it.
       shortTitle: payload.shortTitle === undefined ? existing?.frontmatter.shortTitle : payload.shortTitle.trim() || undefined,
       slug: nextSlug,
       mediaId,
       date: payload.date,
+      displayDate,
+      homeOrder,
       status: nextStatus,
       featured: featuredSelection.featured,
       featured_order: featuredSelection.featured_order,
@@ -584,30 +594,24 @@ export async function saveAdminPortfolio(
       heroMedia,
       gallery,
     });
-    const conflictingFeaturedItems =
-      frontmatter.featured_order === undefined
-        ? []
-        : allItems.filter(
-            (item) => item.slug !== previousSlug && item.frontmatter.featured_order === frontmatter.featured_order,
-          );
-    const conflictingUpserts = conflictingFeaturedItems.map((item) => ({
+    const conflictingItems = allItems.filter(item => item.slug !== previousSlug && (
+      (frontmatter.featured_order !== undefined && item.frontmatter.featured_order === frontmatter.featured_order) ||
+      (homeOrder !== undefined && item.frontmatter.homeOrder === homeOrder)
+    ));
+    const conflictingUpserts = conflictingItems.map((item) => ({
       path: portfolioContentPath(item.slug),
       contentBase64: stringToBase64(
         serializePortfolioFile(
           cleanFrontmatter({
             ...item.frontmatter,
-            featured: false,
-            featured_order: undefined,
+            ...(frontmatter.featured_order !== undefined && item.frontmatter.featured_order === frontmatter.featured_order ? { featured: false, featured_order: undefined } : {}),
+            ...(homeOrder !== undefined && item.frontmatter.homeOrder === homeOrder ? { homeOrder: undefined } : {}),
           }),
           item.content,
           item.storedFrontmatter,
         ),
       ),
     }));
-
-    if (previousSlug && previousSlug !== nextSlug) {
-      deletes.add(portfolioContentPath(previousSlug));
-    }
 
     const markdownContent = serializePortfolioFile(frontmatter, content, existing?.storedFrontmatter);
 
@@ -625,7 +629,7 @@ export async function saveAdminPortfolio(
         },
         ...conflictingUpserts,
       ],
-      deletes: [...deletes].filter((filePath) => filePath !== portfolioContentPath(nextSlug)),
+      deletes: [],
     });
     // Return only editor-supported fields, never stored review/private metadata.
     // The editor can now continue from committed media URLs and updated Markdown.

@@ -45,8 +45,10 @@ export async function verifySessionToken(token: string | undefined, secret: stri
   if (!token) return null;
 
   const parts = token.split(".");
-  if (parts.length !== 3) return null;
-  const [userId, expiresAt, signature] = parts;
+  if (parts.length < 3) return null;
+  // Only the final two separators delimit metadata; an ID may contain dots.
+  const userId = parts.slice(0, -2).join(".");
+  const [expiresAt, signature] = parts.slice(-2);
   if (!userId || !expiresAt || !signature) return null;
 
   const expiresAtNumber = Number(expiresAt);

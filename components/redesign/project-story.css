@@ -1,4 +1,5 @@
 /* Editorial project stories use the existing body and gallery data. */
+.site-detail video { display: block; width: 100%; height: auto; max-height: 80vh; background: #0b0b0b; }
 .detail-role-summary { display: flex; align-items: baseline; gap: 14px; margin-top: 24px; font-size: 12px; line-height: 1.8; }
 .detail-role-summary > span { flex-shrink: 0; color: #737373; }
 .detail-role-summary ul { display: flex; flex-wrap: wrap; gap: 4px 14px; padding: 0; margin: 0; list-style: none; }

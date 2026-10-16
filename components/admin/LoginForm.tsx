@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { adminLoginDestination } from "@/lib/admin/redirect";
 
 type Props = {
   next?: string;
@@ -33,7 +34,7 @@ export function LoginForm({ next = "/admin" }: Props) {
         throw new Error(data.error || "로그인에 실패했습니다.");
       }
 
-      router.push(next);
+      router.push(adminLoginDestination(next));
       router.refresh();
     } catch (error) {
       setError(error instanceof Error ? error.message : "로그인 중 오류가 발생했습니다.");
@@ -46,8 +47,10 @@ export function LoginForm({ next = "/admin" }: Props) {
     <form onSubmit={handleSubmit} className="rounded-[1.8rem] border border-white/10 bg-white/[0.04] p-6 sm:p-7">
       <div className="space-y-4">
         <div>
-          <label className="text-[11px] font-medium uppercase tracking-[0.18em] text-white/46">ID</label>
+          <label htmlFor="admin-id" className="text-[11px] font-medium uppercase tracking-[0.18em] text-white/46">ID</label>
           <input
+            id="admin-id"
+            autoComplete="username"
             value={id}
             onChange={(event) => setId(event.target.value)}
             placeholder="admin"
@@ -55,8 +58,10 @@ export function LoginForm({ next = "/admin" }: Props) {
           />
         </div>
         <div>
-          <label className="text-[11px] font-medium uppercase tracking-[0.18em] text-white/46">Password</label>
+          <label htmlFor="admin-password" className="text-[11px] font-medium uppercase tracking-[0.18em] text-white/46">Password</label>
           <input
+            id="admin-password"
+            autoComplete="current-password"
             type="password"
             value={password}
             onChange={(event) => setPassword(event.target.value)}

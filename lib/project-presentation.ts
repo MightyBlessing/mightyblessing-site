@@ -1,5 +1,6 @@
 import type { PortfolioEntry, PortfolioFrontmatter } from "./content";
 import { reviewPhotoSrcSet } from "./review-photos";
+import { resolvePortfolioThumbnailUrl } from "./portfolio-display";
 
 export type ProjectLink = {
   slug: string;
@@ -36,7 +37,7 @@ export function toProjectLink({ slug, frontmatter: project }: PortfolioEntry): P
     year: (project.displayDate || project.date).slice(0, 4),
     date: projectDisplayDate(project),
     location: project.location || "",
-    image: project.heroMedia?.poster || project.heroMedia?.url || project.thumbnail || "",
+    image: resolvePortfolioThumbnailUrl(project) || "",
     alt: project.heroMedia?.alt || project.title,
   };
 }

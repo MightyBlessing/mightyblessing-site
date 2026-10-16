@@ -17,7 +17,7 @@ async function parseMultipartRequest(request: Request) {
   const bytes = await limitedBody(request, MAX_UPLOAD_REQUEST);
   const formData = await new Response(bytes, { headers: { "Content-Type": request.headers.get("content-type") || "" } }).formData();
   const payloadValue = formData.get("payload");
-  const actionValue = String(formData.get("action") || "update") as "create" | "update" | "publish" | "archive";
+  const actionValue = String(formData.get("action") || "update") as "create" | "update" | "draft" | "publish" | "archive";
 
   if (typeof payloadValue !== "string") {
     throw new RequestError("저장 데이터가 올바르지 않습니다.");
@@ -63,7 +63,7 @@ async function parseMultipartRequest(request: Request) {
 async function parseJsonRequest(request: Request) {
   const body = (await limitedJson(request)) as {
     payload?: PortfolioEditorPayload;
-    action?: "create" | "update" | "publish" | "archive";
+    action?: "create" | "update" | "draft" | "publish" | "archive";
   };
 
   if (!body.payload) {
@@ -76,7 +76,7 @@ async function parseJsonRequest(request: Request) {
       galleryFiles: {},
       galleryPosterFiles: {},
     } satisfies PortfolioEditorUploads,
-    action: (body.action || "update") as "create" | "update" | "publish" | "archive",
+    action: (body.action || "update") as "create" | "update" | "draft" | "publish" | "archive",
   };
 }
 

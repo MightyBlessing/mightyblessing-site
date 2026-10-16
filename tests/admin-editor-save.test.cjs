@@ -8,7 +8,7 @@ const matter = require('gray-matter');
 const { listAdminPortfolios, portfolioDocumentToPayload, saveAdminPortfolio } = require('../lib/admin/portfolio-admin.ts');
 const { markdownImageSources } = require('../lib/markdown-media.ts');
 const { normalizePortfolioFrontmatter, searchPortfolios } = require('../lib/content.ts');
-const { toProjectLink, homeProjectTitle } = require('../lib/project-presentation.ts');
+const { toProjectLink, homeProjectTitle, selectIndexProjects, selectHomeProjects, projectDisplayDate } = require('../lib/project-presentation.ts');
 
 function compile(relative) {
   const filename = path.join(__dirname, '..', relative);
@@ -47,7 +47,7 @@ async function fixture() {
     },
   });
   return {
-    files, uploads, commits, image,
+    files, uploads, commits, image, repository: services.repository,
     payload: portfolioDocumentToPayload((await listAdminPortfolios(services.repository))[0]),
     request: (url, options) => route.POST(new Request('https://local.invalid' + url, options)),
   };
@@ -55,7 +55,7 @@ async function fixture() {
 
 // Run real editor handlers and the real multipart route/save implementation.
 // Hooks, storage, navigation and uploads are isolated; no network or disk save.
-function editor(initialValue, fetchMock) {
+function editor(initialValue, fetchMock, mode = 'edit') {
   const slots = [], navigation = [], requests = [];
   let cursor = 0, tree;
   const hooks = {
@@ -92,7 +92,7 @@ function editor(initialValue, fetchMock) {
   }
   function render() {
     cursor = 0;
-    tree = exports.PortfolioEditor({ mode: 'edit', initialValue, relatedCaseOptions: [], roleSuggestions: [], categorySuggestions: [] });
+    tree = exports.PortfolioEditor({ mode, initialValue, relatedCaseOptions: [], roleSuggestions: [], categorySuggestions: [] });
   }
   render();
   return {
@@ -100,7 +100,7 @@ function editor(initialValue, fetchMock) {
     get tree() { return tree; },
     field(value) { return nodes().find(node => ['input', 'textarea'].includes(node.type) && node.props.value === value); },
     fileInputs() { return nodes().filter(node => node.type === 'input' && node.props.type === 'file'); },
-    save() { return nodes().find(node => node.type === 'button' && text(node).includes('초안 저장')).props.onClick(); },
+    save(label = '초안 저장') { return nodes().find(node => node.type === 'button' && text(node) === label).props.onClick(); },
   };
 }
 
@@ -136,29 +136,118 @@ test('replacement save refreshes editor Markdown/media and clears uploads before
   assert.equal(secondPayload.storedFrontmatter, undefined);
 });
 
-test('slug change continues from the saved slug and a failed save retains edits and pending files', async () => {
+test('failed save retains title and pending files while the saved address stays locked', async () => {
   const state = await fixture();
   let fail = true;
   const ui = editor(state.payload, (url, options) => fail ? Promise.resolve(Response.json({ error: '업로드 실패' }, { status: 500 })) : state.request(url, options));
-  ui.field(state.payload.slug).props.onChange({ target: { value: 'renamed-campus' } });
+  assert.equal(ui.field(state.payload.slug).props.readOnly, true);
+  ui.field(state.payload.title).props.onChange({ target: { value: 'Updated title' } });
   ui.fileInputs()[1].props.onChange({ target: { files: [new File([state.image], 'replacement.webp', { type: 'image/webp' })] } });
   ui.render();
   await ui.save(); ui.render();
   assert.equal(ui.tree.props.disabled, false);
-  assert.ok(ui.field('renamed-campus'));
+  assert.ok(ui.field('Updated title'));
   assert.equal(ui.navigation.length, 0);
   assert.equal(state.commits.length, 0);
   fail = false;
   await ui.save(); ui.render();
   assert.equal(state.uploads.length, 1, 'failed save leaves the selected file ready for a retry');
-  assert.deepEqual(ui.navigation, ['/admin/portfolio/renamed-campus']);
-  assert.equal(state.files.has('content/portfolio/renamed-campus.md'), true);
-  assert.equal(state.files.has('content/portfolio/campus-worship-2026.md'), false);
+  assert.deepEqual(ui.navigation, ['/admin/portfolio/campus-worship-2026']);
+  assert.equal(state.files.has('content/portfolio/campus-worship-2026.md'), true);
   await ui.save();
   const next = JSON.parse(ui.requests.at(-1).get('payload'));
-  assert.equal(next.previousSlug, 'renamed-campus');
-  assert.equal(next.slug, 'renamed-campus');
+  assert.equal(next.previousSlug, 'campus-worship-2026');
+  assert.equal(next.slug, 'campus-worship-2026');
   assert.equal(state.uploads.length, 1);
+});
+
+test('editor draft, publish and archive buttons save their named state', async () => {
+  const state = await fixture(), ui = editor(state.payload, state.request);
+  for (const [button, expected] of [['초안 저장','draft'],['공개 상태로 저장','published'],['보관','archived']]) {
+    await ui.save(button); ui.render();
+    const saved = (await listAdminPortfolios(state.repository))[0];
+    assert.equal(saved.frontmatter.status, expected);
+    assert.equal(state.commits.at(-1).deletes.length, 0);
+  }
+});
+
+test('new published projects use the current schema and appear in the public index', async () => {
+  const state = await fixture();
+  const initial = {...state.payload, previousSlug:undefined, revision:undefined, schemaVersion:undefined, homeOrder:null, slug:'new-event', title:'New event'};
+  const ui = editor(initial, state.request, 'create');
+  await ui.save('공개 상태로 저장');
+  const items = await listAdminPortfolios(state.repository);
+  const added = items.find(item => item.slug === 'new-event');
+  assert.equal(added.frontmatter.schemaVersion, 2, 'server sets schema even for an older client');
+  assert.equal(added.frontmatter.status, 'published');
+  assert.ok(selectIndexProjects(items).some(item => item.slug === 'new-event'));
+  assert.deepEqual(ui.navigation, ['/admin/portfolio/new-event']);
+});
+
+test('deleting a gallery row clears both pending file queues before multipart save', async () => {
+  const state = await fixture();
+  state.payload.gallery[0].type = 'video';
+  const ui = editor(state.payload,state.request);
+  const target = () => ui.nodes().find(node => node.key === state.payload.gallery[0].id);
+  const inputs = ui.nodes(target()).filter(node => node.type === 'input' && node.props.type === 'file');
+  for (const input of inputs) input.props.onChange({target:{files:[new File([state.image],'pending.webp',{type:'image/webp'})]}});
+  ui.render();
+  ui.nodes(target()).find(node => node.type === 'button' && node.props.children === '삭제').props.onClick();
+  ui.render(); await ui.save('공개 상태로 저장');
+  assert.equal(state.commits.length,1);
+  assert.equal(state.uploads.length,0);
+  const form = ui.requests[0];
+  assert.equal(form.has(`galleryFile:${state.payload.gallery[0].id}`),false);
+  assert.equal(form.has(`galleryPosterFile:${state.payload.gallery[0].id}`),false);
+  assert.equal((await listAdminPortfolios(state.repository))[0].frontmatter.gallery.length,1);
+});
+
+test('date changes refresh public display and filters while custom precision survives unrelated saves', async () => {
+  const state=await fixture(), ui=editor(state.payload,state.request);
+  const field=label=>ui.nodes().find(node=>node.type==='input'&&node.props['aria-label']===label);
+  await ui.save('공개 상태로 저장'); ui.render();
+  assert.equal((await listAdminPortfolios(state.repository))[0].frontmatter.displayDate,'2026.07.25');
+  field('날짜').props.onChange({target:{value:'2027-01-02'}});
+  ui.render(); assert.equal(field('표시 날짜').props.value,'');
+  await ui.save('공개 상태로 저장'); ui.render();
+  let saved=(await listAdminPortfolios(state.repository))[0];
+  assert.equal(projectDisplayDate(saved.frontmatter),'2027.01.02');
+  assert.equal(toProjectLink(saved).year,'2027');
+  field('표시 날짜').props.onChange({target:{value:'2027.01.02–03'}});
+  ui.render(); await ui.save('공개 상태로 저장'); ui.render();
+  await ui.save('공개 상태로 저장');
+  saved=(await listAdminPortfolios(state.repository))[0];
+  assert.equal(projectDisplayDate(saved.frontmatter),'2027.01.02–03');
+});
+
+test('saved slugs cannot be renamed through the API in any content state', async () => {
+  for (const status of ['draft','published','archived']) {
+    const state=await fixture();
+    const response=await state.request('/api/admin/portfolio',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({action:'update',payload:{...state.payload,slug:'renamed-campus',status}})});
+    assert.equal(response.status,400);
+    assert.match((await response.json()).error,/주소는 변경할 수 없습니다/);
+    assert.equal(state.commits.length,0);
+    assert.equal(state.uploads.length,0);
+    assert.equal(state.files.has('content/portfolio/campus-worship-2026.md'),true);
+  }
+});
+
+test('home order control changes current selection and resolves the occupied slot without losing metadata', async () => {
+  const state=await fixture();
+  const original=matter(source);
+  state.files.set('content/portfolio/other.md',Buffer.from(matter.stringify('Other story',{...original.data,slug:'other',title:'Other',homeOrder:2,internalEvidence:{keep:true}})).toString('base64'));
+  const payload=portfolioDocumentToPayload((await listAdminPortfolios(state.repository)).find(item=>item.slug==='other'));
+  const ui=editor(payload,state.request);
+  ui.nodes().find(node=>node.props?.id==='home-project-order').props.onChange({target:{value:'1'}});
+  ui.render(); await ui.save('공개 상태로 저장'); ui.render();
+  let items=await listAdminPortfolios(state.repository);
+  assert.equal(selectHomeProjects(items)[0].slug,'other');
+  assert.equal(items.find(item=>item.slug==='campus-worship-2026').frontmatter.homeOrder,undefined);
+  assert.equal(items.find(item=>item.slug==='other').storedFrontmatter.internalEvidence.keep,true);
+  ui.nodes().find(node=>node.props?.id==='home-project-order').props.onChange({target:{value:''}});
+  ui.render(); await ui.save('공개 상태로 저장');
+  items=await listAdminPortfolios(state.repository);
+  assert.equal(items.find(item=>item.slug==='other').frontmatter.homeOrder,undefined);
 });
 
 test('editor round-trips separate titles and an explicit clear restores the detail-title fallback', async () => {

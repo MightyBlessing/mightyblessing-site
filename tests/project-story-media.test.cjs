@@ -164,11 +164,36 @@ test('video poster replacement and removal update story image references', async
   await saveAdminPortfolio(payload, { ...noUploads(), galleryPosterFiles: { [payload.gallery[0].id]: replacementFile } }, 'update', state.services);
   let result = saved(state), project = normalizePortfolioFrontmatter(result.data);
   assert.deepEqual(markdownImageSources(result.content), [project.gallery[0].poster]);
-  assert.equal(images(render(result.data, result.content)).filter(url => url === project.gallery[0].poster).length, 1);
+  const html=render(result.data,result.content);
+  assert.equal((html.match(/<video\b/g)||[]).length,1);
+  assert.ok(html.includes(`poster="${project.gallery[0].poster}"`));
+  assert.ok(html.includes('src="/movie.mp4"'));
+  assert.equal(images(html).filter(url=>url===project.gallery[0].poster).length,0);
   const removePayload = await payloadFor(state); removePayload.gallery = [];
   await saveAdminPortfolio(removePayload, noUploads(), 'update', state.services);
   result = saved(state);
   assert.deepEqual(markdownImageSources(result.content), []);
+});
+
+test('hero, inline and supporting videos render playable controls and never use MP4 as image sources', () => {
+  const data={...originalParsed.data,heroMedia:{type:'video',url:'/hero.mp4',alt:'Hero film'},gallery:[{type:'video',url:'/inline.mp4',poster:'/poster.webp',alt:'Inline film'},{type:'video',url:'/gallery.mp4',alt:'Gallery film'}]};
+  const html=render(data,'![Inline](/poster.webp)');
+  assert.equal((html.match(/<video\b/g)||[]).length,3);
+  assert.equal((html.match(/<video[^>]*controls=""/g)||[]).length,3);
+  assert.equal(images(html).length,0);
+  assert.equal(/autoPlay|autoplay/.test(html),false);
+  assert.equal(toProjectLink({slug:data.slug,frontmatter:normalizePortfolioFrontmatter(data)}).image,'');
+  data.heroMedia.poster='/hero-poster.webp';
+  assert.equal(toProjectLink({slug:data.slug,frontmatter:normalizePortfolioFrontmatter(data)}).image,'/hero-poster.webp');
+});
+
+test('current detail displays edited narrative and only explicitly selected published related cases', () => {
+  const html=render({...originalParsed.data,goals:'독립 목표 마커',process:'독립 운영 마커',partner:'독립 파트너 마커',related_cases:['sos-2024','fia-welove-2026','missing-case',originalParsed.data.slug,'sos-2024']},'');
+  for(const marker of ['독립 목표 마커','독립 운영 마커','독립 파트너 마커','함께 보면 좋은 프로젝트']) assert.ok(html.includes(marker),marker);
+  assert.equal((html.match(/href="\/portfolio\/sos-2024"/g)||[]).length,1);
+  assert.equal(html.includes('href="/portfolio/fia-welove-2026"'),false);
+  assert.equal(html.includes('href="/portfolio/missing-case"'),false);
+  assert.equal(render({...originalParsed.data,related_cases:[]},'').includes('함께 보면 좋은 프로젝트'),false);
 });
 
 test('all review endpoints are recognized in relative, absolute, encoded and poster URLs', () => {

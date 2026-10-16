@@ -207,9 +207,9 @@ export function DashboardClient({ items, categories }: Props) {
                         >
                           {statusLabel(itemStatus)}
                         </span>
-                        {item.frontmatter.featured && (
+                        {item.frontmatter.homeOrder !== undefined && (
                           <span className="inline-flex items-center rounded-full border border-[#ffd98b]/15 bg-[#ffd98b]/10 px-3 py-1 text-[0.76rem] font-medium text-[#ffe1a4]">
-                            대표 {item.frontmatter.featured_order ? `#${item.frontmatter.featured_order}` : ""}
+                            홈 #{item.frontmatter.homeOrder}
                           </span>
                         )}
                         <span className="text-[0.78rem] text-white/38">{item.slug}</span>

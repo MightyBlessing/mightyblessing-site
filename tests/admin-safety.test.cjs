@@ -12,6 +12,25 @@ const { getAdminRepository } = require('../lib/admin/repository.ts');
 const { POST: login } = require('../app/api/admin/login/route.ts');
 const { proxy } = require('../proxy.ts');
 const { ADMIN_SESSION_COOKIE } = require('../lib/admin/constants.ts');
+const { adminLoginDestination } = require('../lib/admin/redirect.ts');
+
+test('login destinations only allow real local admin routes', () => {
+  for (const unsafe of [undefined, null, ['admin'], 'javascript:alert(1)', 'data:text/html,test', '//evil.invalid', '/\\evil.invalid', 'https://evil.invalid/admin', '/admin/login', '/admin/../inquiry', '/admin%2f..%2f..%2fevil', '/admin\n', '/administer', '/api/admin/portfolio', '/admin/%']) assert.equal(adminLoginDestination(unsafe),'/admin');
+  for (const safe of ['/admin','/admin/portfolio/new','/admin/portfolio/campus-worship-2026?view=edit#media']) assert.equal(adminLoginDestination(safe),safe);
+});
+
+test('issued sessions authorize dotted IDs and retain signature, expiry and identity checks', async () => {
+  await withEnvironment({...configured,ADMIN_ID:'operator.name@example.com'},async()=>{
+    const response=await login(loginRequest('operator.name@example.com'));
+    assert.equal(response.status,200);
+    const token=response.cookies.get(ADMIN_SESSION_COOKIE).value;
+    assert.equal((await verifyAdminSessionToken(token)).userId,'operator.name@example.com');
+    assert.equal((await proxy(adminRequest('/api/admin/portfolio',token))).headers.get('x-middleware-next'),'1');
+    assert.equal(await verifyAdminSessionToken(token.replace('operator.name','other.name')),null);
+    assert.equal(await verifyAdminSessionToken(token.replace(/\.\d+\./,'.1.')),null);
+    assert.equal(await verifySessionToken(token,'wrong-secret'),null);
+  });
+});
 
 const configured = {
   NODE_ENV: 'production', ADMIN_ID: 'test-operator', ADMIN_PASSWORD: 'test-only-configured-password',
