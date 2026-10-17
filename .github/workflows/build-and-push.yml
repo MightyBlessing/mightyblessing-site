@@ -65,6 +65,7 @@ jobs:
           build-args: |
             NEXT_PUBLIC_SITE_URL=https://mightyblessing.com
             NEXT_PUBLIC_BLOG_URL=https://blog.mightyblessing.com
+            NEXT_PUBLIC_GA_MEASUREMENT_ID=G-X195JMZNYZ
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
