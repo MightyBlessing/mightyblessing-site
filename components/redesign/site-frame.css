@@ -30,7 +30,8 @@ html:has(.site-layout) { scroll-padding-top: 24px; }
 .site-index-link > span:last-child { flex-shrink: 0; font-size: 11px; }
 .site-index-link[aria-current="page"] { color: var(--primary); font-weight: 600; background: color-mix(in srgb, var(--primary) 4%, #fff); }
 .site-index-link:focus-visible { outline: 2px solid var(--primary); outline-offset: -2px; }
-@media (hover: hover) and (pointer: fine) { .site-index-link:hover { color: #fff; background: var(--primary); } }
+/* The dialog selector outranks `.global-dialog nav a:hover`, which would otherwise paint the text the same colour as the fill. */
+@media (hover: hover) and (pointer: fine) { .site-index-link:hover, .global-dialog nav .site-index-link:hover { color: #fff; background: var(--primary); } }
 body:has(.site-layout) footer.site-footer { width: calc(100% - 2 * var(--site-edge) - var(--site-rail) - var(--site-gap)); margin: 48px var(--site-edge) 0 auto; padding: 28px var(--site-body-gutter) 36px; }
 /* Reading measures apply inside the scene, never to the navigation/hero frame. */
 .site-content .company-page { width: 100%; max-width: var(--site-reading-max); margin-inline: auto; }
