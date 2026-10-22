@@ -76,7 +76,8 @@ export async function verifyAdminSessionToken(token: string | undefined) {
   const config = getAdminAuthConfig();
   if (!config) return null;
   const session = await verifySessionToken(token, config.secret);
-  return session?.userId === config.id ? session : null;
+  // Removing an address from ADMIN_EMAILS ends that person's existing sessions too.
+  return session && config.emails.includes(session.userId) ? session : null;
 }
 
 export function getSessionCookieOptions() {

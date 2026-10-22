@@ -50,10 +50,12 @@ npm run dev
 ## Admin
 
 - 포트폴리오 admin은 `/admin/login`에서 접근합니다.
-- 기본 계정은 환경 변수 기준입니다.
-  - `ADMIN_ID`
-  - `ADMIN_PASSWORD`
+- 로그인은 회사 Google 계정으로 합니다. `ADMIN_EMAILS`에 적힌 계정만 들어올 수 있습니다.
+  - `ADMIN_EMAILS` (쉼표로 구분)
   - `ADMIN_SESSION_SECRET`
+  - `GOOGLE_OAUTH_CLIENT_ID`, `GOOGLE_OAUTH_CLIENT_SECRET`
+  - Google OAuth 클라이언트의 리디렉션 URI: `https://mightyblessing.com/api/admin/auth/google/callback`
+- 로컬 개발(`npm run dev`)에서는 로그인 화면의 '로컬 개발용으로 로그인'으로 Google 없이 들어갈 수 있습니다.
 - GitHub 연동 시 admin 저장은 저장소 커밋으로 이어지고, 다음 재배포 시 공개 사이트에 반영됩니다.
   - `GITHUB_TOKEN`
   - `GITHUB_OWNER`

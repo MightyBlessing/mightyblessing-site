@@ -126,21 +126,28 @@ test('origin guard permits configured proxy origin and development loopback alia
   });
 });
 
-test('login and inquiry routes enforce quotas before any external provider call', async () => {
-  const login = require('../app/api/admin/login/route.ts').POST;
+test('Google sign-in and inquiry routes enforce quotas before any external provider call', async () => {
+  const { NextRequest } = require('next/server');
+  const callback = require('../app/api/admin/auth/google/callback/route.ts').GET;
   const inquiry = require('../app/api/inquiry/route.ts').POST;
   const originalFetch = global.fetch;
-  global.fetch = async () => { throw new Error('No external request permitted'); };
+  let providerCalls = 0;
+  global.fetch = async () => { providerCalls++; throw new Error('No external request permitted'); };
+  const signIn = () => callback(new NextRequest('https://example.invalid/api/admin/auth/google/callback?state=s&code=c', { headers: { cookie: 'mb_admin_oauth_state=s:/admin' } }));
+  const error = response => new URL(response.headers.get('location')).searchParams.get('error');
   try {
-    await withEnv({ NODE_ENV: 'production', ADMIN_ID: 'operator', ADMIN_PASSWORD: 'local-test-password', ADMIN_SESSION_SECRET: 'local-test-signing-secret', RESEND_API_KEY: '', INQUIRY_FROM_EMAIL: '' }, async () => {
-      for (let i = 0; i < 30; i++) assert.equal((await login(new Request('https://example.invalid/api/admin/login', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ id: 'operator', password: 'wrong' }) }))).status, 401);
-      const blocked = await login(new Request('https://example.invalid/api/admin/login', { method: 'POST', body: '{}' }));
-      assert.equal(blocked.status, 429); assert.ok(Number(blocked.headers.get('retry-after')) > 0);
+    await withEnv({ NODE_ENV: 'production', ADMIN_EMAILS: 'operator@example.invalid', ADMIN_SESSION_SECRET: 'local-test-signing-secret', GOOGLE_OAUTH_CLIENT_ID: 'id', GOOGLE_OAUTH_CLIENT_SECRET: 'secret', RESEND_API_KEY: '', INQUIRY_FROM_EMAIL: '' }, async () => {
+      for (let i = 0; i < 30; i++) assert.equal(error(await signIn()), 'failed');
+      assert.equal(providerCalls, 30);
+      assert.equal(error(await signIn()), 'busy');
+      assert.equal(providerCalls, 30);
+      providerCalls = 0;
       for (let i = 0; i < 20; i++) {
         const response = await inquiry(new Request('https://example.invalid/api/inquiry', { method: 'POST', body: JSON.stringify({ email: 'review@example.invalid', message: 'test only' }) }));
         assert.equal(response.status, 200); assert.equal((await response.json()).delivery, 'mailto');
       }
       assert.equal((await inquiry(new Request('https://example.invalid/api/inquiry', { method: 'POST', body: '{}' }))).status, 429);
+      assert.equal(providerCalls, 0);
     });
   } finally { global.fetch = originalFetch; }
 });

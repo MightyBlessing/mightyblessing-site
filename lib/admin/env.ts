@@ -5,7 +5,8 @@ type GithubConfig = {
   branch: string;
 };
 
-const developmentCredentials = { id: "admin", password: "admin1234" };
+/** Local development signs in as this address without Google. It is never allowed outside development. */
+export const DEVELOPMENT_ADMIN_EMAIL = "local-admin@localhost";
 const developmentSessionSecret = "mighty-blessing-admin-session-secret";
 const unsafeSessionSecrets = new Set([developmentSessionSecret, "change-this-secret"]);
 
@@ -14,12 +15,15 @@ function configuredValue(name: string) {
   return value?.trim() ? value : null;
 }
 
-export function getAdminCredentials() {
-  const development = process.env.NODE_ENV === "development";
-  const id = configuredValue("ADMIN_ID") || (development ? developmentCredentials.id : null);
-  const password = configuredValue("ADMIN_PASSWORD") || (development ? developmentCredentials.password : null);
-  if (!id || !password || (!development && password === developmentCredentials.password)) return null;
-  return { id, password };
+export function isDevelopmentLoginEnabled() {
+  return process.env.NODE_ENV === "development";
+}
+
+/** Google accounts allowed into the admin, from comma- or space-separated `ADMIN_EMAILS`. */
+export function getAdminEmails() {
+  const emails = (configuredValue("ADMIN_EMAILS") || "").split(/[\s,]+/).map(email => email.trim().toLowerCase()).filter(Boolean);
+  if (isDevelopmentLoginEnabled()) emails.push(DEVELOPMENT_ADMIN_EMAIL);
+  return emails.length ? emails : null;
 }
 
 export function getAdminSessionSecret() {
@@ -30,9 +34,15 @@ export function getAdminSessionSecret() {
 }
 
 export function getAdminAuthConfig() {
-  const credentials = getAdminCredentials();
+  const emails = getAdminEmails();
   const secret = getAdminSessionSecret();
-  return credentials && secret ? { ...credentials, secret } : null;
+  return emails && secret ? { emails, secret } : null;
+}
+
+export function getGoogleOAuthConfig() {
+  const clientId = configuredValue("GOOGLE_OAUTH_CLIENT_ID");
+  const clientSecret = configuredValue("GOOGLE_OAUTH_CLIENT_SECRET");
+  return clientId && clientSecret ? { clientId: clientId.trim(), clientSecret: clientSecret.trim() } : null;
 }
 
 export function getGithubConfig(): GithubConfig | null {

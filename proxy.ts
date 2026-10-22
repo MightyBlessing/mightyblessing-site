@@ -8,8 +8,10 @@ function isProtectedPath(pathname: string) {
   return pathname.startsWith("/admin") || pathname.startsWith("/api/admin");
 }
 
+const publicAdminPaths = new Set(["/admin/login", "/api/admin/auth/google/start", "/api/admin/auth/google/callback", "/api/admin/auth/dev"]);
+
 function isPublicAdminPath(pathname: string) {
-  return pathname === "/admin/login" || pathname === "/api/admin/login";
+  return publicAdminPaths.has(pathname);
 }
 
 export async function proxy(request: NextRequest) {
@@ -19,7 +21,8 @@ export async function proxy(request: NextRequest) {
     return NextResponse.next();
   }
 
-  if (!getAdminAuthConfig() && pathname.startsWith("/api/admin")) {
+  // Sign-in routes send the browser back to the login page, which explains missing settings itself.
+  if (!getAdminAuthConfig() && pathname.startsWith("/api/admin") && !isPublicAdminPath(pathname)) {
     return NextResponse.json({ error: "관리자 인증 설정이 준비되지 않아 사용할 수 없습니다." }, { status: 503 });
   }
   const token = request.cookies.get(ADMIN_SESSION_COOKIE)?.value;
